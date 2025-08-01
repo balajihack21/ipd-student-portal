@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+    <div class="flex min-h-screen">
+
+        <!-- Sidebar -->
+        <aside id="sidebar"
+            class="bg-white w-64 p-6 shadow-md fixed md:static top-0 left-0 h-full z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-200">
+            <h1 class="text-2xl font-bold mb-8 text-blue-600">Student Panel</h1>
+            <nav class="space-y-4" id="navMenu">
+                <a href="#" class="block text-gray-700 hover:text-blue-500 menu-item active">Dashboard</a>
+                <a href="#studentCards" class="block text-gray-700 hover:text-blue-500 menu-item">Team Members</a>
+                <a href="#uploadSection" class="block text-gray-700 hover:text-blue-500 menu-item">Upload Files</a>
+                <a href="#templateSection" class="block text-gray-700 hover:text-blue-500 menu-item">Templates</a>
+                <a href="#mentorSection" class="block text-gray-700 hover:text-blue-500 menu-item">Mentor</a>
+                <button id="logout"
+                    class="mt-8 bg-red-500 text-white w-full px-4 py-2 rounded hover:bg-red-600 transition">Logout</button>
+            </nav>
+        </aside>
+
+        <!-- Mobile Toggle Button -->
+        <div class="md:hidden fixed top-4 left-4 z-50">
+            <button id="toggleSidebar" class="text-gray-800 bg-white p-2 rounded shadow">
+                ☰
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-64 p-4 mt-16 md:mt-0">
+            <div class="max-w-6xl mx-auto space-y-6">
+
+                <!-- Profile Card -->
+                <div class="bg-white rounded-xl shadow-md p-4 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold">Team Name: <span id="teamName" class="text-blue-600"></span></h2>
+                        <p class="text-gray-500" >Contact No:<span id="contactNo" class="text-blue-600"></span></p>
+                        <div class="w-full bg-gray-200 h-3 rounded-full mt-2">
+                            <div class="bg-blue-500 h-3 rounded-full" style="width: 40%;"></div>
+                        </div>
+                    </div>
+                    <button id="editProfileBtn"
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Edit
+                        Profile</button>
+                </div>
+
+
+
+
+                <!-- Student Cards -->
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4" id="studentCards">
+                    <!-- JS will append student cards here -->
+                </div>
+
+                <!-- Template Files Section -->
+                <div id="templateSection" class="bg-white p-6 rounded-xl shadow-md mt-8">
+                    <h3 class="text-lg font-semibold mb-2">Template Files</h3>
+                    <ul id="templateList" class="list-disc list-inside space-y-2 text-blue-600">
+                        <!-- Files will be loaded here -->
+                    </ul>
+                </div>
+
+                <!-- Upload History -->
+                <div class="bg-white p-6 rounded-xl shadow-md mt-8">
+                    <h3 class="text-lg font-semibold mb-2">Upload History</h3>
+                    <div id="uploadHistory" class="space-y-2 text-sm text-gray-700">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+
+
+
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input type="file" name="file" id="fileInput" required />
+                    <input type="number" name="week_number" id="weekNumber" placeholder="Week #" required
+                        class="mt-2 border p-1" />
+                    <button type="submit" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">Upload</button>
+                </form>
+                <div class="w-full bg-gray-200 rounded-full h-4 mt-2">
+                    <div id="uploadProgressBar" class="bg-blue-500 h-4 rounded-full text-center text-white text-xs"
+                        style="width: 0%">0%</div>
+                </div>
+
+                <p id="uploadStatus" class="mt-2 text-sm text-green-600"></p>
+
+
+                <!-- Mentor Info -->
+                <div id="mentorSection" class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold">Mentor</h3>
+                    <p id="mentorName" class="text-gray-600">Not Assigned</p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Modal -->
+<div id="editModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+  <div class="bg-white rounded-lg p-6 w-full max-w-md relative">
+    <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
+    <form id="editForm" class="space-y-4">
+      <div>
+        <label for="editTeamName" class="block text-sm font-medium">Team Name</label>
+        <input type="text" id="editTeamName" class="w-full border border-gray-300 rounded px-3 py-2" required>
+      </div>
+      <div>
+        <label for="editMobile" class="block text-sm font-medium">Mobile Number</label>
+        <input type="text" id="editMobile" class="w-full border border-gray-300 rounded px-3 py-2" required>
+      </div>
+      <div id="updateMsg" class="text-sm text-red-500"></div>
+      <div class="flex justify-end space-x-2">
+        <button type="button" id="cancelBtn" class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+    <script src="/js/dashboard.js"></script>
+</body>
+
+</html>

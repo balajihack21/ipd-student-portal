@@ -1,0 +1,6344 @@
+[
+    {
+        "mentor": {
+            "department": "IT",
+            "name": "Dr. SENTHIL.G.A",
+            "mentorId": "83",
+            "email": "senthilga.it@act.edu.in"
+        },
+        "mobile": "7845391407",
+        "teamLeader": {
+            "Dept": "IT",
+            "RegisterNo": "312824205034",
+            "StudentName": "INBATHAMIZHAN N",
+            "Section": "A"
+        },
+        "timestamp": {
+            "seconds": 1753430882,
+            "nanoseconds": 22000000
+        },
+        "students": [
+            {
+                "Dept": "IT",
+                "StudentName": "AYYANAR L",
+                "RegisterNo": 312824205011,
+                "Section": "A"
+            },
+            {
+                "Section": "A",
+                "StudentName": "HARISARAN A",
+                "RegisterNo": 312824205027,
+                "Dept": "IT"
+            },
+            {
+                "StudentName": "KISHORE S",
+                "Dept": "IT",
+                "Section": "A",
+                "RegisterNo": 312824205050
+            },
+            {
+                "RegisterNo": 312824205053,
+                "Section": "A",
+                "Dept": "IT",
+                "StudentName": "LOGESHWAR M"
+            }
+        ],
+        "teamName": "Nova networks ",
+        "email": "24it033@act.edu.in"
+    },
+    {
+        "email": "24eee05@act.edu.in",
+        "teamLeader": {
+            "StudentName": "DHANALAKSHMI T",
+            "Section": "A",
+            "RegisterNo": 312824105005,
+            "Dept": "EEE"
+        },
+        "mobile": "7904484448",
+        "teamName": "Maverick",
+        "students": [
+            {
+                "Dept": "EEE",
+                "StudentName": "KAVIYARASU D",
+                "RegisterNo": 312824105011,
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824105021,
+                "Section": "A",
+                "Dept": "EEE",
+                "StudentName": "PAVITHRA D"
+            },
+            {
+                "StudentName": "TAMILARASAN R",
+                "RegisterNo": "02",
+                "Dept": "LE - EEE",
+                "Section": "-"
+            }
+        ],
+        "mentor": {
+            "department": "ECE",
+            "email": "smisha.ms@gmail.com",
+            "name": "Mrs. SMISHA M S",
+            "mentorId": "70"
+        },
+        "timestamp": {
+            "seconds": 1753887367,
+            "nanoseconds": 944000000
+        }
+    },
+    {
+        "students": [
+            {
+                "StudentName": "SAI LEKHA S A",
+                "Section": "C",
+                "Dept": "CSE",
+                "RegisterNo": 312824104137
+            },
+            {
+                "RegisterNo": 312824104148,
+                "StudentName": "SHALINI S",
+                "Section": "C",
+                "Dept": "CSE"
+            },
+            {
+                "Section": "C",
+                "Dept": "CSE",
+                "RegisterNo": 312824104151,
+                "StudentName": "SHARMILA R"
+            },
+            {
+                "RegisterNo": "312824104160",
+                "Section": "C",
+                "Dept": "CSE",
+                "StudentName": "SUPRAJA K L"
+            }
+        ],
+        "mentor": {
+            "name": "Ms. UMA DEVI.G",
+            "email": "umadevi.cse@act.edu.in",
+            "department": "CSE",
+            "mentorId": "41"
+        },
+        "mobile": "6374601456",
+        "teamLeader": {
+            "Dept": "CSE",
+            "Section": "C",
+            "RegisterNo": 312824104126,
+            "StudentName": "RAKSHAA S M"
+        },
+        "timestamp": {
+            "seconds": 1753431789,
+            "nanoseconds": 121000000
+        },
+        "teamName": "Dynamic dreamers",
+        "email": "24cse126@act.edu.in"
+    },
+    {
+        "students": [
+            {
+                "Section": "A",
+                "Dept": "CSE",
+                "StudentName": "DARSHITHAA J",
+                "RegisterNo": 312824104026
+            },
+            {
+                "RegisterNo": 312824104038,
+                "StudentName": "DIVYA S",
+                "Section": "A",
+                "Dept": "CSE"
+            },
+            {
+                "StudentName": "GOPIKA A",
+                "Section": "A",
+                "RegisterNo": 312824104042,
+                "Dept": "CSE"
+            },
+            {
+                "Dept": "CSE",
+                "RegisterNo": 312824104060,
+                "Section": "A",
+                "StudentName": "JEEVITHA S"
+            }
+        ],
+        "mentor": {
+            "mentorId": "42",
+            "name": "Ms. PRINSLIN.L",
+            "department": "CSE",
+            "email": "prinslinl.cse@act.edu.in"
+        },
+        "email": "24cse050@act.edu.in",
+        "teamName": "Syntax squad",
+        "teamLeader": {
+            "StudentName": "HINDHUJA S P",
+            "Section": "A",
+            "Dept": "CSE",
+            "RegisterNo": 312824104051
+        },
+        "mobile": "8839004332",
+        "timestamp": {
+            "seconds": 1753541442,
+            "nanoseconds": 555000000
+        }
+    },
+    {
+        "students": [
+            {
+                "StudentName": "LEKHASREE R",
+                "Section": "A",
+                "RegisterNo": 312824121029,
+                "Dept": "BME"
+            },
+            {
+                "RegisterNo": 312824121046,
+                "StudentName": "SRIYADAV A",
+                "Dept": "BME",
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824121052,
+                "Section": "A",
+                "StudentName": "THIRISHA R",
+                "Dept": "BME"
+            },
+            {
+                "RegisterNo": 312824121053,
+                "Dept": "BME",
+                "Section": "A",
+                "StudentName": "UMAMAGESHWARI D"
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753695148,
+            "nanoseconds": 8000000
+        },
+        "mobile": "8248834383",
+        "teamName": "TheraTech Titans",
+        "mentor": {
+            "mentorId": "15",
+            "department": "BME",
+            "email": "hod.bme@act.edu.in",
+            "name": "Dr. SUREKA.N"
+        },
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "RAMYA M",
+            "RegisterNo": 312824121036,
+            "Dept": "BME"
+        },
+        "email": "24bme36@act.edu.in"
+    },
+    {
+        "students": [
+            {
+                "RegisterNo": 312824121006,
+                "Section": "A",
+                "Dept": "BME",
+                "StudentName": "ASKAR J"
+            },
+            {
+                "StudentName": "ABIRAMI N",
+                "Dept": "AIDS",
+                "Section": "A",
+                "RegisterNo": 312824243002
+            },
+            {
+                "StudentName": "SHALINI D",
+                "RegisterNo": 312824243051,
+                "Section": "A",
+                "Dept": "AIDS"
+            },
+            {
+                "StudentName": "VARSHA S",
+                "Section": "A",
+                "Dept": "AIDS",
+                "RegisterNo": 312824243062
+            }
+        ],
+        "mentor": {
+            "department": "AIDS",
+            "name": "Dr. ISHWARYA.M.V",
+            "mentorId": "1",
+            "email": "aidshod@act.edu.in"
+        },
+        "email": "24aids09@act.edu.in",
+        "mobile": "9025924205",
+        "teamLeader": {
+            "StudentName": "BHAVANA RAJ T",
+            "Dept": "AIDS",
+            "RegisterNo": 312824243009,
+            "Section": "A"
+        },
+        "timestamp": {
+            "seconds": 1753607489,
+            "nanoseconds": 771000000
+        },
+        "teamName": "Innoverse"
+    },
+    {
+        "students": [
+            {
+                "StudentName": "ADARSH L",
+                "Section": "A",
+                "Dept": "ECE",
+                "RegisterNo": 312824106002
+            },
+            {
+                "RegisterNo": 312824106033,
+                "Dept": "ECE",
+                "Section": "A",
+                "StudentName": "PREETHISHA B"
+            },
+            {
+                "Dept": "ECE",
+                "StudentName": "SANTHOSH M",
+                "Section": "A",
+                "RegisterNo": 312824106047
+            },
+            {
+                "Dept": "ECE",
+                "RegisterNo": 312824106061,
+                "Section": "A",
+                "StudentName": "VISHAL T S"
+            }
+        ],
+        "mentor": {
+            "department": "ECE",
+            "name": "Mr. MOHAMED ISMAIL.K",
+            "mentorId": "62",
+            "email": "mohamedismail.ece@act.edu.in"
+        },
+        "timestamp": {
+            "seconds": 1753457071,
+            "nanoseconds": 324000000
+        },
+        "email": "24ece60@act.edu.in",
+        "mobile": "6385320964",
+        "teamName": "Idea Ignitors",
+        "teamLeader": {
+            "RegisterNo": 312824106059,
+            "StudentName": "THIRUVARASI S",
+            "Section": "A",
+            "Dept": "ECE"
+        }
+    },
+    {
+        "mobile": "9042882955",
+        "email": "24it095@act.edu.in",
+        "teamLeader": {
+            "RegisterNo": 312824205094,
+            "Dept": "IT",
+            "StudentName": "SANDIYAKSHINI A",
+            "Section": "B"
+        },
+        "teamName": "SVT Elites ",
+        "timestamp": {
+            "seconds": 1753429788,
+            "nanoseconds": 144000000
+        },
+        "mentor": {
+            "email": "sinduja.it@act.edu.it",
+            "name": "Ms. SINDUJA.M",
+            "mentorId": "91",
+            "department": "IT"
+        },
+        "students": [
+            {
+                "Section": "B",
+                "Dept": "IT",
+                "StudentName": "SADHANA M",
+                "RegisterNo": 312824205087
+            },
+            {
+                "Section": "B",
+                "Dept": "IT",
+                "RegisterNo": 312824205101,
+                "StudentName": "SHALINI K"
+            },
+            {
+                "Section": "B",
+                "StudentName": "THENDRAL S",
+                "RegisterNo": 312824205117,
+                "Dept": "IT"
+            },
+            {
+                "Section": "B",
+                "RegisterNo": 312824205120,
+                "StudentName": "VIDYA GAYATHRI G",
+                "Dept": "IT"
+            }
+        ]
+    },
+    {
+        "students": [
+            {
+                "Dept": "BME",
+                "Section": "A",
+                "StudentName": "ALWIN MARTIN S",
+                "RegisterNo": 312824121001
+            },
+            {
+                "Section": "A",
+                "Dept": "BME",
+                "StudentName": "ANNAMALAI P",
+                "RegisterNo": 312824121002
+            },
+            {
+                "StudentName": "YUVAN P",
+                "RegisterNo": 312824121061,
+                "Dept": "BME",
+                "Section": "A"
+            }
+        ],
+        "mobile": "8122774287",
+        "teamLeader": {
+            "RegisterNo": 312824121051,
+            "Section": "A",
+            "StudentName": "THARRUN SAI R",
+            "Dept": "BME"
+        },
+        "mentor": {
+            "mentorId": "16",
+            "department": "BME",
+            "email": "nithiya.bme@act.edu.in",
+            "name": "Mrs. NITHIYA.R"
+        },
+        "teamName": "Innovertex",
+        "email": "tharrunsai.r@gmail.com",
+        "timestamp": {
+            "seconds": 1753452370,
+            "nanoseconds": 339000000
+        }
+    },
+    {
+        "students": [
+            {
+                "RegisterNo": 312824103003,
+                "StudentName": "ANU PRIYA E A",
+                "Section": "A",
+                "Dept": "CVL"
+            },
+            {
+                "RegisterNo": 312824103011,
+                "Dept": "CVL",
+                "Section": "A",
+                "StudentName": "KEERTHANA PRIYA G"
+            },
+            {
+                "Section": "A",
+                "Dept": "CVL",
+                "StudentName": "RAJALAKSHMI G",
+                "RegisterNo": 312824103017
+            }
+        ],
+        "mentor": {
+            "email": "vishnuvardhan.cvl@act.edu.in",
+            "name": "Mr. VISHNUVARDHAN.S",
+            "department": "CIVIL",
+            "mentorId": "25"
+        },
+        "email": "24cvl10@act.edu.in",
+        "timestamp": {
+            "seconds": 1753425053,
+            "nanoseconds": 754000000
+        },
+        "teamLeader": {
+            "Section": "A",
+            "RegisterNo": 312824103010,
+            "StudentName": "JONAN BOSS R",
+            "Dept": "CVL"
+        },
+        "teamName": "JB&CO",
+        "mobile": "8667396434"
+    },
+    {
+        "mentor": {
+            "name": "Ms. SUJATHA.M.P",
+            "email": "sujatha.cse@act.edu.in",
+            "mentorId": "43",
+            "department": "CSE"
+        },
+        "teamLeader": {
+            "RegisterNo": 312824104136,
+            "Dept": "CSE",
+            "Section": "C",
+            "StudentName": "SAI GEETHA G"
+        },
+        "mobile": "8220952750",
+        "students": [
+            {
+                "Section": "C",
+                "RegisterNo": 312824104140,
+                "StudentName": "SANDHIYA R",
+                "Dept": "CSE"
+            },
+            {
+                "StudentName": "VINITHA B",
+                "Section": "C",
+                "RegisterNo": 312824104180,
+                "Dept": "CSE"
+            },
+            {
+                "Section": "C",
+                "Dept": "CSE",
+                "RegisterNo": 312824104185,
+                "StudentName": "VITHIYA A"
+            },
+            {
+                "RegisterNo": 312824104189,
+                "Dept": "CSE",
+                "Section": "C",
+                "StudentName": "YUVASHRI T"
+            }
+        ],
+        "teamName": "IGNITE CREW",
+        "timestamp": {
+            "seconds": 1753431660,
+            "nanoseconds": 256000000
+        },
+        "email": "24cse136@act.edu.in"
+    },
+    {
+        "teamName": "PENTANOVA",
+        "teamLeader": {
+            "StudentName": "PAVETHRAN P",
+            "RegisterNo": 312824104110,
+            "Dept": "CSE",
+            "Section": "B"
+        },
+        "email": "pavethran2006@gmail.com",
+        "mobile": "6382042738",
+        "students": [
+            {
+                "RegisterNo": 312824104083,
+                "Section": "B",
+                "StudentName": "KISHORE K",
+                "Dept": "CSE"
+            },
+            {
+                "Section": "B",
+                "RegisterNo": 312824104101,
+                "StudentName": "MUTHU AKASH S",
+                "Dept": "CSE"
+            },
+            {
+                "Dept": "CSE",
+                "Section": "B",
+                "StudentName": "PIRUTHIVIRAJ M",
+                "RegisterNo": 312824104112
+            },
+            {
+                "Section": "B",
+                "RegisterNo": 312824104114,
+                "Dept": "CSE",
+                "StudentName": "PRAJEN KARTHIK S"
+            }
+        ],
+        "mentor": {
+            "department": "CSE",
+            "name": "Mr. KANNAN.R",
+            "email": "kannan.cse@act.edu.in",
+            "mentorId": "46"
+        },
+        "timestamp": {
+            "seconds": 1753516811,
+            "nanoseconds": 607000000
+        }
+    },
+    {
+        "mentor": {
+            "email": "nklgayathri.14@gmail.com",
+            "name": "Mrs. GAYATHRI.S",
+            "department": "AIDS",
+            "mentorId": "10"
+        },
+        "teamName": "NextGen Nexus",
+        "email": "24aids61@act.edu.in",
+        "mobile": "8056082812",
+        "teamLeader": {
+            "Section": "A",
+            "Dept": "AIDS",
+            "RegisterNo": 312824243061,
+            "StudentName": "THEJA SRI G"
+        },
+        "timestamp": {
+            "seconds": 1753450960,
+            "nanoseconds": 345000000
+        },
+        "students": [
+            {
+                "Dept": "AIDS",
+                "RegisterNo": 312824243014,
+                "Section": "A",
+                "StudentName": "DIVYA DHARSHINI H"
+            },
+            {
+                "StudentName": "KIRUTHIKA S",
+                "RegisterNo": 312824243029,
+                "Dept": "AIDS",
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824243044,
+                "Section": "A",
+                "Dept": "AIDS",
+                "StudentName": "PREMA M"
+            }
+        ]
+    },
+    {
+        "email": "24cse071@act.edu.in",
+        "teamName": "HUSTLE SQUAD ",
+        "teamLeader": {
+            "RegisterNo": 312824104072,
+            "Dept": "CSE",
+            "StudentName": "KAVIPRIYA H",
+            "Section": "B"
+        },
+        "timestamp": {
+            "seconds": 1753519978,
+            "nanoseconds": 38000000
+        },
+        "mentor": {
+            "email": "suresh.cse@act.edu.in",
+            "mentorId": "47",
+            "name": "Mr. SURESH.C",
+            "department": "CSE"
+        },
+        "students": [
+            {
+                "RegisterNo": 312824104065,
+                "StudentName": "KAMALI H",
+                "Section": "B",
+                "Dept": "CSE"
+            },
+            {
+                "StudentName": "MOHAMED RAFI M",
+                "Dept": "CSE",
+                "RegisterNo": 312824104096,
+                "Section": "B"
+            },
+            {
+                "Section": "B",
+                "RegisterNo": 312824104105,
+                "StudentName": "NIDIGUNTAPALEM MEGHANA",
+                "Dept": "CSE"
+            },
+            {
+                "Section": "B",
+                "StudentName": "PRIYADHARSHINI P",
+                "RegisterNo": 312824104121,
+                "Dept": "CSE"
+            }
+        ],
+        "mobile": "7339417356"
+    },
+    {
+        "email": "24ece13@act.edu.in",
+        "teamLeader": {
+            "Dept": "ECE",
+            "StudentName": "DHEEPA J",
+            "Section": "A",
+            "RegisterNo": 312824106013
+        },
+        "students": [
+            {
+                "Dept": "ECE",
+                "Section": "A",
+                "RegisterNo": 312824106015,
+                "StudentName": "FATHIMA SHAFFREEN J"
+            },
+            {
+                "StudentName": "GIRIDHARAN K",
+                "RegisterNo": 312824106016,
+                "Section": "A",
+                "Dept": "ECE"
+            },
+            {
+                "Section": "A",
+                "Dept": "ECE",
+                "RegisterNo": 312824106023,
+                "StudentName": "KARTHIKEYAN P"
+            },
+            {
+                "Section": "A",
+                "Dept": "ECE",
+                "StudentName": "SRIDHARAN B",
+                "RegisterNo": 312824106052
+            }
+        ],
+        "teamName": "Alt+F4 Squad ",
+        "timestamp": {
+            "seconds": 1753432873,
+            "nanoseconds": 376000000
+        },
+        "mobile": "7010443265",
+        "mentor": {
+            "name": "Mr. MOHAMED ISMAIL.K",
+            "mentorId": "62",
+            "department": "ECE",
+            "email": "mohamedismail.ece@act.edu.in"
+        }
+    },
+    {
+        "mobile": "6381618232",
+        "timestamp": {
+            "seconds": 1753430632,
+            "nanoseconds": 203000000
+        },
+        "teamName": "Vision vibes",
+        "mentor": {
+            "department": "IT",
+            "name": "Mrs. VAHEETHU BANU S",
+            "mentorId": "94",
+            "email": "vaheethabanu.it@act.edu.in"
+        },
+        "teamLeader": {
+            "RegisterNo": 312824205079,
+            "StudentName": "RAMYA M",
+            "Section": "B",
+            "Dept": "IT"
+        },
+        "students": [
+            {
+                "RegisterNo": 312824205071,
+                "StudentName": "PRADEEPA M",
+                "Section": "B",
+                "Dept": "IT"
+            },
+            {
+                "StudentName": "PRIYA DHARSHINI S",
+                "RegisterNo": 312824205074,
+                "Dept": "IT",
+                "Section": "B"
+            },
+            {
+                "RegisterNo": 312824205080,
+                "Dept": "IT",
+                "StudentName": "RANJANI V",
+                "Section": "B"
+            },
+            {
+                "StudentName": "ROBERT LAZARUS A",
+                "RegisterNo": 312824205083,
+                "Dept": "IT",
+                "Section": "B"
+            }
+        ],
+        "email": "ramyasundaram63@gmail.com"
+    },
+    {
+        "mentor": {
+            "email": "megashree.cse@act.edu.in",
+            "department": "CSE",
+            "name": "Ms. MEGA SHREE.R",
+            "mentorId": "50"
+        },
+        "students": [
+            {
+                "StudentName": "AISHWARYA S",
+                "Section": "A",
+                "Dept": "CSE",
+                "RegisterNo": 312824104006
+            },
+            {
+                "RegisterNo": 312824104007,
+                "StudentName": "AKSHAYA K",
+                "Section": "A",
+                "Dept": "CSE"
+            },
+            {
+                "Section": "A",
+                "StudentName": "ANITHA G",
+                "RegisterNo": 312824104012,
+                "Dept": "CSE"
+            },
+            {
+                "Section": "A",
+                "StudentName": "HARINI M L",
+                "Dept": "CSE",
+                "RegisterNo": 312824104044
+            }
+        ],
+        "teamName": "NEXTGEN CODERS",
+        "mobile": "9840658902",
+        "email": "24cse024@act.edu.in",
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "CATHERINE JENILA I",
+            "RegisterNo": 312824104025,
+            "Dept": "CSE"
+        },
+        "timestamp": {
+            "seconds": 1753542324,
+            "nanoseconds": 330000000
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753611056,
+            "nanoseconds": 619000000
+        },
+        "mentor": {
+            "mentorId": "17",
+            "department": "BME",
+            "email": "bilna.bme@act.edu.in",
+            "name": "Ms. BILNA.C"
+        },
+        "teamName": "Health warriors",
+        "mobile": "7200591327",
+        "students": [
+            {
+                "Dept": "BME",
+                "RegisterNo": 312824121021,
+                "StudentName": "GAYATHRI D",
+                "Section": "A"
+            },
+            {
+                "StudentName": "THABITHA V",
+                "RegisterNo": 312824121049,
+                "Section": "A",
+                "Dept": "BME"
+            },
+            {
+                "StudentName": "VIDHYA SRI S",
+                "Dept": "BME",
+                "Section": "A",
+                "RegisterNo": 312824121058
+            }
+        ],
+        "email": "24bme62@act.edu.in",
+        "teamLeader": {
+            "Dept": "BME",
+            "RegisterNo": 312824121062,
+            "StudentName": "YUVASHREE A",
+            "Section": "A"
+        }
+    },
+    {
+        "students": [
+            {
+                "Dept": "EEE",
+                "Section": "A",
+                "RegisterNo": 312824105004,
+                "StudentName": "DEEPAK D"
+            },
+            {
+                "StudentName": "MUTHU KUMAR T",
+                "Section": "A",
+                "RegisterNo": 312824105018,
+                "Dept": "EEE"
+            },
+            {
+                "Dept": "EEE",
+                "Section": "A",
+                "StudentName": "VENNILA K",
+                "RegisterNo": 312824105029
+            },
+            {
+                "Section": "A",
+                "Dept": "EEE",
+                "RegisterNo": 312824105030,
+                "StudentName": "VIKRAM V"
+            }
+        ],
+        "mobile": "6381961600",
+        "mentor": {
+            "name": "Mr. ARAVINDAN.M",
+            "email": "aravindan.eee@act.edu.in",
+            "mentorId": "73",
+            "department": "EEE"
+        },
+        "timestamp": {
+            "seconds": 1753782863,
+            "nanoseconds": 51000000
+        },
+        "email": "24eee15@act.edu.in",
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "MAHA LAKSHMI R",
+            "RegisterNo": 312824105015,
+            "Dept": "EEE"
+        },
+        "teamName": "Tech Phoenix"
+    },
+    {
+        "students": [
+            {
+                "Section": "A",
+                "StudentName": "JOSE RITTHIKA A",
+                "RegisterNo": 312824106020,
+                "Dept": "ECE"
+            },
+            {
+                "RegisterNo": 312824106029,
+                "StudentName": "MATHIYAZHAGAN N",
+                "Section": "A",
+                "Dept": "ECE"
+            },
+            {
+                "RegisterNo": 312824106039,
+                "Section": "A",
+                "StudentName": "PRIYADHARSHINI R",
+                "Dept": "ECE"
+            },
+            {
+                "Dept": "ECE",
+                "StudentName": "TAMIZHPAVAI P",
+                "RegisterNo": 312824106057,
+                "Section": "A"
+            }
+        ],
+        "email": "24ece47@act.edu.in",
+        "mentor": {
+            "name": "Mrs. MAHESWARI.D",
+            "email": "maheswarid.ece@act.edu.in",
+            "mentorId": "63",
+            "department": "ECE"
+        },
+        "teamLeader": {
+            "StudentName": "SANDHIYA D",
+            "Section": "A",
+            "RegisterNo": 312824106046,
+            "Dept": "ECE"
+        },
+        "teamName": "Zentora",
+        "mobile": "6381003161",
+        "timestamp": {
+            "seconds": 1753448215,
+            "nanoseconds": 650000000
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753952520,
+            "nanoseconds": 675000000
+        },
+        "teamName": "IT CREW",
+        "students": [
+            {
+                "Section": "B",
+                "RegisterNo": 312824205085,
+                "StudentName": "RUKHATHMICA S",
+                "Dept": "IT"
+            },
+            {
+                "StudentName": "SATHYASRI P",
+                "Section": "B",
+                "RegisterNo": 312824205099,
+                "Dept": "IT"
+            },
+            {
+                "Section": "B",
+                "RegisterNo": 312824205104,
+                "Dept": "IT",
+                "StudentName": "SHRUTHIGA S"
+            },
+            {
+                "Section": "B",
+                "StudentName": "USHARANI A",
+                "RegisterNo": 312824205119,
+                "Dept": "IT"
+            }
+        ],
+        "email": "24it087@act.edu.in",
+        "mobile": "8610890069",
+        "teamLeader": {
+            "Dept": "IT",
+            "RegisterNo": 312824205086,
+            "Section": "B",
+            "StudentName": "RUPIKA M"
+        },
+        "mentor": {
+            "department": "IT",
+            "name": "Mrs. MANORANJITHAM.S",
+            "mentorId": "87",
+            "email": "manoranjitham.it@act.edu.in"
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753695313,
+            "nanoseconds": 580000000
+        },
+        "teamName": "AURA BYTE",
+        "teamLeader": {
+            "Section": "A",
+            "Dept": "CSE",
+            "RegisterNo": 312824104013,
+            "StudentName": "ANTON SIMON RAJ S"
+        },
+        "mentor": {
+            "mentorId": "51",
+            "name": "Ms. KALARANI.R",
+            "email": "kalarani.cse@act.edu.in",
+            "department": "CSE"
+        },
+        "email": "24cse013@act.edu.in",
+        "students": [
+            {
+                "Dept": "CSE",
+                "Section": "A",
+                "RegisterNo": 312824104017,
+                "StudentName": "ARULNITHI N"
+            },
+            {
+                "StudentName": "BHUVANESHWARAN Y",
+                "Dept": "CSE",
+                "RegisterNo": 312824104023,
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824104040,
+                "Dept": "CSE",
+                "StudentName": "GANESH S",
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824104047,
+                "Section": "A",
+                "StudentName": "HEMA KUMAR H",
+                "Dept": "CSE"
+            }
+        ],
+        "mobile": "6379452507"
+    },
+    {
+        "teamLeader": {
+            "RegisterNo": 312824121034,
+            "Dept": "BME",
+            "StudentName": "PAVITHRA B",
+            "Section": "A"
+        },
+        "mentor": {
+            "department": "BME",
+            "name": "Ms. INDU.S",
+            "email": "indu.bme@act.edu.in",
+            "mentorId": "18"
+        },
+        "mobile": "9080963575",
+        "timestamp": {
+            "seconds": 1753699887,
+            "nanoseconds": 595000000
+        },
+        "teamName": "Wings of fire",
+        "students": [
+            {
+                "RegisterNo": 312824121023,
+                "StudentName": "INBAMOZHI R",
+                "Dept": "BME",
+                "Section": "A"
+            },
+            {
+                "Dept": "BME",
+                "RegisterNo": 312824121024,
+                "StudentName": "JAYASHREE D",
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824121039,
+                "StudentName": "SANDHIYA M",
+                "Section": "A",
+                "Dept": "BME"
+            }
+        ],
+        "email": "24bme34@act.edu.in"
+    },
+    {
+        "teamName": "Warriors",
+        "students": [
+            {
+                "RegisterNo": 312824121020,
+                "StudentName": "FELIX MACH F",
+                "Section": "A",
+                "Dept": "BME"
+            },
+            {
+                "Dept": "BME",
+                "StudentName": "SUWARNAMUGI M",
+                "Section": "A",
+                "RegisterNo": 312824121047
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824121048,
+                "Dept": "BME",
+                "StudentName": "SWETHA S"
+            },
+            {
+                "Section": "A",
+                "StudentName": "VENKATESHWARA RAGAVAN N",
+                "Dept": "BME",
+                "RegisterNo": 312824121057
+            }
+        ],
+        "email": "24bme54@act.edu.in",
+        "teamLeader": {
+            "RegisterNo": 312824121054,
+            "Dept": "BME",
+            "StudentName": "VAISHNAVI B",
+            "Section": "A"
+        },
+        "mentor": {
+            "department": "BME",
+            "mentorId": "16",
+            "name": "Mrs. NITHIYA.R",
+            "email": "nithiya.bme@act.edu.in"
+        },
+        "mobile": "9789018607",
+        "timestamp": {
+            "seconds": 1753695431,
+            "nanoseconds": 677000000
+        }
+    },
+    {
+        "teamName": "The Annunaki,",
+        "mentor": {
+            "name": "Mr. SAM DANIEL FENNY.A",
+            "email": "samdanielfenny.mae@act.edu.in",
+            "department": "MAE",
+            "mentorId": "98"
+        },
+        "mobile": "9791511068",
+        "teamLeader": {
+            "RegisterNo": 312824114020,
+            "Dept": "MECH",
+            "Section": "A",
+            "StudentName": "NAVEEN BALAJI N"
+        },
+        "email": "24mech21@act.edu.in",
+        "students": [
+            {
+                "RegisterNo": 312824106043,
+                "Section": "A",
+                "Dept": "ECE",
+                "StudentName": "RUPENDRA B J"
+            },
+            {
+                "RegisterNo": 312824114023,
+                "Section": "A",
+                "StudentName": "SAI ADITYA K",
+                "Dept": "MECH"
+            },
+            {
+                "StudentName": "SAISIVA D",
+                "RegisterNo": 312824114024,
+                "Section": "A",
+                "Dept": "MECH"
+            },
+            {
+                "StudentName": "SUDALAI MANI D",
+                "Dept": "MECH",
+                "Section": "A",
+                "RegisterNo": 312824114028
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753788573,
+            "nanoseconds": 564000000
+        }
+    },
+    {
+        "students": [
+            {
+                "RegisterNo": 312824106014,
+                "Dept": "ECE",
+                "Section": "A",
+                "StudentName": "DINESH M"
+            },
+            {
+                "StudentName": "KAARTHIK S",
+                "RegisterNo": 312824106022,
+                "Section": "A",
+                "Dept": "ECE"
+            },
+            {
+                "RegisterNo": 312824106037,
+                "Section": "A",
+                "Dept": "ECE",
+                "StudentName": "PRIYADARSHINI S"
+            },
+            {
+                "RegisterNo": 312824106050,
+                "Dept": "ECE",
+                "StudentName": "SOWJINIYA R",
+                "Section": "A"
+            }
+        ],
+        "mentor": {
+            "email": "ratheesh.ece@act.edu.in",
+            "mentorId": "64",
+            "department": "ECE",
+            "name": "Dr. RATHEESH.R"
+        },
+        "teamLeader": {
+            "Section": "A",
+            "Dept": "ECE",
+            "RegisterNo": 312824106026,
+            "StudentName": "MAHIBALAN K"
+        },
+        "mobile": "8940162311",
+        "email": "24ece27@act.edu.in",
+        "teamName": "Scammers",
+        "timestamp": {
+            "seconds": 1753432827,
+            "nanoseconds": 694000000
+        }
+    },
+    {
+        "teamName": "Spark5",
+        "timestamp": {
+            "seconds": 1753431789,
+            "nanoseconds": 404000000
+        },
+        "students": [
+            {
+                "StudentName": "SAI SANJAY R",
+                "RegisterNo": 312824104138,
+                "Section": "C",
+                "Dept": "CSE"
+            },
+            {
+                "RegisterNo": 312824104142,
+                "StudentName": "SANJAI C",
+                "Section": "C",
+                "Dept": "CSE"
+            },
+            {
+                "RegisterNo": 312824104146,
+                "StudentName": "SARAN RAJ S",
+                "Section": "C",
+                "Dept": "CSE"
+            },
+            {
+                "Dept": "CSE",
+                "Section": "C",
+                "StudentName": "SRIVASTHAVA S P B",
+                "RegisterNo": 312824104158
+            }
+        ],
+        "mentor": {
+            "email": "sindhu.cse@act.edu.in",
+            "department": "CSE",
+            "name": "Ms. SINDHU.G",
+            "mentorId": "52"
+        },
+        "email": "24cse135@act.edu.in",
+        "teamLeader": {
+            "RegisterNo": 312824104135,
+            "Section": "C",
+            "StudentName": "SACHIN HARI OM S",
+            "Dept": "CSE"
+        },
+        "mobile": "6369141591"
+    },
+    {
+        "teamLeader": {
+            "Section": "B",
+            "StudentName": "NIVETHA C",
+            "Dept": "CSE",
+            "RegisterNo": 312824104108
+        },
+        "timestamp": {
+            "seconds": 1753521300,
+            "nanoseconds": 172000000
+        },
+        "teamName": "Cohort ",
+        "email": "24cse107@act.edu.in",
+        "mentor": {
+            "name": "Dr. BALAJI MADHAVAN",
+            "email": "csehod@act.edu.in",
+            "mentorId": "53",
+            "department": "CSE"
+        },
+        "mobile": "9962777407",
+        "students": [
+            {
+                "StudentName": "MADHUMITHRA K",
+                "Section": "B",
+                "Dept": "CSE",
+                "RegisterNo": 312824104090
+            },
+            {
+                "Dept": "CSE",
+                "StudentName": "MAHATHI L",
+                "RegisterNo": 312824104092,
+                "Section": "B"
+            },
+            {
+                "RegisterNo": 312824104115,
+                "Dept": "CSE",
+                "Section": "B",
+                "StudentName": "PRAJOLA S"
+            }
+        ]
+    },
+    {
+        "timestamp": {
+            "seconds": 1753955868,
+            "nanoseconds": 51000000
+        },
+        "teamName": "ReactraNova",
+        "teamLeader": {
+            "StudentName": "DINESH KUMAR A",
+            "Section": "A",
+            "Dept": "CME",
+            "RegisterNo": 312824203005
+        },
+        "email": "24cme06@act.edu.in",
+        "mobile": "7538812299",
+        "students": [
+            {
+                "StudentName": "ABDURAHIMAN T",
+                "RegisterNo": 312824203001,
+                "Section": "A",
+                "Dept": "CME"
+            },
+            {
+                "RegisterNo": 312824203006,
+                "StudentName": "GOKULAVASAN S",
+                "Dept": "CME",
+                "Section": "A"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824203011,
+                "Dept": "CME",
+                "StudentName": "MOHAMMED SHEREEF P"
+            },
+            {
+                "StudentName": "HARIHARAN M",
+                "Section": "-",
+                "RegisterNo": "07",
+                "Dept": "LE - CME"
+            }
+        ],
+        "mentor": {
+            "department": "CME",
+            "name": "Dr. YUVANASHREE.E",
+            "mentorId": "36",
+            "email": "yuvanashree.cme@act.edu.in"
+        }
+    },
+    {
+        "teamName": "Innoventors",
+        "email": "24cse122@act.edu.in",
+        "timestamp": {
+            "seconds": 1753517747,
+            "nanoseconds": 229000000
+        },
+        "teamLeader": {
+            "StudentName": "RAHAV S",
+            "RegisterNo": 312824104123,
+            "Dept": "CSE",
+            "Section": "B"
+        },
+        "students": [
+            {
+                "Dept": "CSE",
+                "Section": "B",
+                "StudentName": "KARTHIKA D",
+                "RegisterNo": 312824104069
+            },
+            {
+                "Dept": "CSE",
+                "StudentName": "KAVIYANJALI M",
+                "Section": "B",
+                "RegisterNo": 312824104074
+            },
+            {
+                "StudentName": "LOKESHWARI T",
+                "RegisterNo": 312824104089,
+                "Dept": "CSE",
+                "Section": "B"
+            },
+            {
+                "Section": "B",
+                "RegisterNo": 312824104190,
+                "StudentName": "HARSHAA VARDHINI K L",
+                "Dept": "CSE"
+            }
+        ],
+        "mentor": {
+            "name": "Ms. KAVYA.R.K",
+            "mentorId": "54",
+            "department": "CSE",
+            "email": "kavya.cse@act.edu.in"
+        },
+        "mobile": "9150789356"
+    },
+    {
+        "students": [
+            {
+                "Dept": "CSE",
+                "Section": "C",
+                "StudentName": "SELVI P",
+                "RegisterNo": 312824104147
+            },
+            {
+                "Section": "C",
+                "StudentName": "TEBIN TITUS T",
+                "Dept": "CSE",
+                "RegisterNo": 312824104167
+            },
+            {
+                "Section": "C",
+                "StudentName": "THIREJA S A",
+                "Dept": "CSE",
+                "RegisterNo": 312824104169
+            },
+            {
+                "RegisterNo": 312824104181,
+                "Dept": "CSE",
+                "StudentName": "VISHAL A",
+                "Section": "C"
+            }
+        ],
+        "email": "24cse164@act.edu.in",
+        "timestamp": {
+            "seconds": 1753431797,
+            "nanoseconds": 20000000
+        },
+        "teamLeader": {
+            "StudentName": "SUSHMITHA P",
+            "Section": "C",
+            "Dept": "CSE",
+            "RegisterNo": 312824104164
+        },
+        "mentor": {
+            "department": "CSE",
+            "mentorId": "55",
+            "name": "Mr. SARAVANAN.J",
+            "email": "saravananj.cse@act.edu.in"
+        },
+        "mobile": "8610306640",
+        "teamName": "Neuro sparkers"
+    },
+    {
+        "mobile": "8838083021",
+        "timestamp": {
+            "seconds": 1753956361,
+            "nanoseconds": 415000000
+        },
+        "mentor": {
+            "department": "CME",
+            "mentorId": "39",
+            "name": "Ms. MONICA SILVENAS.A",
+            "email": "monicasilvenas.cme@act.edu.in"
+        },
+        "students": [
+            {
+                "Section": "A",
+                "StudentName": "NAVEEN SELVA K",
+                "RegisterNo": 312824203014,
+                "Dept": "CME"
+            },
+            {
+                "RegisterNo": 312824203018,
+                "Section": "A",
+                "Dept": "CME",
+                "StudentName": "PRATHEEP KUMAR R"
+            },
+            {
+                "Section": "A",
+                "StudentName": "REKHA K",
+                "Dept": "CME",
+                "RegisterNo": 312824203020
+            },
+            {
+                "RegisterNo": 312824203023,
+                "Dept": "CME",
+                "Section": "A",
+                "StudentName": "SRIJITH KRISHNAN S R"
+            }
+        ],
+        "email": "24cme13@act.edu.in",
+        "teamLeader": {
+            "Section": "A",
+            "RegisterNo": 312824203012,
+            "Dept": "CME",
+            "StudentName": "MONISHA M"
+        },
+        "teamName": "CHEM BELIEVERS"
+    },
+    {
+        "teamName": "5bit innov8ors ",
+        "mentor": {
+            "name": "Mrs. CHANDRAKUMARI.K",
+            "department": "CSE",
+            "email": "chandrakumari.cse@act.edu.in",
+            "mentorId": "57"
+        },
+        "timestamp": {
+            "seconds": 1753517844,
+            "nanoseconds": 764000000
+        },
+        "students": [
+            {
+                "Section": "B",
+                "StudentName": "KANISHKA SRI D",
+                "Dept": "CSE",
+                "RegisterNo": 312824104066
+            },
+            {
+                "Section": "B",
+                "RegisterNo": 312824104097,
+                "StudentName": "MONALISA MUDULI N",
+                "Dept": "CSE"
+            },
+            {
+                "RegisterNo": 312824104100,
+                "Dept": "CSE",
+                "StudentName": "MRIDHINI A",
+                "Section": "B"
+            },
+            {
+                "StudentName": "PRATHIBHA P",
+                "Dept": "CSE",
+                "RegisterNo": 312824104117,
+                "Section": "B"
+            }
+        ],
+        "teamLeader": {
+            "RegisterNo": 312824104094,
+            "StudentName": "MANJUSHRI R",
+            "Dept": "CSE",
+            "Section": "B"
+        },
+        "mobile": "7305446245",
+        "email": "24cse093@act.edu.in"
+    },
+    {
+        "mobile": "9940376378",
+        "teamLeader": {
+            "Dept": "BME",
+            "Section": "A",
+            "StudentName": "NETHRA A",
+            "RegisterNo": 312824121032
+        },
+        "email": "24bme32@act.edu.in",
+        "mentor": {
+            "email": "srimathi13052001@gmail.com",
+            "mentorId": "20",
+            "name": "Ms. SRIMATHI H",
+            "department": "BME"
+        },
+        "teamName": "Dream weaver",
+        "timestamp": {
+            "seconds": 1753546888,
+            "nanoseconds": 206000000
+        },
+        "students": [
+            {
+                "RegisterNo": 312824121010,
+                "Section": "A",
+                "StudentName": "BAVADHARANI K",
+                "Dept": "BME"
+            },
+            {
+                "StudentName": "EVANGELIN A",
+                "RegisterNo": 312824121019,
+                "Section": "A",
+                "Dept": "BME"
+            },
+            {
+                "Section": "A",
+                "Dept": "BME",
+                "RegisterNo": 312824121038,
+                "StudentName": "SADHANA R"
+            }
+        ]
+    },
+    {
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "AUGUSTINE AMOS A",
+            "RegisterNo": 312824106006,
+            "Dept": "ECE"
+        },
+        "teamName": "PIXEL RIG",
+        "students": [
+            {
+                "Section": "A",
+                "Dept": "ECE",
+                "RegisterNo": 312824106009,
+                "StudentName": "BRITNEY R"
+            },
+            {
+                "Dept": "ECE",
+                "RegisterNo": 312824106036,
+                "Section": "A",
+                "StudentName": "PRIYADARSHINI K"
+            },
+            {
+                "StudentName": "RAGU RAM A",
+                "RegisterNo": 312824106041,
+                "Section": "A",
+                "Dept": "ECE"
+            },
+            {
+                "StudentName": "YASHWANT S L",
+                "Dept": "ECE",
+                "RegisterNo": 312824106062,
+                "Section": "A"
+            }
+        ],
+        "mobile": "9150637259",
+        "mentor": {
+            "department": "ECE",
+            "name": "Dr. RAJESHWARI.J",
+            "email": "rajeswari.ece@act.edu.in",
+            "mentorId": "65"
+        },
+        "timestamp": {
+            "seconds": 1753430686,
+            "nanoseconds": 163000000
+        },
+        "email": "augustineamos1811@gmail.com"
+    },
+    {
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "AADIL AHMED I",
+            "Dept": "IT",
+            "RegisterNo": 312824205001
+        },
+        "mentor": {
+            "department": "IT",
+            "email": "poojasn.it@act.edu.in",
+            "mentorId": "90",
+            "name": "Ms. POOJA.S"
+        },
+        "email": "24it001@act.edu.in",
+        "timestamp": {
+            "seconds": 1753428856,
+            "nanoseconds": 800000000
+        },
+        "students": [
+            {
+                "Section": "A",
+                "StudentName": "HEMANTH RAJENDRA KUMAR",
+                "RegisterNo": 312824205032,
+                "Dept": "IT"
+            },
+            {
+                "RegisterNo": 312824205033,
+                "Dept": "IT",
+                "Section": "A",
+                "StudentName": "HEMNATH L"
+            },
+            {
+                "RegisterNo": 312824205038,
+                "StudentName": "JESVIN J",
+                "Section": "A",
+                "Dept": "IT"
+            },
+            {
+                "Dept": "IT",
+                "Section": "A",
+                "RegisterNo": 312824205044,
+                "StudentName": "KANISH V"
+            }
+        ],
+        "mobile": "9710920573",
+        "teamName": "The Visionaries"
+    },
+    {
+        "mentor": {
+            "mentorId": "2",
+            "name": "Ms. AMALA PREYADARCHANE.J",
+            "email": "amala.aids@act.edu.in",
+            "department": "AIDS"
+        },
+        "students": [
+            {
+                "StudentName": "BHARATH KUMAR C",
+                "Section": "A",
+                "RegisterNo": 312824243008,
+                "Dept": "AIDS"
+            },
+            {
+                "StudentName": "DHANUSH PANDIAN S",
+                "Dept": "AIDS",
+                "RegisterNo": 312824243012,
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824243020,
+                "Dept": "AIDS",
+                "Section": "A",
+                "StudentName": "GOWTHAM BASKAR"
+            },
+            {
+                "Dept": "AIDS",
+                "StudentName": "MITHUL BHARATH M",
+                "RegisterNo": 312824243036,
+                "Section": "A"
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753431106,
+            "nanoseconds": 535000000
+        },
+        "teamName": "THE DEBUGGERS !",
+        "teamLeader": {
+            "StudentName": "EAGALAIVAN M",
+            "Dept": "AIDS",
+            "Section": "A",
+            "RegisterNo": 312824243018
+        },
+        "email": "24aids18@act.edu.in",
+        "mobile": "9345607507"
+    },
+    {
+        "students": [
+            {
+                "Section": "B",
+                "StudentName": "PONNIAMMAL R",
+                "Dept": "IT",
+                "RegisterNo": 312824205070
+            },
+            {
+                "StudentName": "RAMYA D",
+                "Dept": "IT",
+                "RegisterNo": 312824205078,
+                "Section": "B"
+            },
+            {
+                "Section": "B",
+                "Dept": "IT",
+                "RegisterNo": 312824205093,
+                "StudentName": "SANDHIYA E"
+            },
+            {
+                "RegisterNo": 312824205125,
+                "Dept": "IT",
+                "Section": "B",
+                "StudentName": "YUVRAJ GOEL S. N"
+            }
+        ],
+        "teamName": "Spark Of Innovation ",
+        "mobile": "8531970002",
+        "teamLeader": {
+            "Dept": "IT",
+            "RegisterNo": 312824205122,
+            "StudentName": "VINOBA L",
+            "Section": "B"
+        },
+        "timestamp": {
+            "seconds": 1753430993,
+            "nanoseconds": 628000000
+        },
+        "email": "24it123@act.edu.in",
+        "mentor": {
+            "department": "IT",
+            "name": "Ms. POOJA.S",
+            "mentorId": "90",
+            "email": "poojasn.it@act.edu.in"
+        }
+    },
+    {
+        "teamLeader": {
+            "Section": "A",
+            "Dept": "CSE",
+            "RegisterNo": 312824104050,
+            "StudentName": "HEMNATH V"
+        },
+        "email": "24cse049@act.edu.in",
+        "mentor": {
+            "name": "Mr. SULTAN SALEEM.A",
+            "mentorId": "58",
+            "email": "sultansaleem.cse@act.edu.in",
+            "department": "CSE"
+        },
+        "mobile": "8015002093",
+        "students": [
+            {
+                "Section": "A",
+                "StudentName": "AMIRTHA S",
+                "RegisterNo": 312824104008,
+                "Dept": "CSE"
+            },
+            {
+                "RegisterNo": 312824104018,
+                "StudentName": "ASMITHA W P",
+                "Section": "A",
+                "Dept": "CSE"
+            },
+            {
+                "RegisterNo": 312824104029,
+                "StudentName": "DHARSHINI D",
+                "Section": "A",
+                "Dept": "CSE"
+            },
+            {
+                "RegisterNo": 312824104049,
+                "Dept": "CSE",
+                "StudentName": "HEMASRI A",
+                "Section": "A"
+            }
+        ],
+        "teamName": "Tech Tamers",
+        "timestamp": {
+            "seconds": 1753622875,
+            "nanoseconds": 976000000
+        }
+    },
+    {
+        "mobile": "8438557446",
+        "mentor": {
+            "name": "Mrs. Neguja D",
+            "department": "CSE",
+            "mentorId": "59",
+            "email": "neguja.cse@act.edu.in"
+        },
+        "students": [
+            {
+                "RegisterNo": 312824104005,
+                "Dept": "CSE",
+                "Section": "A",
+                "StudentName": "ADHITHYA J"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824104054,
+                "Dept": "CSE",
+                "StudentName": "JAGANATHAN S G"
+            },
+            {
+                "Dept": "CSE",
+                "RegisterNo": 312824104058,
+                "Section": "A",
+                "StudentName": "JAYARAJ P"
+            },
+            {
+                "StudentName": "JOSHUA SAMUEL D",
+                "Section": "A",
+                "RegisterNo": 312824104062,
+                "Dept": "CSE"
+            }
+        ],
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "BUROSE KHAN A",
+            "Dept": "CSE",
+            "RegisterNo": 312824104024
+        },
+        "timestamp": {
+            "seconds": 1753541542,
+            "nanoseconds": 955000000
+        },
+        "email": "24cse023@act.edu.in",
+        "teamName": "Cache crew"
+    },
+    {
+        "students": [
+            {
+                "RegisterNo": 312824104153,
+                "Dept": "CSE",
+                "Section": "C",
+                "StudentName": "SIVA DHARSHINI P"
+            },
+            {
+                "Section": "C",
+                "RegisterNo": 312824104166,
+                "Dept": "CSE",
+                "StudentName": "TARA V"
+            },
+            {
+                "RegisterNo": 312824104174,
+                "StudentName": "VENNILA R",
+                "Dept": "CSE",
+                "Section": "C"
+            },
+            {
+                "Dept": "CSE",
+                "StudentName": "VISHALI P",
+                "Section": "C",
+                "RegisterNo": 312824104183
+            }
+        ],
+        "teamName": "Techspire Team",
+        "timestamp": {
+            "seconds": 1753431587,
+            "nanoseconds": 110000000
+        },
+        "teamLeader": {
+            "Section": "C",
+            "Dept": "CSE",
+            "StudentName": "VIJAYALAKSHMI S",
+            "RegisterNo": 312824104179
+        },
+        "mobile": "7200139765",
+        "mentor": {
+            "mentorId": "60",
+            "name": "Mrs. GODLINA PC",
+            "department": "CSE",
+            "email": "godlina.cse@act.edu.in"
+        },
+        "email": "24cse179@act.edu.in"
+    },
+    {
+        "teamName": "Team Insight Five",
+        "mentor": {
+            "mentorId": "12",
+            "department": "MEC",
+            "name": "Mr. PRASANTH.S",
+            "email": "prasanth.aero@act.edu.in"
+        },
+        "mobile": "6380620516",
+        "timestamp": {
+            "seconds": 1753679000,
+            "nanoseconds": 602000000
+        },
+        "email": "24mech26@act.edu.in",
+        "teamLeader": {
+            "StudentName": "SAM SANTHOSH S",
+            "Section": "A",
+            "RegisterNo": 312824114025,
+            "Dept": "MECH"
+        },
+        "students": [
+            {
+                "Dept": "MECH",
+                "StudentName": "DEVARAJ S",
+                "RegisterNo": 312824114003,
+                "Section": "A"
+            },
+            {
+                "Dept": "MECH",
+                "RegisterNo": 312824114006,
+                "Section": "A",
+                "StudentName": "DHANUSH T"
+            },
+            {
+                "Section": "A",
+                "StudentName": "FRANKLIN T",
+                "RegisterNo": 312824114007,
+                "Dept": "MECH"
+            },
+            {
+                "RegisterNo": 312824114011,
+                "Dept": "MECH",
+                "StudentName": "HARIHARAN R",
+                "Section": "A"
+            }
+        ]
+    },
+    {
+        "teamLeader": {
+            "RegisterNo": 312824243017,
+            "Section": "A",
+            "StudentName": "DURGA DARSHINI K S",
+            "Dept": "AIDS"
+        },
+        "mentor": {
+            "email": "rahul.aids@act.edu.in",
+            "department": "AIDS",
+            "name": "Mr. RAHUL.J",
+            "mentorId": "3"
+        },
+        "mobile": "9940139032",
+        "email": "24aids17@act.edu.in",
+        "timestamp": {
+            "seconds": 1753551967,
+            "nanoseconds": 74000000
+        },
+        "students": [
+            {
+                "Dept": "AIDS",
+                "Section": "A",
+                "StudentName": "ANUPRIYA V",
+                "RegisterNo": 312824243006
+            },
+            {
+                "Dept": "AIDS",
+                "RegisterNo": 312824243039,
+                "StudentName": "NITHISH S",
+                "Section": "A"
+            },
+            {
+                "Section": "A",
+                "StudentName": "NITHYA SRI E",
+                "Dept": "AIDS",
+                "RegisterNo": 312824243040
+            }
+        ],
+        "teamName": "Agni Titans"
+    },
+    {
+        "timestamp": {
+            "seconds": 1753453632,
+            "nanoseconds": 835000000
+        },
+        "mobile": "9363289420",
+        "teamName": "Tech phoenix ",
+        "teamLeader": {
+            "Section": "A",
+            "RegisterNo": 312824106060,
+            "StudentName": "VARSHA K",
+            "Dept": "ECE"
+        },
+        "students": [
+            {
+                "Dept": "ECE",
+                "RegisterNo": 312824106004,
+                "StudentName": "ARUNESHWARAN G",
+                "Section": "A"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824106011,
+                "Dept": "ECE",
+                "StudentName": "CHRISTINA D"
+            },
+            {
+                "Dept": "ECE",
+                "RegisterNo": 312824106012,
+                "StudentName": "DEEPAK G",
+                "Section": "A"
+            },
+            {
+                "Section": "A",
+                "StudentName": "SOWNDHARRAJAN M",
+                "RegisterNo": 312824106051,
+                "Dept": "ECE"
+            }
+        ],
+        "email": "24ece61@act.edu.in",
+        "mentor": {
+            "email": "elaiyarani.ece@act.edu.in",
+            "mentorId": "66",
+            "name": "Ms. ELAYARANI.K",
+            "department": "ECE"
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753695437,
+            "nanoseconds": 469000000
+        },
+        "email": "24bme33@act.edu.in",
+        "students": [
+            {
+                "StudentName": "ARUNACHALAM K",
+                "Dept": "BME",
+                "RegisterNo": 312824121003,
+                "Section": "A"
+            },
+            {
+                "Section": "A",
+                "StudentName": "BASKAR M",
+                "RegisterNo": 312824121009,
+                "Dept": "BME"
+            },
+            {
+                "Section": "A",
+                "StudentName": "SRISAIRAM K",
+                "Dept": "BME",
+                "RegisterNo": 312824121045
+            }
+        ],
+        "teamName": "Raayan parambarai",
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "NITHISH K",
+            "RegisterNo": 312824121033,
+            "Dept": "BME"
+        },
+        "mobile": "8248922411",
+        "mentor": {
+            "email": "jinijacob001@gmail.com",
+            "department": "BME",
+            "mentorId": "21",
+            "name": "Mrs. JINI JACOB Y"
+        }
+    },
+    {
+        "teamName": "Alpha Minds",
+        "mentor": {
+            "mentorId": "88",
+            "email": "kamatchisaranya.it@act.edu.in",
+            "department": "IT",
+            "name": "Mrs. KAMATCHI SARANYA.M"
+        },
+        "teamLeader": {
+            "RegisterNo": 312824205121,
+            "StudentName": "VIJAYALAKSHMY P",
+            "Section": "B",
+            "Dept": "IT"
+        },
+        "students": [
+            {
+                "RegisterNo": 312824205064,
+                "Section": "B",
+                "Dept": "IT",
+                "StudentName": "NARASIMAN S"
+            },
+            {
+                "Dept": "IT",
+                "Section": "B",
+                "RegisterNo": 312824205067,
+                "StudentName": "NEVIYA G"
+            },
+            {
+                "Dept": "IT",
+                "RegisterNo": 312824205075,
+                "Section": "B",
+                "StudentName": "PRIYAN V"
+            },
+            {
+                "Dept": "IT",
+                "StudentName": "RUDHRAN S",
+                "Section": "B",
+                "RegisterNo": 312824205084
+            }
+        ],
+        "email": "24it122@act.edu.in",
+        "timestamp": {
+            "seconds": 1753429972,
+            "nanoseconds": 324000000
+        },
+        "mobile": "6369741154"
+    },
+    {
+        "students": [
+            {
+                "Dept": "IT",
+                "Section": "A",
+                "StudentName": "ARAVIND V",
+                "RegisterNo": 312824205009
+            },
+            {
+                "StudentName": "KARTHIK RAJ A",
+                "Section": "A",
+                "Dept": "IT",
+                "RegisterNo": 312824205045
+            },
+            {
+                "Dept": "IT",
+                "StudentName": "MAHESWARAN A",
+                "Section": "A",
+                "RegisterNo": 312824205056
+            },
+            {
+                "Dept": "IT",
+                "RegisterNo": 312824205062,
+                "Section": "A",
+                "StudentName": "NABEES AHAMED S"
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753954194,
+            "nanoseconds": 124000000
+        },
+        "mobile": "9025711353",
+        "email": "24it044@act.edu.in",
+        "mentor": {
+            "email": "vaheethabanu.it@act.edu.in",
+            "mentorId": "94",
+            "name": "Mrs. VAHEETHU BANU S",
+            "department": "IT"
+        },
+        "teamLeader": {
+            "RegisterNo": 312824205023,
+            "Dept": "IT",
+            "StudentName": "DIWAKAR M",
+            "Section": "A"
+        },
+        "teamName": "Batch 07 act"
+    },
+    {
+        "teamName": "Nextgen innovators",
+        "email": "24aids19@act.edu.in",
+        "timestamp": {
+            "seconds": 1753451930,
+            "nanoseconds": 377000000
+        },
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "GIRIDHARAN K",
+            "RegisterNo": 312824243019,
+            "Dept": "AIDS"
+        },
+        "students": [
+            {
+                "StudentName": "PRADEEP M",
+                "Section": "A",
+                "RegisterNo": "312824243041",
+                "Dept": "AIDS"
+            },
+            {
+                "StudentName": "SHARAN R",
+                "Dept": "AIDS",
+                "Section": "A",
+                "RegisterNo": 312824243052
+            },
+            {
+                "StudentName": "SOORAJ R",
+                "Section": "A",
+                "RegisterNo": 312824243054,
+                "Dept": "AIDS"
+            },
+            {
+                "Section": "A",
+                "StudentName": "SUNIL KUMAR S",
+                "RegisterNo": 312824243059,
+                "Dept": "AIDS"
+            }
+        ],
+        "mobile": "7397296351",
+        "mentor": {
+            "mentorId": "6",
+            "name": "Ms. RUPAVATHY.R",
+            "department": "AIDS",
+            "email": "rupavathy.aids@act.edu.in"
+        }
+    },
+    {
+        "teamLeader": {
+            "Dept": "CVL",
+            "Section": "A",
+            "RegisterNo": 312824103019,
+            "StudentName": "RESHMA G"
+        },
+        "timestamp": {
+            "seconds": 1753594581,
+            "nanoseconds": 617000000
+        },
+        "students": [
+            {
+                "Dept": "CVL",
+                "RegisterNo": 312824103001,
+                "StudentName": "AKSHAYA S K",
+                "Section": "A"
+            },
+            {
+                "Section": "A",
+                "Dept": "CVL",
+                "RegisterNo": 312824103018,
+                "StudentName": "RAJARAJESHWARI M"
+            },
+            {
+                "RegisterNo": 312824103021,
+                "Dept": "CVL",
+                "Section": "A",
+                "StudentName": "SUBHASREE R"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824103022,
+                "StudentName": "SUJITHA R",
+                "Dept": "CVL"
+            }
+        ],
+        "mobile": "7812885293",
+        "teamName": "THE SURVEY SQUAD",
+        "mentor": {
+            "mentorId": "27",
+            "email": "venkateswaran.cvl@act.edu.in",
+            "name": "Mr. VENKATESWARAN.S",
+            "department": "CIVIL"
+        },
+        "email": "24cvl19@act.edu.in"
+    },
+    {
+        "email": "24ece39@act.edu.in",
+        "mobile": "7305575389",
+        "mentor": {
+            "name": "Mrs. PIRIYADHARSHINI.S",
+            "department": "ECE",
+            "email": "spriyadharshini.ece@act.edu.in",
+            "mentorId": "69"
+        },
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "PRIYADHARSHINI H",
+            "RegisterNo": 312824106038,
+            "Dept": "ECE"
+        },
+        "teamName": "InnoMinds",
+        "timestamp": {
+            "seconds": 1753432697,
+            "nanoseconds": 400000000
+        },
+        "students": [
+            {
+                "Dept": "ECE",
+                "Section": "A",
+                "RegisterNo": 312824106027,
+                "StudentName": "MAHIVARSHINI K S"
+            },
+            {
+                "RegisterNo": 312824106042,
+                "Dept": "ECE",
+                "Section": "A",
+                "StudentName": "RIKASH H"
+            },
+            {
+                "StudentName": "SAINATHAN R",
+                "Dept": "ECE",
+                "Section": "A",
+                "RegisterNo": 312824106045
+            },
+            {
+                "Section": "A",
+                "Dept": "ECE",
+                "RegisterNo": 312824106058,
+                "StudentName": "THIRUSELVAN L"
+            }
+        ]
+    },
+    {
+        "mobile": "6374633800",
+        "email": "24cse187@act.edu.in",
+        "students": [
+            {
+                "StudentName": "ROHAN S",
+                "Dept": "CSE",
+                "RegisterNo": 312824104130,
+                "Section": "C"
+            },
+            {
+                "Dept": "CSE",
+                "Section": "C",
+                "StudentName": "RUBENTHAR R",
+                "RegisterNo": 312824104133
+            },
+            {
+                "RegisterNo": 312824104144,
+                "StudentName": "SANTHOSH KUMAR R",
+                "Dept": "CSE",
+                "Section": "C"
+            },
+            {
+                "Section": "C",
+                "RegisterNo": 312824104150,
+                "StudentName": "SHANMUGAPRIYAN M A",
+                "Dept": "CSE"
+            }
+        ],
+        "mentor": {
+            "name": "Ms. REVATHI.K",
+            "mentorId": "5",
+            "email": "krevathi.aids@act.edu.in",
+            "department": "AIDS"
+        },
+        "timestamp": {
+            "seconds": 1753431403,
+            "nanoseconds": 642000000
+        },
+        "teamLeader": {
+            "StudentName": "YUGAN RAJ J",
+            "Dept": "CSE",
+            "Section": "C",
+            "RegisterNo": 312824104187
+        },
+        "teamName": "Team phoenix"
+    },
+    {
+        "teamName": "RAVEN",
+        "timestamp": {
+            "seconds": 1753451553,
+            "nanoseconds": 592000000
+        },
+        "mobile": "7806993897",
+        "mentor": {
+            "department": "AIDS",
+            "name": "Ms. VISHALI.K",
+            "mentorId": "8",
+            "email": "vishali.aids@act.edu.in"
+        },
+        "students": [
+            {
+                "RegisterNo": 312824104103,
+                "Dept": "CSE",
+                "Section": "B",
+                "StudentName": "NAGULAN S"
+            },
+            {
+                "Section": "B",
+                "RegisterNo": 312824205089,
+                "Dept": "IT",
+                "StudentName": "SAI GANESH S"
+            },
+            {
+                "RegisterNo": 312824243022,
+                "StudentName": "HEMADHARSHINI A",
+                "Section": "A",
+                "Dept": "AIDS"
+            },
+            {
+                "StudentName": "PRAVEENA R",
+                "RegisterNo": 312824243043,
+                "Dept": "AIDS",
+                "Section": "A"
+            }
+        ],
+        "teamLeader": {
+            "Section": "A",
+            "Dept": "AIDS",
+            "RegisterNo": 312824243021,
+            "StudentName": "GURU SARAN G"
+        },
+        "email": "24aids21@act.edu.in"
+    },
+    {
+        "mentor": {
+            "mentorId": "92",
+            "name": "Mr. RAGHURAMAN.V",
+            "email": "raghuraman.it@act.edu.in",
+            "department": "IT"
+        },
+        "mobile": "7558149302",
+        "email": "24it013@act.edu.in",
+        "timestamp": {
+            "seconds": 1753953671,
+            "nanoseconds": 97000000
+        },
+        "teamLeader": {
+            "Dept": "IT",
+            "StudentName": "BHARATH P",
+            "RegisterNo": 312824205014,
+            "Section": "A"
+        },
+        "teamName": "THE WEB RAVEN",
+        "students": [
+            {
+                "Section": "A",
+                "RegisterNo": 312824205016,
+                "Dept": "IT",
+                "StudentName": "DEEPAK ROSHAN M"
+            },
+            {
+                "RegisterNo": 312824205054,
+                "Section": "A",
+                "StudentName": "MADESH M",
+                "Dept": "IT"
+            },
+            {
+                "RegisterNo": "05",
+                "Dept": "LE - IT",
+                "Section": "-",
+                "StudentName": "VETRISELVAN V"
+            },
+            {
+                "RegisterNo": "06",
+                "StudentName": "SHIVALINGESH T",
+                "Dept": "LE - IT",
+                "Section": "-"
+            }
+        ]
+    },
+    {
+        "students": [
+            {
+                "RegisterNo": 312824104143,
+                "StudentName": "SANJAY V",
+                "Section": "C",
+                "Dept": "CSE"
+            },
+            {
+                "RegisterNo": 312824104168,
+                "StudentName": "THARUN G",
+                "Dept": "CSE",
+                "Section": "C"
+            },
+            {
+                "Section": "C",
+                "Dept": "CSE",
+                "RegisterNo": 312824104186,
+                "StudentName": "WILLIAM DAVID K"
+            },
+            {
+                "RegisterNo": 312824104188,
+                "StudentName": "YUVARAJ V",
+                "Dept": "CSE",
+                "Section": "C"
+            }
+        ],
+        "mobile": "7305212737",
+        "teamName": "Team Batman",
+        "mentor": {
+            "name": "Ms. UMA DEVI.G",
+            "mentorId": "41",
+            "department": "CSE",
+            "email": "umadevi.cse@act.edu.in"
+        },
+        "timestamp": {
+            "seconds": 1753438129,
+            "nanoseconds": 140000000
+        },
+        "teamLeader": {
+            "Dept": "CSE",
+            "RegisterNo": 312824104184,
+            "StudentName": "VISHNU PRAKASH C",
+            "Section": "C"
+        },
+        "email": "24cse184@act.edu.in"
+    },
+    {
+        "mentor": {
+            "department": "IT",
+            "name": "Mrs. KAMATCHI SARANYA.M",
+            "mentorId": "88",
+            "email": "kamatchisaranya.it@act.edu.in"
+        },
+        "teamName": "FIT-Z",
+        "email": "24it051@act.edu.in",
+        "timestamp": {
+            "seconds": 1753429325,
+            "nanoseconds": 89000000
+        },
+        "students": [
+            {
+                "StudentName": "ABINESH S",
+                "Section": "A",
+                "Dept": "IT",
+                "RegisterNo": 312824205004
+            },
+            {
+                "RegisterNo": 312824205007,
+                "Section": "A",
+                "Dept": "IT",
+                "StudentName": "ANBU SELVAN G"
+            },
+            {
+                "Dept": "IT",
+                "RegisterNo": 312824205019,
+                "Section": "A",
+                "StudentName": "DHAMODHARAN K"
+            },
+            {
+                "RegisterNo": 312824243027,
+                "StudentName": "KANHA MUDULI N",
+                "Dept": "AIDS",
+                "Section": "A"
+            }
+        ],
+        "mobile": "8778187330",
+        "teamLeader": {
+            "StudentName": "KREITHEESHWARAN M P",
+            "Dept": "IT",
+            "RegisterNo": 312824205051,
+            "Section": "A"
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753680532,
+            "nanoseconds": 425000000
+        },
+        "email": "24mht31@act.edu.in",
+        "teamName": "MHT_SLAYERS",
+        "mobile": "7010556191",
+        "teamLeader": {
+            "StudentName": "LAKSHANADEVI B",
+            "RegisterNo": 312824115031,
+            "Dept": "MHT",
+            "Section": "A"
+        },
+        "students": [
+            {
+                "Section": "A",
+                "RegisterNo": 312824115012,
+                "Dept": "MHT",
+                "StudentName": "BALA ARAVIND M"
+            },
+            {
+                "RegisterNo": 312824115017,
+                "StudentName": "DEEPA S",
+                "Section": "A",
+                "Dept": "MHT"
+            },
+            {
+                "RegisterNo": 312824115026,
+                "Section": "A",
+                "Dept": "MHT",
+                "StudentName": "IMMANUEL D C"
+            },
+            {
+                "RegisterNo": 312824115043,
+                "Section": "A",
+                "Dept": "MHT",
+                "StudentName": "SAIHAAN AHMED M P"
+            }
+        ],
+        "mentor": {
+            "department": "MHT",
+            "mentorId": "107",
+            "email": "mechtrohod@act.edu.in",
+            "name": "Dr. PANDIYARAJAN.R"
+        }
+    },
+    {
+        "students": [
+            {
+                "RegisterNo": 312824121030,
+                "Dept": "BME",
+                "Section": "A",
+                "StudentName": "MANIKANDAN V"
+            },
+            {
+                "Section": "A",
+                "StudentName": "SHARVESH R",
+                "Dept": "BME",
+                "RegisterNo": 312824121043
+            },
+            {
+                "Section": "A",
+                "Dept": "BME",
+                "RegisterNo": 312824121056,
+                "StudentName": "VELMURUGAN M"
+            },
+            {
+                "Dept": "BME",
+                "RegisterNo": 312824121060,
+                "StudentName": "YOGALAKSHMI K P",
+                "Section": "A"
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753450509,
+            "nanoseconds": 811000000
+        },
+        "mentor": {
+            "email": "sureshkapali.bme@act.edu.in",
+            "department": "BME",
+            "mentorId": "22",
+            "name": "Dr. SURESH CHANDER KAPALI B"
+        },
+        "mobile": "8220722521",
+        "teamName": "PYROMATICS ",
+        "teamLeader": {
+            "RegisterNo": 312824121044,
+            "StudentName": "SHERIN GRITTO C M",
+            "Section": "A",
+            "Dept": "BME"
+        },
+        "email": "24bme44@act.edu.in"
+    },
+    {
+        "teamName": "TECHNO GEN-Z",
+        "students": [
+            {
+                "Dept": "ECE",
+                "RegisterNo": 312824106018,
+                "Section": "A",
+                "StudentName": "HARISH KUMAR G"
+            },
+            {
+                "Section": "A",
+                "Dept": "ECE",
+                "RegisterNo": 312824106025,
+                "StudentName": "LOKESHWARAN R"
+            },
+            {
+                "Section": "A",
+                "StudentName": "NANCY M",
+                "Dept": "ECE",
+                "RegisterNo": 312824106030
+            },
+            {
+                "Dept": "ECE",
+                "Section": "A",
+                "RegisterNo": 312824106044,
+                "StudentName": "SADHANA SREE V T"
+            }
+        ],
+        "mobile": "7010045168",
+        "timestamp": {
+            "seconds": 1753442057,
+            "nanoseconds": 508000000
+        },
+        "email": "kkeerthigasri73@gmail.com",
+        "mentor": {
+            "email": "kavipriya.ece@act.edu.in",
+            "department": "ECE",
+            "mentorId": "71",
+            "name": "Mrs. KAVIPRIYA.R"
+        },
+        "teamLeader": {
+            "StudentName": "KEERTHIGA SRI K",
+            "Dept": "ECE",
+            "RegisterNo": 312824106024,
+            "Section": "A"
+        }
+    },
+    {
+        "students": [
+            {
+                "Section": "A",
+                "StudentName": "ABISHIEK J",
+                "Dept": "MHT",
+                "RegisterNo": 312824115006
+            },
+            {
+                "RegisterNo": 312824115008,
+                "StudentName": "ARUN M",
+                "Section": "A",
+                "Dept": "MHT"
+            },
+            {
+                "RegisterNo": 312824115010,
+                "Dept": "MHT",
+                "Section": "A",
+                "StudentName": "ASHWIN KUMAR V"
+            },
+            {
+                "Section": "A",
+                "Dept": "MHT",
+                "RegisterNo": 312824115050,
+                "StudentName": "SHATHES K"
+            }
+        ],
+        "email": "24mht50@act.edu.in",
+        "mentor": {
+            "department": "MHT",
+            "email": "karthikeyan.mht@act.edu.in",
+            "mentorId": "110",
+            "name": "Mr. KARTHIKEYAN.S"
+        },
+        "timestamp": {
+            "seconds": 1754023186,
+            "nanoseconds": 238000000
+        },
+        "teamName": "TechThinkerers",
+        "mobile": "8754536710",
+        "teamLeader": {
+            "StudentName": "SHANMUGAKUMARAN T",
+            "RegisterNo": 312824115049,
+            "Dept": "MHT",
+            "Section": "A"
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753430100,
+            "nanoseconds": 275000000
+        },
+        "teamLeader": {
+            "RegisterNo": 312824205052,
+            "Dept": "IT",
+            "Section": "A",
+            "StudentName": "LAVANYA S"
+        },
+        "mentor": {
+            "name": "Mrs. ELAVARASI.R",
+            "email": "elavarasir.it@act.edu.in",
+            "department": "IT",
+            "mentorId": "89"
+        },
+        "students": [
+            {
+                "Dept": "IT",
+                "RegisterNo": 312824205017,
+                "Section": "A",
+                "StudentName": "DEEPIKA B R"
+            },
+            {
+                "Dept": "IT",
+                "Section": "A",
+                "StudentName": "DHANA LAKSHMI K",
+                "RegisterNo": 312824205020
+            },
+            {
+                "StudentName": "MEKALA A",
+                "Dept": "IT",
+                "Section": "A",
+                "RegisterNo": 312824205058
+            },
+            {
+                "Dept": "IT",
+                "RegisterNo": 312824205060,
+                "StudentName": "MONDRU CHANDHINI",
+                "Section": "A"
+            }
+        ],
+        "mobile": "8838166185",
+        "email": "24it052@act.edu.in",
+        "teamName": "Idea Hackers"
+    },
+    {
+        "mentor": {
+            "name": "Mrs. PANDISELVI.G",
+            "email": "pandiselvi.aids@act.edu.in",
+            "department": "AIDS",
+            "mentorId": "9"
+        },
+        "students": [
+            {
+                "Section": "A",
+                "Dept": "AIDS",
+                "StudentName": "MOHAMMED SHAMEER J",
+                "RegisterNo": 312824243037
+            },
+            {
+                "Dept": "AIDS",
+                "RegisterNo": 312824243049,
+                "StudentName": "SARVESH G",
+                "Section": "A"
+            },
+            {
+                "Dept": "AIDS",
+                "RegisterNo": 312824243050,
+                "Section": "A",
+                "StudentName": "SATHISH M"
+            },
+            {
+                "Dept": "AIDS",
+                "StudentName": "SRIRAM J",
+                "Section": "A",
+                "RegisterNo": 312824243056
+            }
+        ],
+        "teamLeader": {
+            "Section": "A",
+            "RegisterNo": 312824243038,
+            "Dept": "AIDS",
+            "StudentName": "MUHAMMED IRFAN M"
+        },
+        "teamName": "Crimson clads",
+        "email": "24aids38@act.edu.in",
+        "timestamp": {
+            "seconds": 1753431671,
+            "nanoseconds": 713000000
+        },
+        "mobile": "9043502324"
+    },
+    {
+        "email": "24mech16@act.edu.in",
+        "mobile": "8124424607",
+        "timestamp": {
+            "seconds": 1753679373,
+            "nanoseconds": 429000000
+        },
+        "mentor": {
+            "name": "Dr. DHANASAKKARAVARTHI.B",
+            "email": "dhanasakkaravarthi.mec@act.edu.in",
+            "department": "MEC",
+            "mentorId": "105"
+        },
+        "students": [
+            {
+                "RegisterNo": 312824114001,
+                "Section": "A",
+                "Dept": "MECH",
+                "StudentName": "ADHITHYAN S"
+            },
+            {
+                "RegisterNo": 312824114010,
+                "StudentName": "HARIDASS K",
+                "Dept": "MECH",
+                "Section": "A"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824114017,
+                "Dept": "MECH",
+                "StudentName": "LOKESHWARAN B"
+            },
+            {
+                "StudentName": "THARUNKUMAR S",
+                "Dept": "MECH",
+                "RegisterNo": 312824114029,
+                "Section": "A"
+            }
+        ],
+        "teamName": "Mech Titanes",
+        "teamLeader": {
+            "Dept": "MECH",
+            "Section": "A",
+            "StudentName": "LOKESH R",
+            "RegisterNo": 312824114015
+        }
+    },
+    {
+        "teamLeader": {
+            "StudentName": "PRAJVAN KUMAR R",
+            "Section": "A",
+            "RegisterNo": 312824203017,
+            "Dept": "CME"
+        },
+        "email": "24cme18@act.edu.in",
+        "mentor": {
+            "name": "Dr. KADAMBANATHAN.K",
+            "email": "kadambanathank.cme@act.edu.in",
+            "mentorId": "33",
+            "department": "CME"
+        },
+        "timestamp": {
+            "seconds": 1753432447,
+            "nanoseconds": 88000000
+        },
+        "students": [
+            {
+                "RegisterNo": 312824203010,
+                "Dept": "CME",
+                "StudentName": "MOHAMMED ASRAF S",
+                "Section": "A"
+            },
+            {
+                "StudentName": "VIGNESH M",
+                "Dept": "CME",
+                "Section": "A",
+                "RegisterNo": 312824203026
+            },
+            {
+                "RegisterNo": 312824203027,
+                "Dept": "CME",
+                "StudentName": "VIGNESH S",
+                "Section": "A"
+            }
+        ],
+        "teamName": "Innovative warriors ",
+        "mobile": "7305869946"
+    },
+    {
+        "mentor": {
+            "email": "prinslinl.cse@act.edu.in",
+            "mentorId": "42",
+            "name": "Ms. PRINSLIN.L",
+            "department": "CSE"
+        },
+        "teamName": "Stacker's ",
+        "teamLeader": {
+            "Section": "C",
+            "Dept": "CSE",
+            "RegisterNo": 312824104139,
+            "StudentName": "SAMIKSHA SRI A"
+        },
+        "students": [
+            {
+                "Section": "C",
+                "StudentName": "ROSHAN PARVEEN S",
+                "RegisterNo": 312824104131,
+                "Dept": "CSE"
+            },
+            {
+                "RegisterNo": 312824104156,
+                "StudentName": "SRI DHARSHINI A",
+                "Section": "C",
+                "Dept": "CSE"
+            },
+            {
+                "Section": "C",
+                "StudentName": "SUBASRI R",
+                "Dept": "CSE",
+                "RegisterNo": 312824104159
+            }
+        ],
+        "email": "24cse139@act.edu.in",
+        "timestamp": {
+            "seconds": 1753434836,
+            "nanoseconds": 557000000
+        },
+        "mobile": "7094010501"
+    },
+    {
+        "mobile": "7358181985",
+        "email": "24mht34@act.edu.in",
+        "mentor": {
+            "email": "srinivasan.mec@act.edu.in",
+            "name": "Mr. SRINIVASAN.T",
+            "department": "MHT",
+            "mentorId": "108"
+        },
+        "timestamp": {
+            "seconds": 1753681013,
+            "nanoseconds": 754000000
+        },
+        "teamName": "MHT_Technies",
+        "students": [
+            {
+                "RegisterNo": 312824115021,
+                "Section": "A",
+                "Dept": "MHT",
+                "StudentName": "GOKULNATH M"
+            },
+            {
+                "RegisterNo": 312824115025,
+                "Dept": "MHT",
+                "Section": "A",
+                "StudentName": "HARISH S"
+            },
+            {
+                "Section": "A",
+                "Dept": "MHT",
+                "StudentName": "VIGNESHWARAN SHANKAR",
+                "RegisterNo": 312824115054
+            },
+            {
+                "Dept": "MHT",
+                "StudentName": "VIKASH I",
+                "Section": "A",
+                "RegisterNo": 312824115055
+            }
+        ],
+        "teamLeader": {
+            "RegisterNo": 312824115032,
+            "Dept": "MHT",
+            "StudentName": "LOKESH S",
+            "Section": "A"
+        }
+    },
+    {
+        "mentor": {
+            "email": "nklgayathri.14@gmail.com",
+            "mentorId": "10",
+            "department": "AIDS",
+            "name": "Mrs. GAYATHRI.S"
+        },
+        "email": "24aids63@act.edu.in",
+        "students": [
+            {
+                "StudentName": "JOSHEETHA M S",
+                "Dept": "AIDS",
+                "RegisterNo": 312824243025,
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824243026,
+                "Dept": "AIDS",
+                "StudentName": "KALAIARASI V S",
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824243060,
+                "Section": "A",
+                "Dept": "AIDS",
+                "StudentName": "SWARNALATHA R"
+            }
+        ],
+        "mobile": "8148630412",
+        "teamName": "SKY Developers",
+        "teamLeader": {
+            "Dept": "AIDS",
+            "RegisterNo": 312824243063,
+            "Section": "A",
+            "StudentName": "YOGALAKSHMI S"
+        },
+        "timestamp": {
+            "seconds": 1753591438,
+            "nanoseconds": 679000000
+        }
+    },
+    {
+        "mentor": {
+            "mentorId": "43",
+            "department": "CSE",
+            "email": "sujatha.cse@act.edu.in",
+            "name": "Ms. SUJATHA.M.P"
+        },
+        "teamLeader": {
+            "RegisterNo": 312824104034,
+            "StudentName": "DHINAKARAN R",
+            "Dept": "CSE",
+            "Section": "A"
+        },
+        "teamName": "B2W SQUAD",
+        "timestamp": {
+            "seconds": 1753543635,
+            "nanoseconds": 750000000
+        },
+        "students": [
+            {
+                "RegisterNo": 312824104022,
+                "Dept": "CSE",
+                "StudentName": "BHARATHI PRIYAN V",
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824104031,
+                "StudentName": "DHARUNSIVA N",
+                "Section": "A",
+                "Dept": "CSE"
+            },
+            {
+                "RegisterNo": 312824104045,
+                "Dept": "CSE",
+                "Section": "A",
+                "StudentName": "HARISH S"
+            },
+            {
+                "Section": "A",
+                "Dept": "CSE",
+                "RegisterNo": 312824104057,
+                "StudentName": "JAYAKANTHAN M"
+            }
+        ],
+        "email": "24cse033@act.edu.in",
+        "mobile": "6381370921"
+    },
+    {
+        "email": "24cse047@act.edu.in",
+        "mobile": "9840326003",
+        "mentor": {
+            "mentorId": "46",
+            "name": "Mr. KANNAN.R",
+            "email": "kannan.cse@act.edu.in",
+            "department": "CSE"
+        },
+        "teamName": "Infinite developers",
+        "timestamp": {
+            "seconds": 1753631766,
+            "nanoseconds": 543000000
+        },
+        "students": [
+            {
+                "Dept": "CSE",
+                "RegisterNo": 312824104019,
+                "Section": "A",
+                "StudentName": "AYESHA M"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824104028,
+                "Dept": "CSE",
+                "StudentName": "DHANASRI S"
+            },
+            {
+                "Section": "A",
+                "Dept": "CSE",
+                "StudentName": "JANANI M",
+                "RegisterNo": 312824104055
+            },
+            {
+                "Section": "A",
+                "Dept": "CSE",
+                "StudentName": "KALPANA S",
+                "RegisterNo": 312824104064
+            }
+        ],
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "HEMA MALINI M",
+            "RegisterNo": 312824104048,
+            "Dept": "CSE"
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753969518,
+            "nanoseconds": 982000000
+        },
+        "email": "24bme14@act.edu.in",
+        "teamLeader": {
+            "Dept": "BME",
+            "RegisterNo": 312824121014,
+            "StudentName": "DHARANI PRIYA S",
+            "Section": "A"
+        },
+        "students": [
+            {
+                "Section": "A",
+                "StudentName": "DHARSHA D",
+                "RegisterNo": 312824121015,
+                "Dept": "BME"
+            },
+            {
+                "RegisterNo": 312824121022,
+                "Section": "A",
+                "StudentName": "GEETHA SHREE K V",
+                "Dept": "BME"
+            },
+            {
+                "RegisterNo": 312824121050,
+                "Section": "A",
+                "StudentName": "THAMIZHARUVI R",
+                "Dept": "BME"
+            },
+            {
+                "RegisterNo": 312824121063,
+                "Dept": "BME",
+                "StudentName": "YUVASRI K",
+                "Section": "A"
+            }
+        ],
+        "teamName": "The Med Engineers",
+        "mobile": "8056372596",
+        "mentor": {
+            "name": "Ms. DIVYA.Y",
+            "mentorId": "23",
+            "email": "divya.bme@act.edu.in",
+            "department": "BME"
+        }
+    },
+    {
+        "mobile": "9043273016",
+        "teamLeader": {
+            "RegisterNo": 312824115036,
+            "Section": "A",
+            "StudentName": "NICKSON A",
+            "Dept": "MHT"
+        },
+        "students": [
+            {
+                "Dept": "MHT",
+                "Section": "A",
+                "RegisterNo": 312824115020,
+                "StudentName": "FAROOK SALIHAN S M Y"
+            },
+            {
+                "StudentName": "GURU PRASATH G",
+                "Dept": "MHT",
+                "Section": "A",
+                "RegisterNo": 312824115023
+            },
+            {
+                "Section": "A",
+                "StudentName": "RITHISH G",
+                "RegisterNo": 312824115041,
+                "Dept": "MHT"
+            },
+            {
+                "RegisterNo": 312824115045,
+                "Section": "A",
+                "StudentName": "SANTHOSH P",
+                "Dept": "MHT"
+            }
+        ],
+        "email": "24mht36@act.edu.in",
+        "teamName": "MHT_rangers",
+        "mentor": {
+            "email": "arivazhagan.mht@act.edu.in",
+            "department": "MHT",
+            "name": "Mr. ARIVAZHAGAN.R",
+            "mentorId": "109"
+        },
+        "timestamp": {
+            "seconds": 1753681711,
+            "nanoseconds": 684000000
+        }
+    },
+    {
+        "email": "24ece21@act.edu.in",
+        "mobile": "7538823604",
+        "timestamp": {
+            "seconds": 1753431997,
+            "nanoseconds": 198000000
+        },
+        "students": [
+            {
+                "Section": "A",
+                "RegisterNo": 312824106007,
+                "StudentName": "BASKARAN P",
+                "Dept": "ECE"
+            },
+            {
+                "StudentName": "BHAVANA M",
+                "Section": "A",
+                "RegisterNo": 312824106008,
+                "Dept": "ECE"
+            },
+            {
+                "StudentName": "MANISHA M P",
+                "RegisterNo": 312824106028,
+                "Dept": "ECE",
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824106049,
+                "Dept": "ECE",
+                "StudentName": "SIREESH G",
+                "Section": "A"
+            }
+        ],
+        "mentor": {
+            "department": "ECE",
+            "name": "Mrs. PIRIYADHARSHINI.S",
+            "mentorId": "69",
+            "email": "spriyadharshini.ece@act.edu.in"
+        },
+        "teamLeader": {
+            "RegisterNo": 312824106021,
+            "StudentName": "KAARTHIC M",
+            "Section": "A",
+            "Dept": "ECE"
+        },
+        "teamName": "INVENTRONIX"
+    },
+    {
+        "students": [
+            {
+                "Section": "A",
+                "StudentName": "GANESA MOORTHY J",
+                "Dept": "CSE",
+                "RegisterNo": 312824104039
+            },
+            {
+                "StudentName": "KIRUBHAKARAN S",
+                "Dept": "CSE",
+                "Section": "B",
+                "RegisterNo": 312824104081
+            },
+            {
+                "Dept": "CSE",
+                "Section": "B",
+                "StudentName": "LOKESH R",
+                "RegisterNo": 312824104088
+            },
+            {
+                "StudentName": "PRAGADEESH K",
+                "Dept": "CSE",
+                "RegisterNo": 312824104113,
+                "Section": "B"
+            }
+        ],
+        "mentor": {
+            "mentorId": "60",
+            "email": "godlina.cse@act.edu.in",
+            "name": "Mrs. GODLINA PC",
+            "department": "CSE"
+        },
+        "teamName": "Backlog Busters",
+        "teamLeader": {
+            "Section": "B",
+            "RegisterNo": 312824104125,
+            "Dept": "CSE",
+            "StudentName": "RAJKUMAR K"
+        },
+        "timestamp": {
+            "seconds": 1753977073,
+            "nanoseconds": 518000000
+        },
+        "mobile": "9080110590",
+        "email": "24cse123@act.edu.in"
+    },
+    {
+        "teamLeader": {
+            "Dept": "MHT",
+            "RegisterNo": 312824115056,
+            "StudentName": "VISHVA V",
+            "Section": "A"
+        },
+        "email": "24mht57@act.edu.in",
+        "mentor": {
+            "mentorId": "111",
+            "name": "Dr. ARULARASAN.R",
+            "department": "MHT",
+            "email": "arularasan.mht@act.edu.in"
+        },
+        "students": [
+            {
+                "StudentName": "ARUN KUMAR B",
+                "RegisterNo": 312824115009,
+                "Section": "A",
+                "Dept": "MHT"
+            },
+            {
+                "RegisterNo": 312824115030,
+                "Section": "A",
+                "StudentName": "KAUSHIK S",
+                "Dept": "MHT"
+            },
+            {
+                "RegisterNo": 312824115033,
+                "Dept": "MHT",
+                "Section": "A",
+                "StudentName": "MITHRAN R"
+            },
+            {
+                "Dept": "MHT",
+                "StudentName": "YOGESHWARAN J",
+                "Section": "A",
+                "RegisterNo": 312824115057
+            }
+        ],
+        "teamName": "Dravions",
+        "timestamp": {
+            "seconds": 1753709268,
+            "nanoseconds": 533000000
+        },
+        "mobile": "9363979749"
+    },
+    {
+        "mentor": {
+            "name": "Ms. POOJA.S",
+            "email": "poojasn.it@act.edu.in",
+            "mentorId": "90",
+            "department": "IT"
+        },
+        "teamName": "Infinite Loops",
+        "teamLeader": {
+            "Dept": "IT",
+            "Section": "A",
+            "StudentName": "KAMALIKA G",
+            "RegisterNo": 312824205042
+        },
+        "email": "24it041@act.edu.in",
+        "timestamp": {
+            "seconds": 1753431220,
+            "nanoseconds": 603000000
+        },
+        "students": [
+            {
+                "RegisterNo": 312824205021,
+                "StudentName": "DHIVYALAKSHMI E",
+                "Dept": "IT",
+                "Section": "A"
+            },
+            {
+                "Dept": "IT",
+                "Section": "A",
+                "StudentName": "JANANI G",
+                "RegisterNo": 312824205035
+            },
+            {
+                "Section": "A",
+                "Dept": "IT",
+                "RegisterNo": 312824205041,
+                "StudentName": "KALAIYARASI M"
+            },
+            {
+                "RegisterNo": 312824205059,
+                "Section": "A",
+                "StudentName": "MONAL E",
+                "Dept": "IT"
+            }
+        ],
+        "mobile": "9384185882"
+    },
+    {
+        "teamLeader": {
+            "StudentName": "MANOJ H",
+            "RegisterNo": 312824104095,
+            "Section": "B",
+            "Dept": "CSE"
+        },
+        "students": [
+            {
+                "Dept": "CSE",
+                "RegisterNo": 312824104067,
+                "Section": "B",
+                "StudentName": "KANNAN K"
+            },
+            {
+                "Section": "B",
+                "StudentName": "KATHIR P",
+                "Dept": "CSE",
+                "RegisterNo": 312824104070
+            },
+            {
+                "RegisterNo": 312824104106,
+                "StudentName": "NIRANJAN V",
+                "Section": "B",
+                "Dept": "CSE"
+            },
+            {
+                "Section": "B",
+                "Dept": "CSE",
+                "StudentName": "PRAVEEN S D",
+                "RegisterNo": 312824104119
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753694920,
+            "nanoseconds": 33000000
+        },
+        "teamName": "Tech bots",
+        "mentor": {
+            "mentorId": "47",
+            "department": "CSE",
+            "email": "suresh.cse@act.edu.in",
+            "name": "Mr. SURESH.C"
+        },
+        "email": "24cse094@act.edu.in",
+        "mobile": "8072204403"
+    },
+    {
+        "teamName": "Sky Swords",
+        "teamLeader": {
+            "StudentName": "RAHUL S",
+            "RegisterNo": 312824203019,
+            "Section": "A",
+            "Dept": "CME"
+        },
+        "students": [
+            {
+                "RegisterNo": 312824203002,
+                "StudentName": "AISHWARYA N",
+                "Section": "A",
+                "Dept": "CME"
+            },
+            {
+                "Dept": "CME",
+                "StudentName": "MALAR KODI R",
+                "Section": "A",
+                "RegisterNo": 312824203009
+            },
+            {
+                "RegisterNo": 312824203016,
+                "Dept": "CME",
+                "Section": "A",
+                "StudentName": "OVIYA SRI R"
+            },
+            {
+                "Dept": "CME",
+                "RegisterNo": 312824203021,
+                "StudentName": "RESHMA D",
+                "Section": "A"
+            }
+        ],
+        "mentor": {
+            "mentorId": "32",
+            "name": "Dr. MURUGAN.P",
+            "email": "hod.cme@act.edu.in",
+            "department": "CME"
+        },
+        "email": "24cme20@act.edu.in",
+        "mobile": "9940012482",
+        "timestamp": {
+            "seconds": 1753446394,
+            "nanoseconds": 22000000
+        }
+    },
+    {
+        "mentor": {
+            "mentorId": "65",
+            "department": "ECE",
+            "email": "rajeswari.ece@act.edu.in",
+            "name": "Dr. RAJESHWARI.J"
+        },
+        "teamName": "Team Synergy ",
+        "email": "24ece19@act.edu.in",
+        "students": [
+            {
+                "Dept": "ECE",
+                "RegisterNo": 312824106001,
+                "StudentName": "ABINAYA R",
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824106010,
+                "StudentName": "CHANDRU P",
+                "Section": "A",
+                "Dept": "ECE"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824106017,
+                "Dept": "ECE",
+                "StudentName": "GOVARDHANI S G"
+            },
+            {
+                "Section": "A",
+                "StudentName": "SUFFIYAN K",
+                "RegisterNo": 312824106053,
+                "Dept": "ECE"
+            }
+        ],
+        "mobile": "7339522586",
+        "teamLeader": {
+            "RegisterNo": 312824106019,
+            "StudentName": "JEEVA A",
+            "Dept": "ECE",
+            "Section": "A"
+        },
+        "timestamp": {
+            "seconds": 1753505860,
+            "nanoseconds": 490000000
+        }
+    },
+    {
+        "mobile": "9789420568",
+        "mentor": {
+            "email": "arthi.it@act.edu.in",
+            "mentorId": "93",
+            "department": "IT",
+            "name": "Mrs. ARTHI.K"
+        },
+        "teamLeader": {
+            "Dept": "IT",
+            "RegisterNo": 312824205123,
+            "Section": "B",
+            "StudentName": "VISHAL R"
+        },
+        "timestamp": {
+            "seconds": 1754023556,
+            "nanoseconds": 208000000
+        },
+        "students": [
+            {
+                "Section": "A",
+                "StudentName": "NIVEDHA S",
+                "Dept": "ECE",
+                "RegisterNo": 312824106031
+            },
+            {
+                "StudentName": "VAAMAN N",
+                "Section": "A",
+                "RegisterNo": 312824115052,
+                "Dept": "MHT"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824205003,
+                "StudentName": "ABHISHEK S",
+                "Dept": "IT"
+            },
+            {
+                "Section": "B",
+                "StudentName": "TEJA DHINESH KUMAR V",
+                "Dept": "IT",
+                "RegisterNo": 312824205115
+            }
+        ],
+        "teamName": "Cyber Groups",
+        "email": "24it124@act.edu.in"
+    },
+    {
+        "mobile": "8124185724",
+        "timestamp": {
+            "seconds": 1753679584,
+            "nanoseconds": 86000000
+        },
+        "email": "24mech14@act.edu.in",
+        "teamName": "Mechaminds",
+        "students": [
+            {
+                "RegisterNo": 312824114016,
+                "Dept": "MECH",
+                "Section": "A",
+                "StudentName": "LOKESH V"
+            },
+            {
+                "Section": "A",
+                "Dept": "MECH",
+                "RegisterNo": 312824114018,
+                "StudentName": "MAGESH S"
+            },
+            {
+                "Section": "A",
+                "StudentName": "MAGESHBABU J",
+                "Dept": "MECH",
+                "RegisterNo": 312824114019
+            },
+            {
+                "StudentName": "SHERIN BLESSO S",
+                "Section": "A",
+                "Dept": "MECH",
+                "RegisterNo": 312824114026
+            }
+        ],
+        "mentor": {
+            "department": "ASE",
+            "email": "anandc.aero@act.edu.in",
+            "name": "Mr. ANAND.C",
+            "mentorId": "14"
+        },
+        "teamLeader": {
+            "Dept": "MECH",
+            "Section": "A",
+            "RegisterNo": 312824114012,
+            "StudentName": "HARIKARAN R"
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753458563,
+            "nanoseconds": 348000000
+        },
+        "mentor": {
+            "mentorId": "49",
+            "department": "CSE",
+            "email": "veni.cse@act.edu.in",
+            "name": "Ms. VENI.G"
+        },
+        "students": [
+            {
+                "Section": "C",
+                "Dept": "CSE",
+                "StudentName": "RANJITH S",
+                "RegisterNo": 312824104128
+            },
+            {
+                "RegisterNo": 312824106032,
+                "Dept": "ECE",
+                "StudentName": "PARIMALA SRI RANGAN S",
+                "Section": "A"
+            },
+            {
+                "Dept": "ECE",
+                "StudentName": "PREMNATH R",
+                "Section": "A",
+                "RegisterNo": 312824106035
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824106054,
+                "Dept": "ECE",
+                "StudentName": "SUNDHAR RAJAN C"
+            }
+        ],
+        "mobile": "8825738642",
+        "teamName": "Innovative Blasters ",
+        "teamLeader": {
+            "Section": "C",
+            "StudentName": "ROGITH RAADHAKRISHNAN C S",
+            "Dept": "CSE",
+            "RegisterNo": 312824104129
+        },
+        "email": "24cse129@act.edu.in"
+    },
+    {
+        "mentor": {
+            "name": "Mr. GANESH KUMAR.K",
+            "email": "ganeshkumar.mht@act.edu.in",
+            "mentorId": "112",
+            "department": "MHT"
+        },
+        "teamName": "MHT_FIRES OF AGNI",
+        "email": "24mht05@act.edu.in",
+        "timestamp": {
+            "seconds": 1753682257,
+            "nanoseconds": 595000000
+        },
+        "teamLeader": {
+            "RegisterNo": 312824115005,
+            "StudentName": "ABISHEK M",
+            "Dept": "MHT",
+            "Section": "A"
+        },
+        "mobile": "9789048155",
+        "students": [
+            {
+                "RegisterNo": 312824115007,
+                "Dept": "MHT",
+                "Section": "A",
+                "StudentName": "AROCKIA PRADHEEP J"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824115015,
+                "StudentName": "BRAHADISH N",
+                "Dept": "MHT"
+            },
+            {
+                "Section": "A",
+                "StudentName": "MOHAMAD NOORUL HUCK N",
+                "Dept": "MHT",
+                "RegisterNo": 312824115034
+            },
+            {
+                "RegisterNo": 312824115035,
+                "Section": "A",
+                "Dept": "MHT",
+                "StudentName": "NANTHANANTHAN G"
+            }
+        ]
+    },
+    {
+        "teamLeader": {
+            "StudentName": "MONIKA V",
+            "Dept": "CVL",
+            "RegisterNo": 312824103014,
+            "Section": "A"
+        },
+        "teamName": "Dream group",
+        "students": [
+            {
+                "RegisterNo": 312824103008,
+                "Dept": "CVL",
+                "Section": "A",
+                "StudentName": "GAYATHRI R"
+            },
+            {
+                "StudentName": "NANDHINI R",
+                "Section": "A",
+                "RegisterNo": 312824103016,
+                "Dept": "CVL"
+            },
+            {
+                "StudentName": "SANDHIYA S",
+                "Dept": "CVL",
+                "RegisterNo": 312824103020,
+                "Section": "A"
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753630000,
+            "nanoseconds": 145000000
+        },
+        "mobile": "8925404675",
+        "email": "24cvl14@act.edu.in",
+        "mentor": {
+            "department": "CIVIL",
+            "mentorId": "29",
+            "email": "indhumathiv.cvl@act.edu.in",
+            "name": "Ms. INDHUMATHI.V"
+        }
+    },
+    {
+        "mobile": "7904947240",
+        "email": "24eee16@act.edu.in",
+        "mentor": {
+            "department": "EEE",
+            "email": "divyab.eee@act.edu.in",
+            "name": "Mrs. DIVYA BALAKRISHNAN",
+            "mentorId": "81"
+        },
+        "students": [
+            {
+                "StudentName": "ABRAHAM DANIEL",
+                "RegisterNo": 312824105002,
+                "Dept": "EEE",
+                "Section": "A"
+            },
+            {
+                "Section": "A",
+                "StudentName": "DHINESH KARTHIK A",
+                "RegisterNo": 312824105007,
+                "Dept": "EEE"
+            },
+            {
+                "RegisterNo": 312824105020,
+                "StudentName": "NARENDHIRAN K",
+                "Dept": "EEE",
+                "Section": "A"
+            },
+            {
+                "Dept": "LE - EEE",
+                "StudentName": "VASANTH M",
+                "Section": "-",
+                "RegisterNo": "03"
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753891344,
+            "nanoseconds": 901000000
+        },
+        "teamName": "TITANS",
+        "teamLeader": {
+            "StudentName": "MOHAMMAD ALIM ALI",
+            "RegisterNo": 312824105016,
+            "Dept": "EEE",
+            "Section": "A"
+        }
+    },
+    {
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "IYYAPPAN K",
+            "RegisterNo": 312824103009,
+            "Dept": "CVL"
+        },
+        "timestamp": {
+            "seconds": 1753685004,
+            "nanoseconds": 7000000
+        },
+        "students": [
+            {
+                "StudentName": "ANISH A",
+                "Dept": "CVL",
+                "Section": "A",
+                "RegisterNo": 312824103002
+            },
+            {
+                "StudentName": "MOHANAKRISHNAN S",
+                "Section": "A",
+                "Dept": "CVL",
+                "RegisterNo": 312824103013
+            },
+            {
+                "Dept": "CVL",
+                "StudentName": "NAGULAN M",
+                "RegisterNo": 312824103015,
+                "Section": "A"
+            },
+            {
+                "Dept": "CVL",
+                "RegisterNo": 312824103023,
+                "Section": "A",
+                "StudentName": "VARUNESHWARAN I"
+            }
+        ],
+        "mentor": {
+            "mentorId": "30",
+            "department": "CIVIL",
+            "name": "Ms. ARTHI.S",
+            "email": "arthi.cvl@act.edu.in"
+        },
+        "email": "24cvl09@act.edu.in",
+        "teamName": "Infra Warriors",
+        "mobile": "9342100428"
+    },
+    {
+        "mentor": {
+            "department": "CSE",
+            "email": "megashree.cse@act.edu.in",
+            "mentorId": "50",
+            "name": "Ms. MEGA SHREE.R"
+        },
+        "email": "24cse078@act.edu.in",
+        "mobile": "9176200625",
+        "timestamp": {
+            "seconds": 1753694581,
+            "nanoseconds": 225000000
+        },
+        "students": [
+            {
+                "StudentName": "KEERTHANA C",
+                "Section": "B",
+                "Dept": "CSE",
+                "RegisterNo": 312824104076
+            },
+            {
+                "StudentName": "KIRUBA G",
+                "Dept": "CSE",
+                "RegisterNo": 312824104080,
+                "Section": "B"
+            },
+            {
+                "Dept": "CSE",
+                "Section": "B",
+                "StudentName": "MANISHA I",
+                "RegisterNo": 312824104093
+            }
+        ],
+        "teamName": "Future innovates",
+        "teamLeader": {
+            "RegisterNo": 312824104078,
+            "StudentName": "KEERTHIKA M H",
+            "Dept": "CSE",
+            "Section": "B"
+        }
+    },
+    {
+        "teamName": "Brick and click",
+        "students": [
+            {
+                "StudentName": "DEEPIKA S",
+                "Section": "A",
+                "Dept": "IT",
+                "RegisterNo": 312824205018
+            },
+            {
+                "RegisterNo": 312824205039,
+                "StudentName": "JISHA ROBIN R",
+                "Section": "A",
+                "Dept": "IT"
+            },
+            {
+                "StudentName": "KEERTHANA B",
+                "RegisterNo": 312824205047,
+                "Section": "A",
+                "Dept": "IT"
+            },
+            {
+                "RegisterNo": 312824205048,
+                "Section": "A",
+                "StudentName": "KEERTHANA S",
+                "Dept": "IT"
+            }
+        ],
+        "mobile": "9962852657",
+        "timestamp": {
+            "seconds": 1753556349,
+            "nanoseconds": 884000000
+        },
+        "teamLeader": {
+            "StudentName": "KARTHIKA J",
+            "Section": "A",
+            "RegisterNo": 312824205046,
+            "Dept": "IT"
+        },
+        "mentor": {
+            "mentorId": "91",
+            "email": "sinduja.it@act.edu.it",
+            "department": "IT",
+            "name": "Ms. SINDUJA.M"
+        },
+        "email": "24it045@act.edu.in"
+    },
+    {
+        "timestamp": {
+            "seconds": 1753432986,
+            "nanoseconds": 223000000
+        },
+        "teamLeader": {
+            "StudentName": "NISHA S K",
+            "Dept": "CME",
+            "RegisterNo": 312824203015,
+            "Section": "A"
+        },
+        "email": "nynunisha01@gmail.com",
+        "mentor": {
+            "email": "arunodhayan.cme@act.edu.in",
+            "mentorId": "35",
+            "name": "Mr. ARUNODHAYA.N",
+            "department": "CME"
+        },
+        "teamName": "CHEMSPARKS",
+        "mobile": "8807484815",
+        "students": [
+            {
+                "Section": "A",
+                "StudentName": "BAVANI R",
+                "Dept": "CME",
+                "RegisterNo": 312824203003
+            },
+            {
+                "Dept": "CME",
+                "Section": "A",
+                "StudentName": "DEEPIKA R",
+                "RegisterNo": 312824203004
+            },
+            {
+                "RegisterNo": 312824203007,
+                "StudentName": "KAVIYA G",
+                "Section": "A",
+                "Dept": "CME"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824203015,
+                "Dept": "CME",
+                "StudentName": "NISHA S K"
+            }
+        ]
+    },
+    {
+        "mentor": {
+            "email": "simimargarat.it@act.edu.in",
+            "department": "IT",
+            "mentorId": "95",
+            "name": "Dr. G.SIMI MARGARAT"
+        },
+        "email": "24it125@act.edu.in",
+        "timestamp": {
+            "seconds": 1753949824,
+            "nanoseconds": 626000000
+        },
+        "students": [
+            {
+                "Section": "B",
+                "RegisterNo": 312824205105,
+                "Dept": "IT",
+                "StudentName": "SHYAM P S"
+            },
+            {
+                "Dept": "IT",
+                "StudentName": "SRI DURGA K",
+                "Section": "B",
+                "RegisterNo": 312824205107
+            },
+            {
+                "RegisterNo": 312824205114,
+                "StudentName": "TAMILSELVAN K",
+                "Dept": "IT",
+                "Section": "B"
+            },
+            {
+                "StudentName": "VENKATESH M",
+                "Dept": "LE - IT",
+                "RegisterNo": "04",
+                "Section": "-"
+            }
+        ],
+        "teamName": "INSYRA",
+        "teamLeader": {
+            "StudentName": "YOGESHWARAN B",
+            "Dept": "IT",
+            "RegisterNo": 312824205124,
+            "Section": "B"
+        },
+        "mobile": "9944472105"
+    },
+    {
+        "timestamp": {
+            "seconds": 1753440921,
+            "nanoseconds": 685000000
+        },
+        "mobile": "7200344906",
+        "students": [
+            {
+                "RegisterNo": 312824106034,
+                "Dept": "ECE",
+                "StudentName": "PREMKUMAR V",
+                "Section": "A"
+            },
+            {
+                "StudentName": "SARUMATHY V",
+                "RegisterNo": 312824106048,
+                "Dept": "ECE",
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824106055,
+                "Section": "A",
+                "Dept": "ECE",
+                "StudentName": "SURYA PRAKASH K"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824106056,
+                "StudentName": "SWETHA N",
+                "Dept": "ECE"
+            }
+        ],
+        "mentor": {
+            "mentorId": "131",
+            "department": "ECE",
+            "name": "Ms. BLESSINA PREETHI",
+            "email": "blessinapreethi.ece@act.edu.in"
+        },
+        "teamName": "Techspire",
+        "teamLeader": {
+            "RegisterNo": 312824106040,
+            "StudentName": "PRIYANGA D",
+            "Dept": "ECE",
+            "Section": "A"
+        },
+        "email": "24ece41@act.edu.in"
+    },
+    {
+        "teamName": "MHT_A2D_MOTOVENTURE",
+        "email": "24mht03@act.edu.in",
+        "timestamp": {
+            "seconds": 1753681188,
+            "nanoseconds": 291000000
+        },
+        "students": [
+            {
+                "Section": "A",
+                "RegisterNo": 312824115024,
+                "StudentName": "HARINI E",
+                "Dept": "MHT"
+            },
+            {
+                "RegisterNo": 312824115027,
+                "Section": "A",
+                "StudentName": "JOSHIGAMADHY B",
+                "Dept": "MHT"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824115042,
+                "Dept": "MHT",
+                "StudentName": "ROSHAN E"
+            },
+            {
+                "Dept": "MHT",
+                "StudentName": "SATHYA RAJKUMAR P",
+                "RegisterNo": 312824115047,
+                "Section": "A"
+            }
+        ],
+        "mobile": "6385851714",
+        "teamLeader": {
+            "Section": "A",
+            "RegisterNo": 312824115003,
+            "StudentName": "ABISHEK E",
+            "Dept": "MHT"
+        },
+        "mentor": {
+            "mentorId": "110",
+            "name": "Mr. KARTHIKEYAN.S",
+            "email": "karthikeyan.mht@act.edu.in",
+            "department": "MHT"
+        }
+    },
+    {
+        "mentor": {
+            "department": "MEC",
+            "name": "Dr. PRABAKARAN V",
+            "email": "mechod@act.edu.in",
+            "mentorId": "130"
+        },
+        "email": "24mech05@act.edu.in",
+        "mobile": "6374116454",
+        "students": [
+            {
+                "Section": "A",
+                "RegisterNo": 312824114002,
+                "Dept": "MECH",
+                "StudentName": "AKILAN S R"
+            },
+            {
+                "StudentName": "GOKULKUMAR M",
+                "Section": "A",
+                "RegisterNo": 312824114008,
+                "Dept": "MECH"
+            },
+            {
+                "RegisterNo": 312824114013,
+                "Section": "A",
+                "StudentName": "HARINARAYANAN M",
+                "Dept": "MECH"
+            },
+            {
+                "RegisterNo": 312824114021,
+                "StudentName": "NIRANJAN N",
+                "Section": "A",
+                "Dept": "MECH"
+            }
+        ],
+        "teamLeader": {
+            "Dept": "MECH",
+            "RegisterNo": 312824114005,
+            "Section": "A",
+            "StudentName": "DHANUSH DHARAN S"
+        },
+        "timestamp": {
+            "seconds": 1753957773,
+            "nanoseconds": 822000000
+        },
+        "teamName": "Mechanical Environment"
+    },
+    {
+        "teamName": "GodSpeedX",
+        "teamLeader": {
+            "Section": "B",
+            "RegisterNo": 312824205100,
+            "StudentName": "SEMMALAI E",
+            "Dept": "IT"
+        },
+        "email": "24it100@act.edu.in",
+        "mentor": {
+            "name": "Dr. SENTHIL.G.A",
+            "mentorId": "83",
+            "email": "senthilga.it@act.edu.in",
+            "department": "IT"
+        },
+        "mobile": "9384187988",
+        "timestamp": {
+            "seconds": 1753516998,
+            "nanoseconds": 37000000
+        },
+        "students": [
+            {
+                "Dept": "IT",
+                "RegisterNo": 312824205069,
+                "StudentName": "PANIMUGILAN R S",
+                "Section": "B"
+            },
+            {
+                "RegisterNo": 312824205072,
+                "Dept": "IT",
+                "StudentName": "PRAMODH KUMAR S K",
+                "Section": "B"
+            },
+            {
+                "RegisterNo": 312824205103,
+                "Dept": "IT",
+                "StudentName": "SHERWIN JOHN LOUIE J",
+                "Section": "B"
+            },
+            {
+                "StudentName": "THIRUVENKADAMURTHY R",
+                "RegisterNo": 312824205118,
+                "Dept": "IT",
+                "Section": "B"
+            }
+        ]
+    },
+    {
+        "teamName": "Vortex Development",
+        "email": "24cse161@act.edu.in",
+        "mentor": {
+            "department": "CSE",
+            "mentorId": "49",
+            "name": "Ms. VENI.G",
+            "email": "veni.cse@act.edu.in"
+        },
+        "students": [
+            {
+                "StudentName": "SARAN CHELLAN A",
+                "Section": "C",
+                "RegisterNo": 312824104145,
+                "Dept": "CSE"
+            },
+            {
+                "RegisterNo": 312824104149,
+                "Section": "C",
+                "Dept": "CSE",
+                "StudentName": "SHANMUGA SUNDARAM R"
+            },
+            {
+                "Dept": "CSE",
+                "StudentName": "UDHAYA D",
+                "Section": "C",
+                "RegisterNo": 312824104171
+            },
+            {
+                "Dept": "CSE",
+                "Section": "C",
+                "StudentName": "VIGNESH J",
+                "RegisterNo": 312824104177
+            }
+        ],
+        "mobile": "7200035542",
+        "timestamp": {
+            "seconds": 1754028890,
+            "nanoseconds": 358000000
+        },
+        "teamLeader": {
+            "Dept": "CSE",
+            "RegisterNo": 312824104161,
+            "StudentName": "SURIYA S K",
+            "Section": "C"
+        }
+    },
+    {
+        "email": "24cvl26@act.edu.in",
+        "teamName": "TVK SPARTANS",
+        "timestamp": {
+            "seconds": 1753637583,
+            "nanoseconds": 840000000
+        },
+        "students": [
+            {
+                "Dept": "CVL",
+                "RegisterNo": 312824103005,
+                "Section": "A",
+                "StudentName": "ARON JUDSON IMMANUEL A"
+            },
+            {
+                "Section": "A",
+                "Dept": "CVL",
+                "RegisterNo": 312824103006,
+                "StudentName": "DINAKARAN V"
+            },
+            {
+                "RegisterNo": 312824103024,
+                "StudentName": "VIGNESH V",
+                "Section": "A",
+                "Dept": "CVL"
+            },
+            {
+                "RegisterNo": 312824103025,
+                "StudentName": "YOKESH R",
+                "Dept": "CVL",
+                "Section": "A"
+            }
+        ],
+        "teamLeader": {
+            "Dept": "CVL",
+            "RegisterNo": 312824103007,
+            "Section": "A",
+            "StudentName": "DISHWATH KANNA S"
+        },
+        "mentor": {
+            "name": "Ms. BEAULA JASMINE.R",
+            "email": "beaulajasmine.cvl@act.edu.in",
+            "department": "CIVIL",
+            "mentorId": "26"
+        },
+        "mobile": "8610866358"
+    },
+    {
+        "teamName": "Sparking Minds",
+        "email": "24aids04@act.edu.in",
+        "timestamp": {
+            "seconds": 1753598034,
+            "nanoseconds": 650000000
+        },
+        "students": [
+            {
+                "Section": "A",
+                "StudentName": "ANUSHYA R",
+                "Dept": "AIDS",
+                "RegisterNo": 312824243007
+            },
+            {
+                "Dept": "AIDS",
+                "Section": "A",
+                "RegisterNo": 312824243016,
+                "StudentName": "DONIKUMAR I"
+            },
+            {
+                "RegisterNo": 312824243033,
+                "Section": "A",
+                "Dept": "AIDS",
+                "StudentName": "LOSHINI S"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824243035,
+                "Dept": "AIDS",
+                "StudentName": "MANOHAR S"
+            }
+        ],
+        "mobile": "8072405601",
+        "teamLeader": {
+            "RegisterNo": 312824243004,
+            "Dept": "AIDS",
+            "StudentName": "AMIRTHA LAKSHMI R",
+            "Section": "A"
+        },
+        "mentor": {
+            "department": "AIDS",
+            "mentorId": "6",
+            "email": "rupavathy.aids@act.edu.in",
+            "name": "Ms. RUPAVATHY.R"
+        }
+    },
+    {
+        "students": [
+            {
+                "RegisterNo": 312824243003,
+                "Section": "A",
+                "Dept": "AIDS",
+                "StudentName": "AHAMED ADHIL WASIM S"
+            },
+            {
+                "RegisterNo": 312824243024,
+                "Section": "A",
+                "Dept": "AIDS",
+                "StudentName": "JEYANTH S"
+            },
+            {
+                "Dept": "AIDS",
+                "StudentName": "KISHORE KUMAR S",
+                "Section": "A",
+                "RegisterNo": 312824243030
+            },
+            {
+                "Dept": "AIDS",
+                "Section": "A",
+                "StudentName": "SUJITHKUMAR S",
+                "RegisterNo": 312824243058
+            }
+        ],
+        "mobile": "8072905414",
+        "timestamp": {
+            "seconds": 1753431740,
+            "nanoseconds": 611000000
+        },
+        "mentor": {
+            "name": "Ms. SINDHU.G",
+            "department": "CSE",
+            "email": "sindhu.cse@act.edu.in",
+            "mentorId": "52"
+        },
+        "teamLeader": {
+            "Section": "A",
+            "RegisterNo": 312824104053,
+            "Dept": "CSE",
+            "StudentName": "JAGADESH PANDIAN S"
+        },
+        "email": "24cse052@act.edu.in",
+        "teamName": "PRIMES"
+    },
+    {
+        "mobile": "9150264312",
+        "timestamp": {
+            "seconds": 1753681105,
+            "nanoseconds": 70000000
+        },
+        "email": "24mht51@act.edu.in",
+        "students": [
+            {
+                "RegisterNo": 312824115011,
+                "Section": "A",
+                "Dept": "MHT",
+                "StudentName": "BAARKAVI E K"
+            },
+            {
+                "Dept": "MHT",
+                "StudentName": "DHANALAKSHMI R",
+                "Section": "A",
+                "RegisterNo": 312824115018
+            },
+            {
+                "RegisterNo": 312824115037,
+                "Section": "A",
+                "StudentName": "PADMAJA G",
+                "Dept": "MHT"
+            },
+            {
+                "RegisterNo": 312824115058,
+                "StudentName": "YOGIDHA Y",
+                "Dept": "MHT",
+                "Section": "A"
+            }
+        ],
+        "teamName": "MHT IPD team",
+        "mentor": {
+            "email": "sivaprakash.mht@act.edu.in",
+            "name": "Mr. SIVAPRAKASH.P",
+            "department": "MHT",
+            "mentorId": "113"
+        },
+        "teamLeader": {
+            "StudentName": "THIRUMARAN R",
+            "RegisterNo": 312824115051,
+            "Section": "A",
+            "Dept": "MHT"
+        }
+    },
+    {
+        "mobile": "6383324133",
+        "teamName": "Bug hunters",
+        "mentor": {
+            "department": "CSE",
+            "email": "godlina.cse@act.edu.in",
+            "name": "Mrs. GODLINA PC",
+            "mentorId": "60"
+        },
+        "teamLeader": {
+            "RegisterNo": 312824104011,
+            "Section": "A",
+            "Dept": "CSE",
+            "StudentName": "ANDREW FLINTOF D"
+        },
+        "students": [
+            {
+                "Section": "A",
+                "RegisterNo": 312824104015,
+                "Dept": "CSE",
+                "StudentName": "ARJUN V"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824104021,
+                "StudentName": "BENOLYN DIVINE B",
+                "Dept": "CSE"
+            },
+            {
+                "Section": "A",
+                "Dept": "CSE",
+                "RegisterNo": 312824104033,
+                "StudentName": "DHILIP KUMAR B"
+            },
+            {
+                "Dept": "CSE",
+                "StudentName": "JEEVA S",
+                "Section": "A",
+                "RegisterNo": 312824104059
+            }
+        ],
+        "email": "24cse011@act.edu.in",
+        "timestamp": {
+            "seconds": 1753976882,
+            "nanoseconds": 7000000
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753432012,
+            "nanoseconds": 140000000
+        },
+        "teamName": "Empires ",
+        "teamLeader": {
+            "RegisterNo": 312824104176,
+            "StudentName": "VIGNESH D",
+            "Section": "C",
+            "Dept": "CSE"
+        },
+        "mobile": "8072380861",
+        "students": [
+            {
+                "Dept": "CSE",
+                "RegisterNo": 312824104132,
+                "Section": "C",
+                "StudentName": "ROSHITH D R"
+            },
+            {
+                "Dept": "CSE",
+                "StudentName": "SURYA R",
+                "RegisterNo": 312824104162,
+                "Section": "C"
+            },
+            {
+                "RegisterNo": 312824104163,
+                "StudentName": "SURYA S",
+                "Dept": "CSE",
+                "Section": "C"
+            },
+            {
+                "RegisterNo": 312824104170,
+                "StudentName": "THIRUSELVAN P",
+                "Dept": "CSE",
+                "Section": "C"
+            }
+        ],
+        "email": "24cse176@act.edu.in",
+        "mentor": {
+            "mentorId": "53",
+            "email": "csehod@act.edu.in",
+            "name": "Dr. BALAJI MADHAVAN",
+            "department": "CSE"
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753437128,
+            "nanoseconds": 974000000
+        },
+        "students": [
+            {
+                "StudentName": "ASLAM I",
+                "Dept": "IT",
+                "Section": "A",
+                "RegisterNo": 312824205010
+            },
+            {
+                "Dept": "IT",
+                "RegisterNo": 312824205022,
+                "StudentName": "DINESH L",
+                "Section": "A"
+            },
+            {
+                "StudentName": "GOKIL RAJ B",
+                "Dept": "IT",
+                "RegisterNo": 312824205025,
+                "Section": "A"
+            },
+            {
+                "Section": "A",
+                "Dept": "IT",
+                "RegisterNo": 312824205026,
+                "StudentName": "GOKULA KRISHNAN V"
+            }
+        ],
+        "teamName": "Tech Titans",
+        "teamLeader": {
+            "Dept": "IT",
+            "Section": "A",
+            "StudentName": "HEERAASANTH K B",
+            "RegisterNo": 312824205031
+        },
+        "mobile": "6379239987",
+        "mentor": {
+            "name": "Mrs. VAHEETHU BANU S",
+            "department": "IT",
+            "email": "vaheethabanu.it@act.edu.in",
+            "mentorId": "94"
+        },
+        "email": "24it030@act.edu.in"
+    },
+    {
+        "mobile": "6381227103",
+        "timestamp": {
+            "seconds": 1753539256,
+            "nanoseconds": 813000000
+        },
+        "teamName": "Fantastic five",
+        "students": [
+            {
+                "Dept": "CSE",
+                "Section": "A",
+                "RegisterNo": 312824104043,
+                "StudentName": "GRACESON B"
+            },
+            {
+                "RegisterNo": 312824104052,
+                "StudentName": "JACK HARRISH V",
+                "Section": "A",
+                "Dept": "CSE"
+            },
+            {
+                "StudentName": "JASHWANTH V",
+                "Section": "A",
+                "Dept": "CSE",
+                "RegisterNo": 312824104056
+            },
+            {
+                "StudentName": "KABILAN D",
+                "RegisterNo": 312824104063,
+                "Section": "A",
+                "Dept": "CSE"
+            }
+        ],
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "AMUDHAN M",
+            "RegisterNo": 312824104010,
+            "Dept": "CSE"
+        },
+        "mentor": {
+            "name": "Ms. KAVYA.R.K",
+            "mentorId": "54",
+            "department": "CSE",
+            "email": "kavya.cse@act.edu.in"
+        },
+        "email": "24cse010@act.edu.in"
+    },
+    {
+        "mentor": {
+            "name": "Ms. BILNA.C",
+            "department": "BME",
+            "mentorId": "17",
+            "email": "bilna.bme@act.edu.in"
+        },
+        "mobile": "9841005622",
+        "email": "24bme28@act.edu.in",
+        "teamName": "Nova mind",
+        "students": [
+            {
+                "Section": "A",
+                "Dept": "BME",
+                "StudentName": "ASHATHINI A",
+                "RegisterNo": 312824121005
+            },
+            {
+                "RegisterNo": 312824121026,
+                "Dept": "BME",
+                "Section": "A",
+                "StudentName": "KAVIPRIYA S"
+            },
+            {
+                "Dept": "BME",
+                "RegisterNo": 312824121035,
+                "StudentName": "PRIYADHARSHINI J",
+                "Section": "A"
+            },
+            {
+                "StudentName": "RESHMA J",
+                "Section": "A",
+                "RegisterNo": 312824121037,
+                "Dept": "BME"
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753695992,
+            "nanoseconds": 719000000
+        },
+        "teamLeader": {
+            "StudentName": "LAVANYA K",
+            "Section": "A",
+            "RegisterNo": 312824121028,
+            "Dept": "BME"
+        }
+    },
+    {
+        "email": "24bme59@act.edu.in",
+        "timestamp": {
+            "seconds": 1753969211,
+            "nanoseconds": 562000000
+        },
+        "students": [
+            {
+                "StudentName": "CHANDRU M",
+                "RegisterNo": 312824121012,
+                "Section": "A",
+                "Dept": "BME"
+            },
+            {
+                "RegisterNo": 312824121025,
+                "Dept": "BME",
+                "StudentName": "JEEVITHYA B",
+                "Section": "A"
+            },
+            {
+                "Dept": "BME",
+                "Section": "A",
+                "RegisterNo": 312824121027,
+                "StudentName": "KEERTHIKA V"
+            },
+            {
+                "StudentName": "VASANTHAMOHAN R",
+                "Dept": "BME",
+                "RegisterNo": 312824121055,
+                "Section": "A"
+            }
+        ],
+        "teamName": "BioMinds",
+        "teamLeader": {
+            "RegisterNo": 312824121059,
+            "Dept": "BME",
+            "Section": "A",
+            "StudentName": "VITHYA LAKSHMI S"
+        },
+        "mentor": {
+            "email": "jinijacob001@gmail.com",
+            "name": "Mrs. JINI JACOB Y",
+            "department": "BME",
+            "mentorId": "21"
+        },
+        "mobile": "9342415298"
+    },
+    {
+        "teamName": "Codectra",
+        "mobile": "7200211978",
+        "mentor": {
+            "mentorId": "55",
+            "email": "saravananj.cse@act.edu.in",
+            "name": "Mr. SARAVANAN.J",
+            "department": "CSE"
+        },
+        "students": [
+            {
+                "Dept": "CSE",
+                "RegisterNo": 312824104082,
+                "StudentName": "KIRUTHIKA M",
+                "Section": "B"
+            },
+            {
+                "Section": "C",
+                "StudentName": "ROSHAN PARVEEN S",
+                "Dept": "CSE",
+                "RegisterNo": 312824104131
+            },
+            {
+                "StudentName": "URASRI M",
+                "Dept": "CSE",
+                "Section": "C",
+                "RegisterNo": 312824104173
+            },
+            {
+                "StudentName": "MONICA V",
+                "RegisterNo": 312824105017,
+                "Dept": "EEE",
+                "Section": "A"
+            }
+        ],
+        "email": "24cse084@act.edu.in",
+        "teamLeader": {
+            "StudentName": "LATHA K",
+            "Section": "B",
+            "RegisterNo": "312824104085",
+            "Dept": "CSE"
+        },
+        "timestamp": {
+            "seconds": 1753520670,
+            "nanoseconds": 539000000
+        }
+    },
+    {
+        "students": [
+            {
+                "Section": "B",
+                "RegisterNo": 312824205073,
+                "StudentName": "PRITHISWARAN S",
+                "Dept": "IT"
+            },
+            {
+                "RegisterNo": 312824205095,
+                "Dept": "IT",
+                "Section": "B",
+                "StudentName": "SANJAY B"
+            },
+            {
+                "Dept": "IT",
+                "RegisterNo": 312824205111,
+                "StudentName": "SRIRAM D",
+                "Section": "B"
+            },
+            {
+                "Dept": "IT",
+                "StudentName": "THAMILMARAN A",
+                "RegisterNo": 312824205116,
+                "Section": "B"
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753429819,
+            "nanoseconds": 587000000
+        },
+        "email": "sridharecr123@gamil.com",
+        "mobile": "8608233486",
+        "teamName": "Tech Culprits ",
+        "teamLeader": {
+            "Dept": "IT",
+            "RegisterNo": 312824205108,
+            "Section": "B",
+            "StudentName": "SRIDHAR R"
+        },
+        "mentor": {
+            "mentorId": "95",
+            "name": "Dr. G.SIMI MARGARAT",
+            "email": "simimargarat.it@act.edu.in",
+            "department": "IT"
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753631890,
+            "nanoseconds": 554000000
+        },
+        "email": "24cse004@act.edu.in",
+        "teamLeader": {
+            "StudentName": "ADHI NARAYAN J",
+            "RegisterNo": 312824104004,
+            "Dept": "CSE",
+            "Section": "A"
+        },
+        "students": [
+            {
+                "Section": "A",
+                "StudentName": "ABDUL KALAM M",
+                "RegisterNo": 312824104002,
+                "Dept": "CSE"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824104014,
+                "Dept": "CSE",
+                "StudentName": "ARIGARAN S"
+            },
+            {
+                "RegisterNo": 312824104027,
+                "Section": "A",
+                "StudentName": "DEVINA SREE K",
+                "Dept": "CSE"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824104061,
+                "StudentName": "JOHN MILTON S",
+                "Dept": "CSE"
+            }
+        ],
+        "mentor": {
+            "name": "Mrs. CHANDRAKUMARI.K",
+            "department": "CSE",
+            "email": "chandrakumari.cse@act.edu.in",
+            "mentorId": "57"
+        },
+        "teamName": "ThinkAura",
+        "mobile": "7305656082"
+    },
+    {
+        "mentor": {
+            "name": "Mr. SULTAN SALEEM.A",
+            "mentorId": "58",
+            "department": "CSE",
+            "email": "sultansaleem.cse@act.edu.in"
+        },
+        "teamName": "CODE4PURPOSE",
+        "students": [
+            {
+                "Dept": "CSE",
+                "Section": "B",
+                "StudentName": "LOGESHKUMAR S",
+                "RegisterNo": 312824104087
+            },
+            {
+                "RegisterNo": 312824104116,
+                "Dept": "CSE",
+                "StudentName": "PRASANNA KUMAR S",
+                "Section": "B"
+            },
+            {
+                "RegisterNo": 312824104120,
+                "StudentName": "PRIYA DHARSHAN R",
+                "Dept": "CSE",
+                "Section": "B"
+            }
+        ],
+        "email": "24cse090@act.edu.in",
+        "mobile": "9360587421",
+        "teamLeader": {
+            "Dept": "CSE",
+            "RegisterNo": 312824104091,
+            "Section": "B",
+            "StudentName": "MAHANAM ROSHAN R"
+        },
+        "timestamp": {
+            "seconds": 1753694594,
+            "nanoseconds": 557000000
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753679239,
+            "nanoseconds": 381000000
+        },
+        "students": [
+            {
+                "StudentName": "DEVI G",
+                "Section": "A",
+                "Dept": "MECH",
+                "RegisterNo": 312824114004
+            },
+            {
+                "StudentName": "GOKULNATH K",
+                "Dept": "MECH",
+                "Section": "A",
+                "RegisterNo": 312824114009
+            },
+            {
+                "Dept": "MECH",
+                "Section": "A",
+                "StudentName": "HEMANTH V",
+                "RegisterNo": 312824114014
+            },
+            {
+                "Dept": "MECH",
+                "StudentName": "PREETHY Y",
+                "RegisterNo": 312824114022,
+                "Section": "A"
+            }
+        ],
+        "mentor": {
+            "email": "saravanan.mech@act.edu.in",
+            "mentorId": "104",
+            "department": "MEC",
+            "name": "Mr. SARAVANAN.K"
+        },
+        "mobile": "9940337064",
+        "teamName": "Team Targaryen",
+        "teamLeader": {
+            "StudentName": "SRIHARAN S",
+            "RegisterNo": 312824114027,
+            "Dept": "MECH",
+            "Section": "A"
+        },
+        "email": "24mech29@act.edu.in"
+    },
+    {
+        "students": [
+            {
+                "RegisterNo": 312824205082,
+                "Dept": "IT",
+                "StudentName": "RAVISANKAR S",
+                "Section": "B"
+            },
+            {
+                "RegisterNo": 312824205096,
+                "Dept": "IT",
+                "Section": "B",
+                "StudentName": "SANJAY K"
+            },
+            {
+                "StudentName": "SHEIK AHAMED MEERAN H",
+                "RegisterNo": 312824205102,
+                "Section": "B",
+                "Dept": "IT"
+            },
+            {
+                "RegisterNo": 312824205110,
+                "Section": "B",
+                "Dept": "IT",
+                "StudentName": "SRIPRATHIP S"
+            }
+        ],
+        "mentor": {
+            "name": "Mrs. ARTHI.K",
+            "mentorId": "93",
+            "department": "IT",
+            "email": "arthi.it@act.edu.in"
+        },
+        "timestamp": {
+            "seconds": 1753428551,
+            "nanoseconds": 799000000
+        },
+        "teamName": "Mistry gems",
+        "mobile": "9345411184",
+        "teamLeader": {
+            "Section": "B",
+            "StudentName": "SAI SIDDHARTH N",
+            "Dept": "IT",
+            "RegisterNo": 312824205090
+        },
+        "email": "24it091@act.edu.in"
+    },
+    {
+        "students": [
+            {
+                "RegisterNo": 312824104037,
+                "Section": "A",
+                "Dept": "CSE",
+                "StudentName": "DINAKARAN R"
+            },
+            {
+                "StudentName": "MYTHILI L",
+                "Dept": "CSE",
+                "Section": "B",
+                "RegisterNo": 312824104102
+            },
+            {
+                "Dept": "CSE",
+                "Section": "B",
+                "StudentName": "NIDIGANTI AARUHYA KUMAR",
+                "RegisterNo": 312824104104
+            },
+            {
+                "Section": "B",
+                "RegisterNo": 312824104118,
+                "StudentName": "PRAVEEN R",
+                "Dept": "CSE"
+            }
+        ],
+        "mobile": "6369188495",
+        "teamName": "Hack Elite",
+        "mentor": {
+            "name": "Ms. REVATHI.K",
+            "mentorId": "5",
+            "department": "AIDS",
+            "email": "krevathi.aids@act.edu.in"
+        },
+        "email": "24cse097@act.edu.in",
+        "timestamp": {
+            "seconds": 1753950656,
+            "nanoseconds": 269000000
+        },
+        "teamLeader": {
+            "RegisterNo": 312824104098,
+            "Section": "B",
+            "StudentName": "MONICKKANNAN S J",
+            "Dept": "CSE"
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753439144,
+            "nanoseconds": 507000000
+        },
+        "mobile": "8608879550",
+        "email": "sivanthi2808@gmail.com",
+        "students": [
+            {
+                "Dept": "CSE",
+                "Section": "C",
+                "RegisterNo": 312824104127,
+                "StudentName": "RAMYA R"
+            },
+            {
+                "Dept": "CSE",
+                "StudentName": "SOWMYA SRI P",
+                "RegisterNo": 312824104155,
+                "Section": "C"
+            },
+            {
+                "Dept": "CSE",
+                "Section": "C",
+                "RegisterNo": 312824104165,
+                "StudentName": "SUVARSHA S"
+            },
+            {
+                "Dept": "CSE",
+                "Section": "C",
+                "StudentName": "UMMU FAALIHA M",
+                "RegisterNo": 312824104172
+            }
+        ],
+        "mentor": {
+            "name": "Ms. UMA DEVI.G",
+            "mentorId": "41",
+            "department": "CSE",
+            "email": "umadevi.cse@act.edu.in"
+        },
+        "teamName": "Growth gurus",
+        "teamLeader": {
+            "StudentName": "SIVANTHI V",
+            "RegisterNo": 312824104154,
+            "Section": "C",
+            "Dept": "CSE"
+        }
+    },
+    {
+        "email": "24it093@act.edu.in",
+        "mobile": "7305423436",
+        "teamLeader": {
+            "Section": "B",
+            "StudentName": "SAMEEHA M",
+            "RegisterNo": 312824205092,
+            "Dept": "IT"
+        },
+        "students": [
+            {
+                "Section": "B",
+                "Dept": "IT",
+                "RegisterNo": 312824205066,
+                "StudentName": "NAVEENA T"
+            },
+            {
+                "Dept": "IT",
+                "Section": "B",
+                "StudentName": "SAHANA R",
+                "RegisterNo": 312824205088
+            },
+            {
+                "Dept": "IT",
+                "RegisterNo": 312824205091,
+                "StudentName": "SAKTHI B",
+                "Section": "B"
+            },
+            {
+                "StudentName": "SWATHY S",
+                "RegisterNo": 312824205112,
+                "Section": "B",
+                "Dept": "IT"
+            }
+        ],
+        "mentor": {
+            "name": "Mrs. ELAVARASI.R",
+            "mentorId": "89",
+            "department": "IT",
+            "email": "elavarasir.it@act.edu.in"
+        },
+        "timestamp": {
+            "seconds": 1753429672,
+            "nanoseconds": 230000000
+        },
+        "teamName": "Pentaforce"
+    },
+    {
+        "mentor": {
+            "email": "manoranjitham.it@act.edu.in",
+            "department": "IT",
+            "name": "Mrs. MANORANJITHAM.S",
+            "mentorId": "87"
+        },
+        "teamName": "Hawkeye",
+        "email": "raginiperumal07@gmail.com",
+        "timestamp": {
+            "seconds": 1753430375,
+            "nanoseconds": 987000000
+        },
+        "teamLeader": {
+            "Dept": "IT",
+            "StudentName": "RAGINI P",
+            "RegisterNo": 312824205076,
+            "Section": "B"
+        },
+        "mobile": "9080447327",
+        "students": [
+            {
+                "Section": "A",
+                "RegisterNo": 312824121001,
+                "Dept": "BME",
+                "StudentName": "ALWIN MARTIN S"
+            },
+            {
+                "StudentName": "BARATHWAJ V",
+                "RegisterNo": 312824121008,
+                "Section": "A",
+                "Dept": "BME"
+            },
+            {
+                "RegisterNo": 312824205068,
+                "StudentName": "NITHISH KUMAR G",
+                "Section": "B",
+                "Dept": "IT"
+            },
+            {
+                "RegisterNo": 312824205113,
+                "StudentName": "TAMIL MATHI P",
+                "Dept": "IT",
+                "Section": "B"
+            }
+        ]
+    },
+    {
+        "email": "24it078@act.edu.in",
+        "teamName": "Byte Benders",
+        "mentor": {
+            "name": "Mr. RAGHURAMAN.V",
+            "email": "raghuraman.it@act.edu.in",
+            "department": "IT",
+            "mentorId": "92"
+        },
+        "students": [
+            {
+                "Dept": "IT",
+                "RegisterNo": 312824205097,
+                "StudentName": "SANJAY M",
+                "Section": "B"
+            },
+            {
+                "Dept": "IT",
+                "Section": "B",
+                "RegisterNo": 312824205098,
+                "StudentName": "SASIDHARAN A"
+            },
+            {
+                "StudentName": "SOWNDRESH K",
+                "Section": "B",
+                "RegisterNo": 312824205106,
+                "Dept": "IT"
+            },
+            {
+                "Dept": "IT",
+                "StudentName": "SRINITHI B",
+                "RegisterNo": 312824205109,
+                "Section": "B"
+            }
+        ],
+        "teamLeader": {
+            "Section": "B",
+            "StudentName": "RAMANAN S",
+            "RegisterNo": 312824205077,
+            "Dept": "IT"
+        },
+        "mobile": "9080173002",
+        "timestamp": {
+            "seconds": 1753951935,
+            "nanoseconds": 46000000
+        }
+    },
+    {
+        "email": "24eee09@act.edu.in",
+        "students": [
+            {
+                "RegisterNo": 312824105010,
+                "Section": "A",
+                "StudentName": "JEEVAN A",
+                "Dept": "EEE"
+            },
+            {
+                "RegisterNo": 312824105026,
+                "Section": "A",
+                "StudentName": "SRIDHAR A",
+                "Dept": "EEE"
+            },
+            {
+                "RegisterNo": 312824105027,
+                "StudentName": "SUBATHRA C",
+                "Section": "A",
+                "Dept": "EEE"
+            }
+        ],
+        "teamName": "INNOVSPARK ⚡",
+        "mobile": "6381117320",
+        "mentor": {
+            "name": "Mrs. PANDY SELVI",
+            "mentorId": "78",
+            "department": "EEE",
+            "email": "pandyselvi.eee@act.edu.in"
+        },
+        "timestamp": {
+            "seconds": 1753795772,
+            "nanoseconds": 961000000
+        },
+        "teamLeader": {
+            "StudentName": "INDHUJA R D",
+            "Section": "A",
+            "Dept": "EEE",
+            "RegisterNo": 312824105009
+        }
+    },
+    {
+        "teamLeader": {
+            "StudentName": "SHANMUGAPRIYA R",
+            "Section": "A",
+            "Dept": "EEE",
+            "RegisterNo": 312824105024
+        },
+        "mentor": {
+            "mentorId": "75",
+            "name": "Ms. REMYA.O.C",
+            "email": "remya.eee@act.edu.in",
+            "department": "EEE"
+        },
+        "email": "24eee24@act.edu.in",
+        "timestamp": {
+            "seconds": 1753797697,
+            "nanoseconds": 191000000
+        },
+        "mobile": "9940481369",
+        "students": [
+            {
+                "Section": "A",
+                "StudentName": "AKASH B",
+                "RegisterNo": 312824105003,
+                "Dept": "EEE"
+            },
+            {
+                "RegisterNo": 312824105006,
+                "Section": "A",
+                "Dept": "EEE",
+                "StudentName": "DHARANI PRIYA M"
+            },
+            {
+                "Dept": "EEE",
+                "StudentName": "SENNIRAL M",
+                "RegisterNo": 312824105023,
+                "Section": "A"
+            },
+            {
+                "Dept": "EEE",
+                "StudentName": "SHRIHARI S",
+                "RegisterNo": 312824105025,
+                "Section": "A"
+            }
+        ],
+        "teamName": "Fluxionics"
+    },
+    {
+        "teamLeader": {
+            "Dept": "BME",
+            "Section": "A",
+            "StudentName": "SHALINI G",
+            "RegisterNo": 312824121042
+        },
+        "mobile": "7401444881",
+        "mentor": {
+            "department": "BME",
+            "email": "sureshkapali.bme@act.edu.in",
+            "mentorId": "22",
+            "name": "Dr. SURESH CHANDER KAPALI B"
+        },
+        "students": [
+            {
+                "StudentName": "ARUNI A",
+                "RegisterNo": 312824121004,
+                "Section": "A",
+                "Dept": "BME"
+            },
+            {
+                "Section": "A",
+                "StudentName": "CHARULATHA M",
+                "Dept": "BME",
+                "RegisterNo": 312824121013
+            },
+            {
+                "RegisterNo": 312824121018,
+                "Dept": "BME",
+                "StudentName": "DHIVYA DHARSHNI M",
+                "Section": "A"
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753948033,
+            "nanoseconds": 186000000
+        },
+        "teamName": "Shalini and co",
+        "email": "24bme42@act.edu.in"
+    },
+    {
+        "mobile": "7418077358",
+        "email": "24cse035@act.edu.in",
+        "mentor": {
+            "mentorId": "42",
+            "email": "prinslinl.cse@act.edu.in",
+            "name": "Ms. PRINSLIN.L",
+            "department": "CSE"
+        },
+        "teamLeader": {
+            "RegisterNo": 312824104036,
+            "Dept": "CSE",
+            "StudentName": "DHIVYASRI P",
+            "Section": "A"
+        },
+        "students": [
+            {
+                "StudentName": "AMITA K",
+                "RegisterNo": 312824104009,
+                "Section": "A",
+                "Dept": "CSE"
+            },
+            {
+                "Dept": "CSE",
+                "RegisterNo": 312824104030,
+                "Section": "A",
+                "StudentName": "DHARSHINI S"
+            },
+            {
+                "Dept": "CSE",
+                "RegisterNo": 312824104032,
+                "Section": "A",
+                "StudentName": "DHEEKSHANA S"
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753950159,
+            "nanoseconds": 620000000
+        },
+        "teamName": "Visionary Minds"
+    },
+    {
+        "mentor": {
+            "name": "Ms. SUJATHA.M.P",
+            "email": "sujatha.cse@act.edu.in",
+            "department": "CSE",
+            "mentorId": "43"
+        },
+        "email": "24cse178@act.edu.in",
+        "teamName": "Skylar",
+        "students": [
+            {
+                "Section": "C",
+                "StudentName": "SRIRAGHAVAN K",
+                "Dept": "CSE",
+                "RegisterNo": 312824104157
+            },
+            {
+                "Section": "C",
+                "RegisterNo": 312824104182,
+                "StudentName": "VISHAL A",
+                "Dept": "CSE"
+            },
+            {
+                "RegisterNo": "08",
+                "Dept": "LE - CSE",
+                "StudentName": "LAKSHMAN ASHWANTH P",
+                "Section": "-"
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753758544,
+            "nanoseconds": 990000000
+        },
+        "mobile": "7358359400",
+        "teamLeader": {
+            "RegisterNo": 312824104178,
+            "Section": "C",
+            "Dept": "CSE",
+            "StudentName": "VIGNESH V"
+        }
+    },
+    {
+        "students": [
+            {
+                "Section": "B",
+                "RegisterNo": 312824104071,
+                "Dept": "CSE",
+                "StudentName": "KAVENTARA E"
+            },
+            {
+                "Dept": "CSE",
+                "StudentName": "KAVITHA S",
+                "Section": "B",
+                "RegisterNo": 312824104073
+            },
+            {
+                "Section": "B",
+                "StudentName": "KAYALVIZHI P",
+                "RegisterNo": 312824104075,
+                "Dept": "CSE"
+            },
+            {
+                "Dept": "CSE",
+                "Section": "B",
+                "RegisterNo": 312824104109,
+                "StudentName": "PATTIBOIYANA SRAVANTHI"
+            }
+        ],
+        "mentor": {
+            "email": "kannan.cse@act.edu.in",
+            "mentorId": "46",
+            "name": "Mr. KANNAN.R",
+            "department": "CSE"
+        },
+        "email": "lavanyaengrace@gmail.com",
+        "mobile": "8925243012",
+        "teamLeader": {
+            "Dept": "CSE",
+            "Section": "B",
+            "RegisterNo": 312824104086,
+            "StudentName": "LAVANYA S"
+        },
+        "timestamp": {
+            "seconds": 1753519993,
+            "nanoseconds": 0
+        },
+        "teamName": "High-Five avenue "
+    },
+    {
+        "students": [
+            {
+                "StudentName": "BALAMANIKANDAN R",
+                "RegisterNo": 312824205013,
+                "Dept": "IT",
+                "Section": "A"
+            },
+            {
+                "StudentName": "JEEVABHARATHI B",
+                "RegisterNo": 312824205036,
+                "Section": "A",
+                "Dept": "IT"
+            },
+            {
+                "RegisterNo": 312824205037,
+                "Dept": "IT",
+                "StudentName": "JEEVATHARAN R",
+                "Section": "A"
+            },
+            {
+                "Dept": "IT",
+                "RegisterNo": 312824205049,
+                "Section": "A",
+                "StudentName": "KISHORE K"
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753429963,
+            "nanoseconds": 305000000
+        },
+        "teamLeader": {
+            "StudentName": "KAMESH D",
+            "Section": "A",
+            "RegisterNo": 312824205043,
+            "Dept": "IT"
+        },
+        "teamName": "CYBER KNIGHTS",
+        "email": "24it042@act.edu.in",
+        "mobile": "7200739680",
+        "mentor": {
+            "mentorId": "83",
+            "department": "IT",
+            "name": "Dr. SENTHIL.G.A",
+            "email": "senthilga.it@act.edu.in"
+        }
+    },
+    {
+        "timestamp": {
+            "seconds": 1753765185,
+            "nanoseconds": 112000000
+        },
+        "mobile": "9655269681",
+        "email": "24cse079@act.edu.in",
+        "students": [
+            {
+                "Section": "A",
+                "Dept": "CSE",
+                "StudentName": "GOPALA KRISHNAN M",
+                "RegisterNo": 312824104041
+            },
+            {
+                "RegisterNo": 312824104068,
+                "Dept": "CSE",
+                "Section": "B",
+                "StudentName": "KARAN JHA"
+            },
+            {
+                "Dept": "CSE",
+                "StudentName": "KEERTHI BHOOSHIAN L",
+                "RegisterNo": 312824104077,
+                "Section": "B"
+            },
+            {
+                "Section": "B",
+                "StudentName": "RAJADURAI R",
+                "RegisterNo": 312824104124,
+                "Dept": "CSE"
+            }
+        ],
+        "mentor": {
+            "email": "suresh.cse@act.edu.in",
+            "mentorId": "47",
+            "name": "Mr. SURESH.C",
+            "department": "CSE"
+        },
+        "teamName": "Tech titans",
+        "teamLeader": {
+            "RegisterNo": 312824104079,
+            "Dept": "CSE",
+            "StudentName": "KIRAN KUMAR A V",
+            "Section": "B"
+        }
+    },
+    {
+        "email": "24it008@act.edu.in",
+        "teamName": "GRYFFINDEVS",
+        "mobile": "7418984886",
+        "students": [
+            {
+                "Dept": "IT",
+                "Section": "A",
+                "RegisterNo": 312824205024,
+                "StudentName": "EZHILARASI R"
+            },
+            {
+                "Dept": "IT",
+                "RegisterNo": 312824205029,
+                "StudentName": "HARISHNI C",
+                "Section": "A"
+            },
+            {
+                "StudentName": "HARSHINI SRI S",
+                "RegisterNo": 312824205030,
+                "Dept": "IT",
+                "Section": "A"
+            },
+            {
+                "Dept": "IT",
+                "StudentName": "KALAIVANI P",
+                "RegisterNo": 312824205040,
+                "Section": "A"
+            }
+        ],
+        "teamLeader": {
+            "StudentName": "ANNE GRACEWIN A",
+            "Section": "A",
+            "RegisterNo": 312824205008,
+            "Dept": "IT"
+        },
+        "mentor": {
+            "email": "kamatchisaranya.it@act.edu.in",
+            "mentorId": "88",
+            "department": "IT",
+            "name": "Mrs. KAMATCHI SARANYA.M"
+        },
+        "timestamp": {
+            "seconds": 1753953316,
+            "nanoseconds": 323000000
+        }
+    },
+    {
+        "teamName": "PIXAL TECHHUB",
+        "timestamp": {
+            "seconds": 1753432195,
+            "nanoseconds": 151000000
+        },
+        "students": [
+            {
+                "Section": "A",
+                "RegisterNo": 312824205012,
+                "StudentName": "BALAJI KOLLA",
+                "Dept": "IT"
+            },
+            {
+                "StudentName": "DEEPAK S",
+                "Dept": "AIDS",
+                "RegisterNo": 312824243011,
+                "Section": "A"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824243015,
+                "Dept": "AIDS",
+                "StudentName": "DIVYASREE M"
+            },
+            {
+                "Dept": "AIDS",
+                "Section": "A",
+                "StudentName": "LAKSHMI PRIYA R",
+                "RegisterNo": 312824243031
+            }
+        ],
+        "email": "24aids05@act.edu.in",
+        "mentor": {
+            "department": "AIDS",
+            "name": "Mr. RAHUL.J",
+            "mentorId": "3",
+            "email": "rahul.aids@act.edu.in"
+        },
+        "mobile": "9489155202",
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "ANITHA N",
+            "RegisterNo": 312824243005,
+            "Dept": "AIDS"
+        }
+    },
+    {
+        "mobile": "7338898905",
+        "email": "24it002@act.edu.in",
+        "teamLeader": {
+            "Dept": "IT",
+            "Section": "A",
+            "StudentName": "ABARNA S",
+            "RegisterNo": 312824205002
+        },
+        "mentor": {
+            "email": "manoranjitham.it@act.edu.in",
+            "name": "Mrs. MANORANJITHAM.S",
+            "mentorId": "87",
+            "department": "IT"
+        },
+        "timestamp": {
+            "seconds": 1753455101,
+            "nanoseconds": 200000000
+        },
+        "students": [
+            {
+                "Dept": "IT",
+                "Section": "A",
+                "StudentName": "AMIRTHINI K",
+                "RegisterNo": 312824205005
+            },
+            {
+                "Section": "A",
+                "Dept": "IT",
+                "StudentName": "ANANIYA V",
+                "RegisterNo": 312824205006
+            },
+            {
+                "Dept": "IT",
+                "Section": "A",
+                "StudentName": "MONISHA G",
+                "RegisterNo": 312824205061
+            },
+            {
+                "Dept": "IT",
+                "StudentName": "NAILIN NITHIYA THANGAM K",
+                "RegisterNo": 312824205063,
+                "Section": "A"
+            }
+        ],
+        "teamName": "Tech squad "
+    },
+    {
+        "students": [
+            {
+                "Dept": "AIDS",
+                "Section": "A",
+                "StudentName": "ABINAYA D",
+                "RegisterNo": 312824243001
+            },
+            {
+                "Dept": "AIDS",
+                "RegisterNo": 312824243023,
+                "Section": "A",
+                "StudentName": "JERITH HEARTSON M"
+            },
+            {
+                "Section": "A",
+                "StudentName": "LEENA VISHAGINI J",
+                "Dept": "AIDS",
+                "RegisterNo": 312824243032
+            }
+        ],
+        "mobile": "9094090098",
+        "teamLeader": {
+            "RegisterNo": 312824243013,
+            "Section": "A",
+            "Dept": "AIDS",
+            "StudentName": "DHARSHINI MARY J"
+        },
+        "mentor": {
+            "mentorId": "8",
+            "email": "vishali.aids@act.edu.in",
+            "name": "Ms. VISHALI.K",
+            "department": "AIDS"
+        },
+        "timestamp": {
+            "seconds": 1753541811,
+            "nanoseconds": 96000000
+        },
+        "teamName": "QuadraMind",
+        "email": "24aids13@act.edu.in"
+    },
+    {
+        "timestamp": {
+            "seconds": 1753948801,
+            "nanoseconds": 716000000
+        },
+        "teamLeader": {
+            "StudentName": "DHIVAHAR S",
+            "Section": "A",
+            "RegisterNo": 312824104035,
+            "Dept": "CSE"
+        },
+        "email": "24cse034@act.edu.in",
+        "mentor": {
+            "department": "AIDS",
+            "name": "Ms. REVATHI.K",
+            "mentorId": "5",
+            "email": "krevathi.aids@act.edu.in"
+        },
+        "teamName": "Bitwise",
+        "mobile": "8807939337",
+        "students": [
+            {
+                "StudentName": "AADHESH A",
+                "Section": "A",
+                "RegisterNo": 312824104001,
+                "Dept": "CSE"
+            },
+            {
+                "StudentName": "ADARSH M",
+                "Section": "A",
+                "RegisterNo": 312824104003,
+                "Dept": "CSE"
+            },
+            {
+                "Section": "A",
+                "StudentName": "BALAJI A",
+                "RegisterNo": 312824104020,
+                "Dept": "CSE"
+            },
+            {
+                "StudentName": "HARISH S",
+                "Section": "A",
+                "RegisterNo": 312824104046,
+                "Dept": "CSE"
+            }
+        ]
+    },
+    {
+        "timestamp": {
+            "seconds": 1753431388,
+            "nanoseconds": 816000000
+        },
+        "email": "24aids28@act.edu.in",
+        "students": [
+            {
+                "RegisterNo": 312824243010,
+                "Section": "A",
+                "StudentName": "BOOMIKA M",
+                "Dept": "AIDS"
+            },
+            {
+                "StudentName": "PRITHIVI K",
+                "RegisterNo": 312824243045,
+                "Dept": "AIDS",
+                "Section": "A"
+            },
+            {
+                "StudentName": "RAHUL KUMAR GUPTA S",
+                "Dept": "AIDS",
+                "RegisterNo": 312824243046,
+                "Section": "A"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824243048,
+                "StudentName": "SADHANA J",
+                "Dept": "AIDS"
+            }
+        ],
+        "teamName": "The Forge ",
+        "teamLeader": {
+            "Dept": "AIDS",
+            "StudentName": "KIRUTHIKA S",
+            "Section": "A",
+            "RegisterNo": 312824243028
+        },
+        "mobile": "9360585770",
+        "mentor": {
+            "department": "AIDS",
+            "name": "Mrs. PANDISELVI.G",
+            "mentorId": "9",
+            "email": "pandiselvi.aids@act.edu.in"
+        }
+    },
+    {
+        "mobile": "7339684907",
+        "students": [
+            {
+                "RegisterNo": 312824105012,
+                "StudentName": "KEERTHIKA E",
+                "Dept": "EEE",
+                "Section": "A"
+            },
+            {
+                "Dept": "EEE",
+                "Section": "A",
+                "RegisterNo": 312824105014,
+                "StudentName": "KUMARARAGAVAN N"
+            },
+            {
+                "Dept": "EEE",
+                "RegisterNo": 312824105028,
+                "Section": "A",
+                "StudentName": "TINU AAKASH S"
+            },
+            {
+                "StudentName": "SUNIL KUMAR G",
+                "Dept": "LE - EEE",
+                "Section": "-",
+                "RegisterNo": "01"
+            }
+        ],
+        "teamName": "Power pulse",
+        "email": "24eee19@act.edu.in",
+        "timestamp": {
+            "seconds": 1753956603,
+            "nanoseconds": 588000000
+        },
+        "teamLeader": {
+            "StudentName": "NANCY MAJELLA A",
+            "RegisterNo": 312824105019,
+            "Section": "A",
+            "Dept": "EEE"
+        },
+        "mentor": {
+            "mentorId": "74",
+            "name": "Ms. ANUJA PRASHANT DIWAN",
+            "email": "anuja.eee@act.edu.in",
+            "department": "EEE"
+        }
+    },
+    {
+        "mentor": {
+            "name": "Mrs. KARTHIKA.C.D",
+            "email": "karthika.cme@act.edu.in",
+            "mentorId": "34",
+            "department": "CME"
+        },
+        "email": "24cme26@act.edu.in",
+        "teamLeader": {
+            "Section": "A",
+            "Dept": "CME",
+            "StudentName": "TAMIZHARASU K",
+            "RegisterNo": 312824203025
+        },
+        "students": [
+            {
+                "StudentName": "POOJITHA S",
+                "Dept": "EEE",
+                "Section": "A",
+                "RegisterNo": 312824105022
+            },
+            {
+                "Section": "A",
+                "Dept": "CME",
+                "StudentName": "NAVEEN KUMAR K",
+                "RegisterNo": 312824203013
+            },
+            {
+                "Dept": "CME",
+                "StudentName": "SARAVANA VIKESH E",
+                "Section": "A",
+                "RegisterNo": 312824203022
+            },
+            {
+                "Dept": "CME",
+                "StudentName": "SUDHARSAN S",
+                "RegisterNo": 312824203024,
+                "Section": "A"
+            }
+        ],
+        "timestamp": {
+            "seconds": 1753956206,
+            "nanoseconds": 582000000
+        },
+        "mobile": "7305664736",
+        "teamName": "BOND BREAKERZ"
+    },
+    {
+        "timestamp": {
+            "seconds": 1754023397,
+            "nanoseconds": 648000000
+        },
+        "teamLeader": {
+            "RegisterNo": 312824115044,
+            "Dept": "MHT",
+            "Section": "A",
+            "StudentName": "SANJAI GANESH A"
+        },
+        "email": "24mht45@act.edu.in",
+        "students": [
+            {
+                "Dept": "MHT",
+                "RegisterNo": 312824115013,
+                "Section": "A",
+                "StudentName": "BHUVANESHWAR V"
+            },
+            {
+                "StudentName": "PAPPALA SUMANTH",
+                "Dept": "MHT",
+                "RegisterNo": 312824115038,
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824115039,
+                "Dept": "MHT",
+                "StudentName": "RAM M",
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824115046,
+                "Section": "A",
+                "Dept": "MHT",
+                "StudentName": "SARAN KUMAR S"
+            }
+        ],
+        "mobile": "9361010398",
+        "mentor": {
+            "name": "Mrs. GEETHA T",
+            "mentorId": "114",
+            "department": "MHT",
+            "email": "geetha.mht@act.edu.in"
+        },
+        "teamName": "Black Pearl"
+    },
+    {
+        "teamLeader": {
+            "Dept": "CSE",
+            "Section": "C",
+            "RegisterNo": 312824104152,
+            "StudentName": "SHAYANA SHREE Y"
+        },
+        "email": "24cse152@act.edu.in",
+        "teamName": "SheCodesIt ",
+        "mobile": "9962885677",
+        "timestamp": {
+            "seconds": 1753450452,
+            "nanoseconds": 165000000
+        },
+        "students": [
+            {
+                "Dept": "CSE",
+                "Section": "C",
+                "StudentName": "RUPIKA S",
+                "RegisterNo": 312824104134
+            },
+            {
+                "Dept": "CSE",
+                "RegisterNo": 312824104141,
+                "StudentName": "SANDHIYA S",
+                "Section": "C"
+            },
+            {
+                "RegisterNo": 312824104175,
+                "StudentName": "VIDYASRI M",
+                "Dept": "CSE",
+                "Section": "C"
+            }
+        ],
+        "mentor": {
+            "department": "CSE",
+            "name": "Mrs. CHANDRAKUMARI.K",
+            "mentorId": "57",
+            "email": "chandrakumari.cse@act.edu.in"
+        }
+    },
+    {
+        "teamLeader": {
+            "Section": "A",
+            "Dept": "MHT",
+            "RegisterNo": 312824115001,
+            "StudentName": "ABHIJITH A"
+        },
+        "email": "24mht01@act.edu.in",
+        "students": [
+            {
+                "Section": "A",
+                "Dept": "MHT",
+                "StudentName": "ABHINAV N",
+                "RegisterNo": 312824115002
+            },
+            {
+                "StudentName": "DOSAN T",
+                "RegisterNo": 312824115019,
+                "Dept": "MHT",
+                "Section": "A"
+            },
+            {
+                "Dept": "MHT",
+                "StudentName": "GOKUL SANJAY M",
+                "RegisterNo": 312824115022,
+                "Section": "A"
+            },
+            {
+                "Section": "A",
+                "RegisterNo": 312824115040,
+                "Dept": "MHT",
+                "StudentName": "RAMITH RADHAKRISHNAN"
+            }
+        ],
+        "teamName": "MHT : PHOENIX",
+        "mobile": "8089525974",
+        "timestamp": {
+            "seconds": 1753681364,
+            "nanoseconds": 774000000
+        },
+        "mentor": {
+            "name": "Ms. PRAGATHI T",
+            "email": "pragathi.mht@act.edu.in",
+            "mentorId": "115",
+            "department": "MHT"
+        }
+    },
+    {
+        "email": "24bme11@act.edu.in",
+        "students": [
+            {
+                "Dept": "BME",
+                "Section": "A",
+                "StudentName": "DHARSHINI R",
+                "RegisterNo": 312824121017
+            },
+            {
+                "Dept": "BME",
+                "RegisterNo": 312824121031,
+                "StudentName": "NARMADHA S",
+                "Section": "A"
+            },
+            {
+                "RegisterNo": 312824121040,
+                "Dept": "BME",
+                "Section": "A",
+                "StudentName": "SANTHOSINI S"
+            },
+            {
+                "Dept": "BME",
+                "StudentName": "SAVITHA SREE N",
+                "RegisterNo": 312824121041,
+                "Section": "A"
+            }
+        ],
+        "mobile": "7305558267",
+        "mentor": {
+            "email": "divya.bme@act.edu.in",
+            "department": "BME",
+            "name": "Ms. DIVYA.Y",
+            "mentorId": "23"
+        },
+        "teamName": "Nexus",
+        "timestamp": {
+            "seconds": 1753696016,
+            "nanoseconds": 482000000
+        },
+        "teamLeader": {
+            "Dept": "BME",
+            "RegisterNo": 312824121011,
+            "StudentName": "BHAGYASHREE S B",
+            "Section": "A"
+        }
+    },
+    {
+        "email": "24mht54@act.edu.in",
+        "timestamp": {
+            "seconds": 1753685844,
+            "nanoseconds": 981000000
+        },
+        "teamName": "MHT warriors",
+        "teamLeader": {
+            "Section": "A",
+            "StudentName": "VENKAT B",
+            "Dept": "MHT",
+            "RegisterNo": 312824115053
+        },
+        "mentor": {
+            "mentorId": "111",
+            "department": "MHT",
+            "name": "Dr. ARULARASAN.R",
+            "email": "arularasan.mht@act.edu.in"
+        },
+        "mobile": "9342820068",
+        "students": [
+            {
+                "RegisterNo": 312824115004,
+                "StudentName": "ABISHEK K",
+                "Dept": "MHT",
+                "Section": "A"
+            },
+            {
+                "Dept": "MHT",
+                "Section": "A",
+                "StudentName": "BOOPATHY G",
+                "RegisterNo": 312824115014
+            },
+            {
+                "Section": "A",
+                "StudentName": "CHERAN V",
+                "Dept": "MHT",
+                "RegisterNo": 312824115016
+            },
+            {
+                "Dept": "MHT",
+                "StudentName": "KAILASH V",
+                "RegisterNo": 312824115029,
+                "Section": "A"
+            }
+        ]
+    },
+    {
+        "mobile": "9042396795",
+        "students": [
+            {
+                "Section": "A",
+                "StudentName": "MALARVIZHI M",
+                "Dept": "AIDS",
+                "RegisterNo": 312824243034
+            },
+            {
+                "StudentName": "PRAVEEN G",
+                "Section": "A",
+                "Dept": "AIDS",
+                "RegisterNo": 312824243042
+            },
+            {
+                "RegisterNo": 312824243047,
+                "Dept": "AIDS",
+                "Section": "A",
+                "StudentName": "RANJITH S"
+            },
+            {
+                "StudentName": "SOWMIYA M",
+                "Section": "A",
+                "Dept": "AIDS",
+                "RegisterNo": 312824243055
+            }
+        ],
+        "mentor": {
+            "email": "aidshod@act.edu.in",
+            "department": "AIDS",
+            "mentorId": "1",
+            "name": "Dr. ISHWARYA.M.V"
+        },
+        "timestamp": {
+            "seconds": 1753452889,
+            "nanoseconds": 916000000
+        },
+        "teamName": "Alpha acheivers ",
+        "teamLeader": {
+            "StudentName": "SHEETHAL SHYLU G",
+            "RegisterNo": 312824243053,
+            "Dept": "AIDS",
+            "Section": "A"
+        },
+        "email": "24aids53@act.edu.in"
+    },
+    {
+        "email": "bhuvigee26@gmail.com",
+        "teamLeader": {
+            "StudentName": "BHUVANESHWARI S",
+            "RegisterNo": 312824205015,
+            "Dept": "IT",
+            "Section": "A"
+        },
+        "teamName": "Team Techno ",
+        "mentor": {
+            "mentorId": "95",
+            "department": "IT",
+            "email": "simimargarat.it@act.edu.in",
+            "name": "Dr. G.SIMI MARGARAT"
+        },
+        "students": [
+            {
+                "StudentName": "MADHUMITHA M",
+                "RegisterNo": 312824205055,
+                "Dept": "IT",
+                "Section": "A"
+            },
+            {
+                "StudentName": "NARESH KUMAR P",
+                "Dept": "IT",
+                "Section": "B",
+                "RegisterNo": 312824205065
+            },
+            {
+                "Section": "B",
+                "RegisterNo": 312824205081,
+                "Dept": "IT",
+                "StudentName": "RAVI RAGHUL S"
+            }
+        ],
+        "mobile": "9363004047",
+        "timestamp": {
+            "seconds": 1753431111,
+            "nanoseconds": 298000000
+        }
+    },
+    {
+        "mobile": "7010275965",
+        "mentor": {
+            "mentorId": "58",
+            "department": "CSE",
+            "name": "Mr. SULTAN SALEEM.A",
+            "email": "sultansaleem.cse@act.edu.in"
+        },
+        "teamLeader": {
+            "RegisterNo": 312824104107,
+            "Dept": "CSE",
+            "StudentName": "NISHITHA VELMURUGAN",
+            "Section": "B"
+        },
+        "email": "24cse106@act.edu.in",
+        "timestamp": {
+            "seconds": 1753518201,
+            "nanoseconds": 991000000
+        },
+        "students": [
+            {
+                "StudentName": "MONISHA L",
+                "Dept": "CSE",
+                "Section": "B",
+                "RegisterNo": 312824104099
+            },
+            {
+                "RegisterNo": 312824104111,
+                "Section": "B",
+                "StudentName": "PAVIKSHA M",
+                "Dept": "CSE"
+            },
+            {
+                "RegisterNo": 312824104122,
+                "Dept": "CSE",
+                "Section": "B",
+                "StudentName": "PRIYADHARSHINI S"
+            }
+        ],
+        "teamName": "Tech Tide"
+    }
+]
