@@ -29,7 +29,7 @@ window.onload = async () => {
     document.getElementById("mentorName").innerHTML = `${mentor.title}${mentor.name}<br> ${mentor.designation} - ${mentor.department}<br> ${mentor.email}`;
 
     await loadUploadHistory();
-   
+
 
     // // Progress
     // document.getElementById("progressFill").style.width = `${progress}%`;
@@ -69,7 +69,7 @@ async function loadUploadHistory() {
       `;
       uploadDiv.appendChild(item);
     });
-    
+
 
   } catch (err) {
     console.error("Error loading upload history", err);
@@ -129,7 +129,14 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
 
     document.getElementById("uploadStatus").textContent = "Uploaded successfully!";
     progressBar.style.backgroundColor = "#16a34a"; // green on success
+    alert("Uploaded Successfully!!")
     console.log("Cloudinary URL:", res.data.url);
+
+    setTimeout(() => {
+      progressBar.style.width = "0%";
+      progressBar.textContent = "0%";
+      progressBar.style.backgroundColor = "#3b82f6"; // reset to default blue or whatever your original color is
+    }, 1000);
 
     await loadUploadHistory(); // refresh uploads
   } catch (err) {
@@ -173,7 +180,7 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
 // Load Template Files (static list or fetched from server)
 const templates = [
   { name: "Affinity Diagram", file: "Affinity Diagram.docx" },
-  {name:"Problem Statement Canvas_ACT",file:"Problem Statement Canvas_ACT.docx"}
+  { name: "Problem Statement Canvas_ACT", file: "Problem Statement Canvas_ACT.docx" }
 ];
 
 function loadTemplateFiles() {
@@ -231,7 +238,7 @@ document.getElementById('editForm').addEventListener('submit', async function (e
     // update UI
     document.getElementById('teamName').textContent = teamName;
     document.getElementById("contactNo").textContent = mobile;
-    
+
     setTimeout(() => {
       document.getElementById('editModal').classList.add('hidden');
     }, 1000);

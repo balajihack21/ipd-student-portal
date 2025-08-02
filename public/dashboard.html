@@ -43,7 +43,7 @@
                 <div class="bg-white rounded-xl shadow-md p-4 flex items-center justify-between">
                     <div>
                         <h2 class="text-xl font-bold">Team Name: <span id="teamName" class="text-blue-600"></span></h2>
-                        <p class="text-gray-500" >Contact No:<span id="contactNo" class="text-blue-600"></span></p>
+                        <p class="text-gray-500">Contact No:<span id="contactNo" class="text-blue-600"></span></p>
                         <div class="w-full bg-gray-200 h-3 rounded-full mt-2">
                             <div class="bg-blue-500 h-3 rounded-full" style="width: 40%;"></div>
                         </div>
@@ -76,11 +76,17 @@
                         <!-- Filled dynamically -->
                     </div>
                 </div>
-
+                <!-- Mentor Comments Section -->
+                <div class="bg-white p-6 rounded-xl shadow-md mt-8">
+                    <h3 class="text-lg font-semibold mb-2">Comments From Mentor</h3>
+                    <div id="mentorComments" class="space-y-2 text-sm text-gray-700">
+                        <!-- Mentor comments will be injected here via JS -->
+                    </div>
+                </div>
 
 
                 <form id="uploadForm" enctype="multipart/form-data">
-                    <input type="file" name="file" id="fileInput" accept=".pdf,.jpg,.png,.docx,.pptx" required/>
+                    <input type="file" name="file" id="fileInput" accept=".pdf,.jpg,.png,.docx,.pptx" required />
                     <input type="number" name="week_number" id="weekNumber" placeholder="Week #" required
                         class="mt-2 border p-1" />
                     <button type="submit" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">Upload</button>
@@ -104,26 +110,29 @@
     </div>
 
     <!-- Edit Modal -->
-<div id="editModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
-  <div class="bg-white rounded-lg p-6 w-full max-w-md relative">
-    <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
-    <form id="editForm" class="space-y-4">
-      <div>
-        <label for="editTeamName" class="block text-sm font-medium">Team Name</label>
-        <input type="text" id="editTeamName" class="w-full border border-gray-300 rounded px-3 py-2" required>
-      </div>
-      <div>
-        <label for="editMobile" class="block text-sm font-medium">Mobile Number</label>
-        <input type="text" id="editMobile" class="w-full border border-gray-300 rounded px-3 py-2" required>
-      </div>
-      <div id="updateMsg" class="text-sm text-red-500"></div>
-      <div class="flex justify-end space-x-2">
-        <button type="button" id="cancelBtn" class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save</button>
-      </div>
-    </form>
-  </div>
-</div>
+    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 w-full max-w-md relative">
+            <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
+            <form id="editForm" class="space-y-4">
+                <div>
+                    <label for="editTeamName" class="block text-sm font-medium">Team Name</label>
+                    <input type="text" id="editTeamName" class="w-full border border-gray-300 rounded px-3 py-2"
+                        required>
+                </div>
+                <div>
+                    <label for="editMobile" class="block text-sm font-medium">Mobile Number</label>
+                    <input type="text" id="editMobile" class="w-full border border-gray-300 rounded px-3 py-2" required>
+                </div>
+                <div id="updateMsg" class="text-sm text-red-500"></div>
+                <div class="flex justify-end space-x-2">
+                    <button type="button" id="cancelBtn"
+                        class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+                    <button type="submit"
+                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
     <script src="/js/dashboard.js"></script>
