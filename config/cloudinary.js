@@ -1,9 +1,6 @@
-const cloudinary = require('cloudinary').v2;
+import { createClient } from '@supabase/supabase-js';
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key:    process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
 
-module.exports = cloudinary;
+export const supabase = createClient(supabaseUrl, supabaseKey);

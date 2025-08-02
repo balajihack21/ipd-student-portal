@@ -1,15 +1,15 @@
-const express = require('express');
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    console.log(email, password)
+    console.log(email, password);
     const user = await User.findOne({ where: { email } });
-
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
@@ -25,19 +25,19 @@ router.post("/login", async (req, res) => {
     });
 
     res.json({ token });
-    // res.status(200).json({message:"Logged in Successfully"})
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 router.post("/reset-password", async (req, res) => {
   const { userId, newPassword } = req.body;
 
   try {
-    console.log(userId)
+    console.log(userId);
     const user = await User.findByPk(userId);
-    
+
     if (!user) return res.status(404).json({ message: "User not found" });
 
     user.password = newPassword;
@@ -51,4 +51,4 @@ router.post("/reset-password", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

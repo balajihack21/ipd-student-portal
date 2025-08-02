@@ -1,9 +1,9 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('./index');
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
 
 const Mentor = sequelize.define('Mentor', {
   mentorId: {
-    type: DataTypes.INTEGER.UNSIGNED, // ✅ Match foreign key type
+    type: DataTypes.INTEGER.UNSIGNED,
     primaryKey: true,
     allowNull: false,
     unique: true
@@ -36,6 +36,8 @@ const Mentor = sequelize.define('Mentor', {
     type: DataTypes.STRING(255),
     allowNull: true
   }
-}, { tableName: 'mentors' });
+}, {
+  tableName: 'mentors'
+});
 
-module.exports = Mentor;
+export default Mentor;

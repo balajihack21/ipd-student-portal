@@ -1,21 +1,29 @@
-const express=require('express')
-const bodyparser=require('body-parser')
-const fs=require('fs')
-const path=require('path')
-const morgan = require("morgan");
-const cors=require('cors')
-const helmet = require("helmet");
-const app=express()
-const dotenv = require("dotenv");
+import express from 'express';
+import fs from 'fs';
+import path from 'path';
+import morgan from 'morgan';
+import cors from 'cors';
+import helmet from 'helmet';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+// ESM-compatible __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 dotenv.config();
-const sequelize=require('./models/index')
-const TeamUpload=require('./models/TeamUpload')
-const User=require('./models/User')
-const Mentor=require('./models/Mentor')
-const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/user');
 
+import sequelize from './models/index.js';
+import TeamUpload from './models/TeamUpload.js';
+import User from './models/User.js';
+import Mentor from './models/Mentor.js';
+import authRoutes from './routes/auth.js';
+import userRoutes from './routes/user.js';
 
+const app = express();
+
+// Helmet CSP setup
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
@@ -25,43 +33,42 @@ app.use(
   })
 );
 
-
-
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Logging
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'access.log'),
+  { flags: 'a' }
+);
+app.use(morgan('combined', { stream: accessLogStream }));
+
+// Routes
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-
-// Routes
 app.use('/templates', express.static(path.join(__dirname, 'public/templates')));
-app.use('/api',userRoutes)
+app.use('/api', userRoutes);
 app.use('/api/auth', authRoutes);
 
-
-const accessLogStream = fs.createWriteStream(
-  path.join(__dirname, "access.log"),
-  {flags:'a'}
-);
-app.use(morgan("combined", { stream: accessLogStream }));
-
-
+// Sequelize associations
 TeamUpload.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 TeamUpload.belongsTo(Mentor, { foreignKey: 'mentor_id', onDelete: 'SET NULL' });
 
 User.hasMany(TeamUpload, { foreignKey: 'user_id' });
 Mentor.hasMany(TeamUpload, { foreignKey: 'mentor_id' });
 
+// Start server
 sequelize.authenticate()
   .then(() => console.log('✅ Database connected'))
   .catch((err) => console.error('Connection error:', err));
 
 sequelize.sync().then(() => {
-  app.listen(process.env.PORT, () => console.log("✅ Server running on http://localhost:4000"));
+  app.listen(process.env.PORT || 4000, () =>
+    console.log(`✅ Server running on http://localhost:${process.env.PORT || 4000}`)
+  );
 });
-

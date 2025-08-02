@@ -1,22 +1,27 @@
-const express = require("express");
-const router = express.Router();
-const User = require("../models/User");
-const Student = require("../models/Student");
-const Mentor = require('../models/Mentor')
-const authenticate = require("../middleware/authenticate"); // middleware to verify JWT
-const upload = require("../middleware/upload");
-const TeamUpload = require("../models/TeamUpload");
-// const transporter = require('../config/sendEmail');
+import path from 'path';
+import fs from 'fs';
+import dotenv from 'dotenv';
+import Sib from 'sib-api-v3-sdk';
+import { fileURLToPath } from 'url';
+import { Router } from 'express';
+import { upload, uploadToSupabase } from "../middleware/upload.js";
+
+import User from '../models/User.js';
+import Mentor from '../models/Mentor.js';
+import Student from '../models/Student.js'
+import TeamUpload from '../models/TeamUpload.js';
+import authenticate from '../middleware/authenticate.js';
+import { supabase } from "../config/cloudinary.js";
+
+dotenv.config();
+
+const router = Router();
 
 router.get("/dashboard", authenticate, async (req, res) => {
   try {
-    console.log(req.user)
     const user = await User.findByPk(req.user.UserId);
     const students = await Student.findAll({ where: { user_id: req.user.UserId } });
-    console.log(user.mentor_id)
-    const mentor = await Mentor.findOne({ where: { mentorId: user.mentor_id } })
-    console.log(mentor)
-
+    const mentor = await Mentor.findOne({ where: { mentorId: user.mentor_id } });
 
     res.json({
       teamName: user.team_name,
@@ -30,31 +35,92 @@ router.get("/dashboard", authenticate, async (req, res) => {
   }
 });
 
-// Update profile
-router.put('/profile', authenticate, async (req, res) => {
-  try {
-    const { team_name, mobile } = req.body;
-    await User.update(
-      { team_name, mobile },
-      { where: { UserId: req.user.UserId } }
-    );
-    res.json({ message: "Profile updated." });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error." });
-  }
-});
+// router.post("/upload", authenticate, upload.single("file"), async (req, res) => {
+//   try {
+//     const filePath = req.file.path; // Cloudinary URL
+//     const fileName = path.basename(filePath);
+//     const userId = req.user.UserId;
+//     const weekNumber = req.body.week_number;
 
+//     console.log("filePath:", filePath);
+//     console.log("userId:", userId);
+//     console.log("weekNumber:", weekNumber);
 
+//     const user = await User.findByPk(userId);
+//     const mentorId = user.mentor_id;
+//     const mentor = await Mentor.findByPk(mentorId);
+
+//     const [uploadEntry, created] = await TeamUpload.findOrCreate({
+//       where: { user_id: userId, week_number: weekNumber },
+//       defaults: {
+//         file_url: filePath,
+//         status: "SUBMITTED",
+//         mentor_id: mentorId,
+//       },
+//     });
+
+//     console.log("Upload entry created:", created);
+
+//     if (!created) {
+//       uploadEntry.file_url = filePath;
+//       uploadEntry.uploaded_at = new Date();
+//       uploadEntry.status = "SUBMITTED";
+//       uploadEntry.mentor_id = mentorId;
+//       await uploadEntry.save();
+//     }
+
+//     // Setup Brevo (Sendinblue) API
+//     const client = Sib.ApiClient.instance;
+//     const apiKey = client.authentications["api-key"];
+//     apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+//     const transEmailApi = new Sib.TransactionalEmailsApi();
+//     const sender = {
+//       email: process.env.EMAIL_USER,
+//       name: "IPD-TEAM",
+//     };
+// //  to: [{ email: mentor.email }],
+//     const emailResponse = await transEmailApi.sendTransacEmail({
+//       sender,
+//       to:[{email:"balajiaru06@gmail.com"}],
+//       subject: `Team Upload Notification - Week ${weekNumber}`,
+//       textContent: `A file has been uploaded by your mentee (Team Name: ${user.team_name}) for week ${weekNumber}.`,
+//       htmlContent: `<h3>Dear ${mentor.name},</h3>
+//         <p>Your mentee has uploaded a file for <strong>Week ${weekNumber}</strong>.</p>
+//         <p>You can view or download the file using the attachment or from the dashboard.</p>
+//         <p>Team Name: <strong>${user.team_name}</strong></p>
+//         <br />
+//         <p>Best Regards,<br />IPD Team</p>`,
+//       attachment: [
+//         {
+//           url: filePath,
+//           name: fileName,
+//         },
+//       ],
+//     });
+
+//     console.log("Email sent successfully");
+
+//     res.status(200).json({ message: "Upload successful", url: filePath });
+//   } catch (err) {
+//     console.error("Upload error:", err);
+//     res.status(500).json({ message: "Upload failed", error: err.message });
+//   }
+// });
+
+// routes/upload.js
 
 
 router.post("/upload", authenticate, upload.single("file"), async (req, res) => {
   try {
-    console.log(req.file)
-    const fileUrl = req.file.path;
+    const file = req.file;
+    const fileName = file.originalname;
+    const mimeType = file.mimetype;
+
+    const supabaseUrl = await uploadToSupabase(file.buffer, fileName, mimeType);
     const userId = req.user.UserId;
     const weekNumber = req.body.week_number;
-    console.log(fileUrl, userId, weekNumber)
+
     const user = await User.findByPk(userId);
     const mentorId = user.mentor_id;
     const mentor = await Mentor.findByPk(mentorId);
@@ -62,49 +128,64 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
     const [uploadEntry, created] = await TeamUpload.findOrCreate({
       where: { user_id: userId, week_number: weekNumber },
       defaults: {
-        file_url: fileUrl,
+        file_url: supabaseUrl,
         status: "SUBMITTED",
-        mentor_id: mentorId
+        mentor_id: mentorId,
       },
     });
-    console.log(created)
 
     if (!created) {
-      uploadEntry.file_url = fileUrl;
+      uploadEntry.file_url = supabaseUrl;
       uploadEntry.uploaded_at = new Date();
       uploadEntry.status = "SUBMITTED";
       uploadEntry.mentor_id = mentorId;
       await uploadEntry.save();
     }
 
-    // if (mentorId == mentor.id) {
-    //   console.log("matched")
-    //   const mentor = user.Mentor;
+    // Send email with Brevo (Sendinblue)
+    const client = Sib.ApiClient.instance;
+    const apiKey = client.authentications["api-key"];
+    apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+    const transEmailApi = new Sib.TransactionalEmailsApi();
+    const sender = {
+      email: process.env.EMAIL_USER,
+      name: "IPD-TEAM",
+    };
+//[{ email: mentor.email }]
+    await transEmailApi.sendTransacEmail({
+  sender,
+  to: [{ email: "balajiaru06@gmail.com" }],
+  subject: `Team Upload Notification - Week ${weekNumber}`,
+  htmlContent: `<h3>Dear ${mentor.name},</h3>
+    <p>Your mentee has uploaded a file for <strong>Week ${weekNumber}</strong>.</p>
+    <p>You can view or download the file using the attachment or from the dashboard.</p>
+    <p><a href="${supabaseUrl}" target="_blank">${fileName}</a></p>
+    <p>Team Name: <strong>${user.team_name}</strong></p>
+    <br />
+    <p>Best Regards,<br />IPD Team</p>`,
+  attachment: [
+    {
+      url: supabaseUrl,
+      name: fileName,
+    },
+  ],
+});
 
 
-
-    //   await transporter.sendMail({
-    //     from: '"Team Upload" <your_email@domain.com>',
-    //     to: mentor.email,
-    //     subject: `New Upload from ${user.teamName}`,
-    //     text: `The team has uploaded their Week ${uploadEntry.week_number} file.\nLink: ${uploadEntry.file_url}`,
-    //     html: `<p>The team has uploaded their <strong>Week ${uploadEntry.week_number}</strong> file.</p><p><a href="${uploadEntry.file_url}">Click to view</a></p>`,
-    //   });
-
-    // }
-
-    res.status(200).json({ message: "Upload successful", url: fileUrl });
+    res.status(200).json({ message: "Upload successful", url: supabaseUrl });
   } catch (err) {
     console.error("Upload error:", err);
-    res.status(500).json({ message: "Upload failed" });
+    res.status(500).json({ message: "Upload failed", error: err.message });
   }
 });
+
 
 router.get("/upload-history", authenticate, async (req, res) => {
   try {
     const uploads = await TeamUpload.findAll({
       where: { user_id: req.user.UserId },
-      order: [['week_number', 'ASC']]
+      order: [["week_number", "ASC"]],
     });
 
     res.json(uploads);
@@ -114,5 +195,4 @@ router.get("/upload-history", authenticate, async (req, res) => {
   }
 });
 
-
-module.exports = router;
+export default router;

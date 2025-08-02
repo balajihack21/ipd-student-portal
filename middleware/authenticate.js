@@ -1,5 +1,4 @@
-// middleware/authMiddleware.js
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
 const authenticate = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -12,15 +11,14 @@ const authenticate = (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    // Verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log("hey")
-    req.user = decoded; // attach user data to request
-    console.log("verified")
+    console.log("hey");
+    req.user = decoded;
+    console.log("verified");
     next();
   } catch (err) {
     return res.status(401).json({ message: 'Invalid or expired token.' });
   }
 };
 
-module.exports = authenticate;
+export default authenticate;

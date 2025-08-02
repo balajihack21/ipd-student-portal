@@ -1,7 +1,6 @@
-const { DataTypes } = require('sequelize');
-const  sequelize  = require('./index');
-const User = require('./User');
-const Mentor = require('./Mentor');
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+import User from './User.js';
 
 const TeamUpload = sequelize.define('TeamUpload', {
   file_url: {
@@ -33,8 +32,8 @@ const TeamUpload = sequelize.define('TeamUpload', {
   ]
 });
 
+// Associations
 TeamUpload.belongsTo(User, { foreignKey: 'user_id' });
 User.hasMany(TeamUpload, { foreignKey: 'user_id' });
 
-
-module.exports = TeamUpload;
+export default TeamUpload;

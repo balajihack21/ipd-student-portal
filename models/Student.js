@@ -1,6 +1,6 @@
-const { DataTypes } = require('sequelize');
-const  sequelize  = require('./index');
-const User = require('./User');
+import { DataTypes } from 'sequelize';
+import sequelize from './index.js';
+import User from './User.js';
 
 const Student = sequelize.define('Student', {
   register_no: {
@@ -23,9 +23,12 @@ const Student = sequelize.define('Student', {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   }
-}, { tableName: 'students' });
+}, {
+  tableName: 'students'
+});
 
+// Associations
 Student.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 User.hasMany(Student, { foreignKey: 'user_id' });
 
-module.exports = Student;
+export default Student;
