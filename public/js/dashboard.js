@@ -172,7 +172,8 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
 
 // Load Template Files (static list or fetched from server)
 const templates = [
-  { name: "IPD Template", file: "exported_data (3).xlsx" }
+  { name: "Affinity Diagram", file: "Affinity Diagram.docx" },
+  {name:"Problem Statement Canvas_ACT",file:"Problem Statement Canvas_ACT.docx"}
 ];
 
 function loadTemplateFiles() {
