@@ -196,4 +196,22 @@ router.get("/upload-history", authenticate, async (req, res) => {
   }
 });
 
+router.put('/profile', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.UserId; // from decoded token
+    const { mobile } = req.body;
+
+    if (!mobile || mobile.length < 10) {
+      return res.status(400).json({ message: "Invalid mobile number" });
+    }
+
+    await User.update({ mobile }, { where: { UserId: userId } });
+
+    return res.json({ message: 'Mobile number updated successfully' });
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 export default router;

@@ -247,9 +247,9 @@ document.getElementById('editProfileBtn').addEventListener('click', () => {
   document.getElementById('editModal').classList.remove('hidden');
 
   // Fill existing values (you might have them in JS already)
-  const teamName = document.getElementById('teamName').textContent;
+  // const teamName = document.getElementById('teamName').textContent;
   const mobile = document.getElementById('contactNo').textContent; // or fetch from API
-  document.getElementById('editTeamName').value = teamName;
+  // document.getElementById('editTeamName').value = teamName;
   document.getElementById('editMobile').value = mobile;
 });
 
@@ -259,14 +259,13 @@ document.getElementById('cancelBtn').addEventListener('click', () => {
 
 document.getElementById('editForm').addEventListener('submit', async function (e) {
   e.preventDefault();
-  const teamName = document.getElementById('editTeamName').value.trim();
+  // const teamName = document.getElementById('editTeamName').value.trim();
   const mobile = document.getElementById('editMobile').value.trim();
   const updateMsg = document.getElementById('updateMsg');
 
   try {
     const token = localStorage.getItem("token");
     const res = await axios.put('/api/profile', {
-      team_name: teamName,
       mobile
     }, {
       headers: {
@@ -279,7 +278,7 @@ document.getElementById('editForm').addEventListener('submit', async function (e
     updateMsg.classList.add("text-green-500");
 
     // update UI
-    document.getElementById('teamName').textContent = teamName;
+    // document.getElementById('teamName').textContent = teamName;
     document.getElementById("contactNo").textContent = mobile;
 
     setTimeout(() => {
