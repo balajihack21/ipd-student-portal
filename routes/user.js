@@ -201,7 +201,7 @@ router.put('/profile', authenticate, async (req, res) => {
     const userId = req.user.UserId; // from decoded token
     const { mobile } = req.body;
 
-    if (!mobile || mobile.length < 10) {
+    if (!mobile || mobile.length < 10 || mobile.length>10) {
       return res.status(400).json({ message: "Invalid mobile number" });
     }
 
