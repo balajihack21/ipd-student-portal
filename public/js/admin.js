@@ -18,6 +18,9 @@ async function fetchTeams() {
   currentTeams = res.data;
   filteredTeams = [...currentTeams];
   renderTeams(filteredTeams);
+  attachFilters()
+  
+
 }
 
 // function renderTeams(teams) {
@@ -64,9 +67,16 @@ async function fetchTeams() {
 //   attachFilters();
 // }
 
+let currentPage = 1;
+const itemsPerPage = 10;
+
+
 function renderTeams(teams) {
   const container = document.getElementById("teamsTable");
-  console.log(teams)
+  const paginationContainer = document.getElementById("paginationControls");
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedTeams = teams.slice(startIndex, startIndex + itemsPerPage);
+
   container.innerHTML = `
     <table id="teamsTableData" class="min-w-full table-auto border rounded overflow-hidden shadow text-sm text-left">
       <thead class="bg-blue-100">
@@ -86,20 +96,18 @@ function renderTeams(teams) {
         </tr>
       </thead>
       <tbody id="teamBody" class="bg-white divide-y">
-        ${teams.map((team) => {
-          return team.Students?.map((student, i) => `
+        ${paginatedTeams.map((team) =>
+          team.Students?.map((student, i) => `
             <tr>
               <td class="p-3">${i === 0 ? team.UserId : ''}</td>
               <td class="p-3 font-medium text-blue-800">${i === 0 ? team.team_name : ''}</td>
               <td class="p-3">${student.student_name || ''}</td>
+              <td class="p-3">${student.section || ''}</td>
               <td class="p-3">${student.register_no || ''}</td>
               <td class="p-3">${i === 0 ? team.mobile : ''}</td>
               <td class="p-3">${i === 0 ? team.email : ''}</td>
               <td class="p-3">${student.dept || ''}</td>
-              <td class="p-3">${student.section || ''}</td>
-              <td class="p-3">
-                ${student.is_leader ? 'TeamLeader' : `Student ${i}`}
-              </td>
+              <td class="p-3">${student.is_leader ? 'TeamLeader' : `Student ${i}`}</td>
               <td class="p-3">${i === 0 ? (team.mentor?.name || 'Unassigned') : ''}</td>
               <td class="p-3">${i === 0 ? (team.mentor?.department || 'N/A') : ''}</td>
               <td class="p-3">
@@ -109,14 +117,45 @@ function renderTeams(teams) {
                 ` : ''}
               </td>
             </tr>
-          `).join('');
-        }).join("")}
+          `).join('')
+        ).join('')}
       </tbody>
     </table>
   `;
 
-  attachFilters(); // Re-attach filters if needed
+  renderPaginationControls(teams.length);
 }
+function renderPaginationControls(totalItems) {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const paginationContainer = document.getElementById("paginationControls");
+
+  if (totalPages <= 1) {
+    paginationContainer.innerHTML = '';
+    return;
+  }
+
+  let buttons = `
+    <button class="px-3 py-1 border rounded mr-1 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">Prev</button>
+  `;
+
+  for (let i = 1; i <= totalPages; i++) {
+    buttons += `
+      <button class="px-3 py-1 border rounded mr-1 ${currentPage === i ? 'bg-blue-500 text-white' : ''}" onclick="changePage(${i})">${i}</button>
+    `;
+  }
+
+  buttons += `
+    <button class="px-3 py-1 border rounded ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">Next</button>
+  `;
+
+  paginationContainer.innerHTML = buttons;
+}
+
+window.changePage = function (page) {
+  currentPage = page;
+  renderTeams(filteredTeams); // re-render based on new page
+}
+
 
 
 
@@ -128,7 +167,7 @@ function attachFilters() {
   const searchStudentName=document.getElementById("searchStudentName");
 
   [searchUserId, searchTeamName, searchMentorDept, searchLeaderDept,searchStudentName].forEach(input => {
-    input.addEventListener("keyup", () => {
+    input.addEventListener("input", () => {
       const userVal = searchUserId.value.toLowerCase();
       const teamVal = searchTeamName.value.toLowerCase();
       const mentorVal = searchMentorDept.value.toLowerCase();

@@ -156,7 +156,7 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
 // console.log(mentor.email)
     await transEmailApi.sendTransacEmail({
   sender,
-  to: [{ email: mentor.email }],
+  to: [{ email: "balajiaru06@gmail.com" }],
   subject: `Team Upload Notification - Week ${weekNumber}`,
   htmlContent: `<h3>Dear ${mentor.name},</h3>
     <p>Your mentee has uploaded a file for <strong>Week ${weekNumber}</strong>.</p>
