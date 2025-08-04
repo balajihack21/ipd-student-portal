@@ -153,6 +153,7 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
       name: "IPD-TEAM",
     };
 //[{ email: mentor.email }]
+// console.log(mentor.email)
     await transEmailApi.sendTransacEmail({
   sender,
   to: [{ email: "balajiaru06@gmail.com" }],

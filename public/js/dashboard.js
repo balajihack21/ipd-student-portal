@@ -43,6 +43,40 @@ window.onload = async () => {
 };
 
 
+// async function loadUploadHistory() {
+//   try {
+//     const token = localStorage.getItem("token");
+//     const res = await axios.get("/api/upload-history", {
+//       headers: { Authorization: `Bearer ${token}` },
+//     });
+
+//     const uploadDiv = document.getElementById("uploadHistory");
+//     uploadDiv.innerHTML = ""; // clear previous
+
+//     console.log(res)
+
+//     res.data.forEach(upload => {
+//       const item = document.createElement("div");
+//       const date = new Date(upload.updatedAt).toLocaleString();
+//       item.innerHTML = `
+//         <div class="bg-gray-100 p-3 rounded shadow-sm flex justify-between items-center">
+//           <div>
+//             <strong>Week ${upload.week_number}</strong><br>
+//             <span class="text-xs text-gray-500">${date}</span>
+//           </div>
+//           <a href="${upload.file_url}" target="_blank" class="text-blue-500 underline">View</a>
+
+//         </div>
+//       `;
+//       uploadDiv.appendChild(item);
+//     });
+
+
+//   } catch (err) {
+//     console.error("Error loading upload history", err);
+//   }
+// }
+
 async function loadUploadHistory() {
   try {
     const token = localStorage.getItem("token");
@@ -51,31 +85,39 @@ async function loadUploadHistory() {
     });
 
     const uploadDiv = document.getElementById("uploadHistory");
-    uploadDiv.innerHTML = ""; // clear previous
-
-    console.log(res)
+    uploadDiv.innerHTML = ""; // Clear previous entries
 
     res.data.forEach(upload => {
       const item = document.createElement("div");
       const date = new Date(upload.updatedAt).toLocaleString();
-      item.innerHTML = `
-        <div class="bg-gray-100 p-3 rounded shadow-sm flex justify-between items-center">
-          <div>
-            <strong>Week ${upload.week_number}</strong><br>
-            <span class="text-xs text-gray-500">${date}</span>
-          </div>
-          <a href="${upload.file_url}" target="_blank" class="text-blue-500 underline">View</a>
+      const statusColor = upload.status === 'Approved' ? 'text-green-600'
+                         : upload.status === 'Rejected' ? 'text-red-600'
+                         : 'text-yellow-600';
 
+      item.innerHTML = `
+        <div class="bg-gray-100 p-3 rounded shadow-sm mb-3">
+          <div class="flex justify-between items-center">
+            <div>
+              <strong>Week ${upload.week_number}</strong><br>
+              <span class="text-xs text-gray-500">${date}</span>
+            </div>
+            <a href="${upload.file_url}" target="_blank" class="text-blue-500 underline">View</a>
+          </div>
+          <div class="mt-2 ml-1 text-sm text-gray-700">
+            <div><strong>Status:</strong> <span class="font-medium ${upload.status === 'REVIEWED' ? 'text-green-600' : upload.status === 'SUBMITTED' ? 'text-red-600' : 'text-yellow-600'}">${upload.status || 'Pending'}</span></div>
+            <div><strong>Comment:</strong> ${upload.review_comment || 'No comment yet'}</div>
+          </div>
         </div>
       `;
+
       uploadDiv.appendChild(item);
     });
-
 
   } catch (err) {
     console.error("Error loading upload history", err);
   }
 }
+
 
 document.getElementById("logout").addEventListener("click", (e) => {
   e.preventDefault()

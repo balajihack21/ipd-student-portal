@@ -20,6 +20,7 @@ import User from './models/User.js';
 import Mentor from './models/Mentor.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
+import adminRoutes from './routes/admin.js'
 
 const app = express();
 
@@ -50,10 +51,14 @@ app.use(morgan('combined', { stream: accessLogStream }));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
+app.get('/adminpage', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin-dashboard.html'));
+});
 
 app.use('/templates', express.static(path.join(__dirname, 'public/templates')));
 app.use('/api', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/admin',adminRoutes)
 
 // Sequelize associations
 TeamUpload.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' });

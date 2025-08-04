@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="bg-gradient-to-br from-blue-50 to-gray-100 font-sans min-h-screen">
+  <div class="max-w-7xl mx-auto px-6 py-10">
+    <h1 class="text-4xl font-extrabold text-blue-700 mb-8 text-center">📊 Admin Dashboard</h1>
+
+    <!-- Tabs -->
+    <div class="flex justify-center space-x-4 mb-8">
+      <button class="tab active px-6 py-3 font-medium text-lg transition-all" data-tab="teamsTab">👥 Project Teams</button>
+      <button class="tab px-6 py-3 font-medium text-lg transition-all" data-tab="assignTab">🎓 Assign/Reassign Mentor</button>
+      <button class="tab px-6 py-3 font-medium text-lg transition-all" data-tab="historyTab">🕓 Team History</button>
+    </div>
+
+    <!-- Tab Content -->
+    <div id="teamsTab" class="tab-content">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <input type="text" id="searchTeamName" placeholder="🔍 Search by team name..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
+        <input type="text" id="searchUserId" placeholder="🔍 Search by User ID..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
+        <input type="text" id="searchLeaderDept" placeholder="🔍 Search by Leader Dept..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
+        <input type="text" id="searchMentorDept" placeholder="🔍 Search by Mentor Dept..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
+        <input type="text" id="searchStudentName" placeholder="🔍 Search by Student Name..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
+      </div>
+
+      <button id="exportExcel" class="mb-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+        Export to Excel
+      </button>
+
+      <div id="teamsTable" class="bg-white rounded-lg shadow-lg p-6 overflow-x-auto">
+        <table class="min-w-full table-auto text-left">
+          <thead>
+            <tr class="bg-gray-100 text-gray-700">
+              <th class="p-2">User ID</th>
+              <th class="p-2">Team Name</th>
+              <th class="p-2">Team Leader</th>
+              <th class="p-2">Leader Dept</th>
+              <th class="p-2">Mentor</th>
+              <th class="p-2">Mentor Dept</th>
+              <th class="p-2">Members</th>
+              <th class="p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="teamsBody">
+            <!-- JavaScript will populate rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="assignTab" class="tab-content hidden">
+      <div class="bg-white p-6 rounded-lg shadow-lg space-y-4">
+        <select id="teamSelect" class="border p-3 rounded w-full shadow-sm"></select>
+        <select id="mentorSelect" class="border p-3 rounded w-full shadow-sm"></select>
+        <button id="assignBtn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg shadow-md transition">✅ Assign Mentor</button>
+      </div>
+    </div>
+
+    <div id="historyTab" class="tab-content hidden">
+      <input type="text" id="historySearch" placeholder="🔎 Enter Team ID..." class="mb-6 p-3 border border-gray-300 rounded-lg w-full max-w-md shadow-sm">
+      <div id="historyContent" class="bg-white p-6 rounded-lg shadow-lg">
+        <!-- Full history will be shown here -->
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="/js/admin.js"></script>
+
+</body>
+
+</html>
