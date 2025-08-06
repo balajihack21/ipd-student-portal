@@ -7,9 +7,14 @@ window.onload = async () => {
       },
     });
 
-    const { teamName, mobile, students = [], mentor = {}, progress = 0 } = res.data;
+    const { teamName, mobile, students = [], mentor = {}, progress = 0 ,profilePhoto} = res.data;
     document.getElementById("teamName").textContent = `${teamName}`;
     document.getElementById("contactNo").textContent = ` ${mobile}`;
+    console.log(res.data)
+
+    if (profilePhoto) {
+  document.getElementById("profilePhoto").src = profilePhoto;
+}
 
     // Populate students
     const studentCards = document.getElementById("studentCards");
@@ -243,30 +248,108 @@ function loadTemplateFiles() {
 loadTemplateFiles();
 
 
-document.getElementById('editProfileBtn').addEventListener('click', () => {
-  document.getElementById('editModal').classList.remove('hidden');
+// document.getElementById('editProfileBtn').addEventListener('click', () => {
+//   document.getElementById('editModal').classList.remove('hidden');
 
-  // Fill existing values (you might have them in JS already)
-  // const teamName = document.getElementById('teamName').textContent;
-  const mobile = document.getElementById('contactNo').textContent; // or fetch from API
-  // document.getElementById('editTeamName').value = teamName;
+//   // Fill existing values (you might have them in JS already)
+//   // const teamName = document.getElementById('teamName').textContent;
+//   const mobile = document.getElementById('contactNo').textContent; // or fetch from API
+//   // document.getElementById('editTeamName').value = teamName;
+//   document.getElementById('editMobile').value = mobile;
+// });
+
+// document.getElementById('cancelBtn').addEventListener('click', () => {
+//   document.getElementById('editModal').classList.add('hidden');
+// });
+
+// document.getElementById('editForm').addEventListener('submit', async function (e) {
+//   e.preventDefault();
+//   // const teamName = document.getElementById('editTeamName').value.trim();
+//   const mobile = document.getElementById('editMobile').value.trim();
+//   const updateMsg = document.getElementById('updateMsg');
+
+//   try {
+//     const token = localStorage.getItem("token");
+//     const res = await axios.put('/api/profile', {
+//       mobile
+//     }, {
+//       headers: {
+//         Authorization: `Bearer ${token}`
+//       }
+//     });
+
+//     updateMsg.textContent = "Profile updated successfully!";
+//     updateMsg.classList.remove("text-red-500");
+//     updateMsg.classList.add("text-green-500");
+
+//     // update UI
+//     // document.getElementById('teamName').textContent = teamName;
+//     document.getElementById("contactNo").textContent = mobile;
+
+//     setTimeout(() => {
+//       document.getElementById('editModal').classList.add('hidden');
+//     }, 1000);
+//   } catch (err) {
+//     updateMsg.textContent = err.response?.data?.message || "Failed to update profile.";
+//     updateMsg.classList.remove("text-green-500");
+//     updateMsg.classList.add("text-red-500");
+//   }
+// });
+
+// Open Modal & Populate Fields
+document.getElementById('editProfileBtn').addEventListener('click', async () => {
+  document.getElementById('editModal').classList.remove('hidden');
+  const mobile = document.getElementById('contactNo').textContent.trim();
   document.getElementById('editMobile').value = mobile;
+
+  // Fetch student list again
+  const token = localStorage.getItem("token");
+  const res = await axios.get("/api/dashboard", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  const { students = [] } = res.data;
+  const container = document.getElementById("studentEditFields");
+  container.innerHTML = "";
+
+  students.forEach(s => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <label class="block text-sm font-medium text-gray-700">
+        ${s.student_name} (${s.register_no})
+        <input type="text" data-student-id="${s.id}" value="${s.mobile || ''}" class="student-mobile mt-1 p-2 w-full border rounded" placeholder="Mobile Number" maxlength="10" />
+      </label>
+    `;
+    container.appendChild(div);
+  });
 });
 
+// Cancel Edit
 document.getElementById('cancelBtn').addEventListener('click', () => {
   document.getElementById('editModal').classList.add('hidden');
 });
 
+// Submit Edit
 document.getElementById('editForm').addEventListener('submit', async function (e) {
   e.preventDefault();
-  // const teamName = document.getElementById('editTeamName').value.trim();
   const mobile = document.getElementById('editMobile').value.trim();
   const updateMsg = document.getElementById('updateMsg');
 
+  const studentInputs = document.querySelectorAll('.student-mobile');
+  const studentMobiles = [];
+
+  studentInputs.forEach(input => {
+    studentMobiles.push({
+      id: input.dataset.studentId,
+      mobile: input.value.trim()
+    });
+  });
+
   try {
     const token = localStorage.getItem("token");
-    const res = await axios.put('/api/profile', {
-      mobile
+    await axios.put('/api/profile', {
+      mobile,
+      studentMobiles
     }, {
       headers: {
         Authorization: `Bearer ${token}`
@@ -277,8 +360,6 @@ document.getElementById('editForm').addEventListener('submit', async function (e
     updateMsg.classList.remove("text-red-500");
     updateMsg.classList.add("text-green-500");
 
-    // update UI
-    // document.getElementById('teamName').textContent = teamName;
     document.getElementById("contactNo").textContent = mobile;
 
     setTimeout(() => {
@@ -290,6 +371,7 @@ document.getElementById('editForm').addEventListener('submit', async function (e
     updateMsg.classList.add("text-red-500");
   }
 });
+
 
 // document.getElementById("editProfileForm").addEventListener("submit", async (e) => {
 //   e.preventDefault();
@@ -317,6 +399,43 @@ document.getElementById('editForm').addEventListener('submit', async function (e
 //     document.getElementById("editStatus").style.color = "red";
 //   }
 // });
+
+document.getElementById("photoInput").addEventListener("change", async function (e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("photo", file);
+  console.log(file)
+  for (let [key, value] of formData.entries()) {
+    console.log(`${key}:`, value);
+  }
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.post("/api/upload-profile-photo", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data"
+      }
+    });
+
+    const data = res.data;
+
+    if (res.status === 200) {
+      document.getElementById("profilePhoto").src = data.photoUrl;
+      alert("Profile photo updated successfully!");
+    }
+  } catch (err) {
+    console.error(err);
+    const message = err.response?.data?.message || "Upload failed";
+    alert(message);
+  }
+});
+
+
+
 
 
 

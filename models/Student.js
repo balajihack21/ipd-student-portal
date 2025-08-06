@@ -19,6 +19,11 @@ const Student = sequelize.define('Student', {
     type: DataTypes.STRING,
     allowNull: false
   },
+   mobile: {
+    type: DataTypes.STRING(12),
+    allowNull: true,
+    defaultValue: null
+  },
   is_leader: {
     type: DataTypes.BOOLEAN,
     defaultValue: false

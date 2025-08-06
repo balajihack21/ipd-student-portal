@@ -27,6 +27,10 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING(100),
     allowNull: false
   },
+  profilePhoto: {
+  type: DataTypes.STRING,
+  allowNull: true,
+},
   token: {
     type: DataTypes.STRING,
     allowNull: true
@@ -42,7 +46,8 @@ const User = sequelize.define('User', {
   firstLogin: {
     type: DataTypes.BOOLEAN,
     defaultValue: true
-  }
+  },
+  
 }, { tableName: 'users' });
 
 // Associations

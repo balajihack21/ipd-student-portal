@@ -40,18 +40,33 @@
             <div class="max-w-6xl mx-auto space-y-6">
 
                 <!-- Profile Card -->
-                <div class="bg-white rounded-xl shadow-md p-4 flex items-center justify-between">
-                    <div>
-                        <h2 class="text-xl font-bold">Team Name: <span id="teamName" class="text-blue-600"></span></h2>
-                        <p class="text-gray-500">Contact No:<span id="contactNo" class="text-blue-600"></span></p>
-                        <div class="w-full bg-gray-200 h-3 rounded-full mt-2">
-                            <div class="bg-blue-500 h-3 rounded-full" style="width: 40%;"></div>
-                        </div>
-                    </div>
-                    <button id="editProfileBtn"
-                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Edit
-                        Profile</button>
-                </div>
+<!-- Profile Card with Photo -->
+<div class="bg-white rounded-xl shadow-md p-4 flex items-center justify-between">
+  <div class="flex items-center space-x-4">
+    <label for="photoInput" class="cursor-pointer relative">
+      <img
+        id="profilePhoto"
+        src="/images/default-avatar.png"
+        alt="Profile Photo"
+        class="w-16 h-16 rounded-full object-cover border border-gray-300"
+      />
+      <input type="file" id="photoInput" accept="image/*" class="hidden" />
+    </label>
+
+    <div>
+      <h2 class="text-xl font-bold">Team Name: <span id="teamName" class="text-blue-600"></span></h2>
+      <p class="text-gray-500">Contact No:<span id="contactNo" class="text-blue-600"></span></p>
+      <div class="w-full bg-gray-200 h-3 rounded-full mt-2">
+        <div id="progressFill" class="bg-blue-500 h-3 rounded-full" style="width: 40%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <button id="editProfileBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+    Edit Profile
+  </button>
+</div>
+
 
 
 
@@ -76,7 +91,7 @@
                         <!-- Filled dynamically -->
                     </div>
                 </div>
-                
+
 
 
                 <form id="uploadForm" enctype="multipart/form-data">
@@ -104,29 +119,38 @@
     </div>
 
     <!-- Edit Modal -->
-    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg p-6 w-full max-w-md relative">
-            <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
+    <!-- Edit Profile Modal -->
+    <div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg w-full max-w-lg relative">
+            <h2 class="text-2xl font-bold mb-4">Edit Profile</h2>
+
             <form id="editForm" class="space-y-4">
-                <!-- <div>
-                    <label for="editTeamName" class="block text-sm font-medium">Team Name</label>
-                    <input type="text" id="editTeamName" class="w-full border border-gray-300 rounded px-3 py-2"
-                        required>
-                </div> -->
                 <div>
-                    <label for="editMobile" class="block text-sm font-medium">Mobile Number</label>
-                    <input type="text" id="editMobile" class="w-full border border-gray-300 rounded px-3 py-2" required>
+                    <label for="editMobile" class="block text-sm font-medium text-gray-700">Team Leader Mobile
+                        Number</label>
+                    <input type="text" id="editMobile" name="editMobile" maxlength="10"
+                        class="mt-1 p-2 w-full border rounded" required>
                 </div>
-                <div id="updateMsg" class="text-sm text-red-500"></div>
-                <div class="flex justify-end space-x-2">
+
+                <div>
+                    <h3 class="text-lg font-semibold mt-4 mb-2">Team Members Contact Numbers</h3>
+                    <div id="studentEditFields" class="space-y-3">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+
+                <p id="updateMsg" class="text-sm font-semibold"></p>
+
+                <div class="flex justify-end space-x-2 mt-4">
                     <button type="button" id="cancelBtn"
-                        class="px-4 py-2 border rounded hover:bg-gray-100">Cancel</button>
+                        class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded">Cancel</button>
                     <button type="submit"
-                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Save</button>
+                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">Save</button>
                 </div>
             </form>
         </div>
     </div>
+
 
 
     <script src="/js/dashboard.js"></script>

@@ -188,10 +188,37 @@ function attachFilters() {
 }
 
 document.getElementById("exportExcel").addEventListener("click", () => {
-  const table = document.getElementById("teamsTableData");
-  const wb = XLSX.utils.table_to_book(table, { sheet: "Teams" });
-  XLSX.writeFile(wb, "filtered_teams_export.xlsx");
+  console.log(typeof XLSX);
+
+  const rows = [
+    ["Team ID", "Team Name", "Name", "Section", "Register No", "Mobile", "Email", "Dept", "Role", "Mentor Name", "Mentor Department"]
+  ];
+
+  filteredTeams.forEach(team => {
+    team.Students?.forEach((student, i) => {
+      rows.push([
+        i === 0 ? team.UserId : "",
+        i === 0 ? team.team_name : "",
+        student.student_name || "",
+        student.section || "",
+        student.register_no || "",
+        i === 0 ? team.mobile : "",
+        i === 0 ? team.email : "",
+        student.dept || "",
+        student.is_leader ? "TeamLeader" : `Student ${i}`,
+        i === 0 ? (team.mentor?.name || "Unassigned") : "",
+        i === 0 ? (team.mentor?.department || "N/A") : ""
+      ]);
+    });
+  });
+
+  const worksheet = XLSX.utils.aoa_to_sheet(rows);
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Teams");
+
+  XLSX.writeFile(workbook, "filtered_teams_export.xlsx");
 });
+
 
 async function fetchMentorsAndTeams() {
   const [mentorsRes, teamsRes] = await Promise.all([

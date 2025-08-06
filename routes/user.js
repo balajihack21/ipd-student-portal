@@ -5,6 +5,7 @@ import Sib from 'sib-api-v3-sdk';
 import { fileURLToPath } from 'url';
 import { Router } from 'express';
 import { upload, uploadToSupabase } from "../middleware/upload.js";
+import { uploadprofile } from "../config/cloud_profile.js"
 
 import User from '../models/User.js';
 import Mentor from '../models/Mentor.js';
@@ -25,6 +26,7 @@ router.get("/dashboard", authenticate, async (req, res) => {
 
     res.json({
       teamName: user.team_name,
+      profilePhoto:user.profilePhoto,
       mobile: user.mobile,
       students,
       mentor
@@ -197,22 +199,77 @@ router.get("/upload-history", authenticate, async (req, res) => {
   }
 });
 
+// router.put('/profile', authenticate, async (req, res) => {
+//   try {
+//     const userId = req.user.UserId; // from decoded token
+//     const { mobile } = req.body;
+
+//     if (!mobile || mobile.length < 10 || mobile.length>10) {
+//       return res.status(400).json({ message: "Invalid mobile number" });
+//     }
+
+//     await User.update({ mobile }, { where: { UserId: userId } });
+
+//     return res.json({ message: 'Mobile number updated successfully' });
+//   } catch (err) {
+//     console.error("Error updating profile:", err);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
+
+// PUT /profile - Update mobile numbers
 router.put('/profile', authenticate, async (req, res) => {
   try {
-    const userId = req.user.UserId; // from decoded token
-    const { mobile } = req.body;
+    const userId = req.user.UserId;
+    const { mobile, studentMobiles = [] } = req.body;
 
-    if (!mobile || mobile.length < 10 || mobile.length>10) {
-      return res.status(400).json({ message: "Invalid mobile number" });
+    // Validate team leader mobile
+    if (!mobile || mobile.length !== 10) {
+      return res.status(400).json({ message: "Invalid team leader mobile number" });
     }
 
     await User.update({ mobile }, { where: { UserId: userId } });
 
-    return res.json({ message: 'Mobile number updated successfully' });
+    for (const student of studentMobiles) {
+      if (!student.id || !student.mobile || student.mobile.length !== 10) {
+        return res.status(400).json({ message: "Invalid student mobile input" });
+      }
+
+      await Student.update(
+        { mobile: student.mobile },
+        { where: { id: student.id, user_id: userId } } // Prevent tampering
+      );
+    }
+
+    return res.json({ message: 'Profile updated successfully' });
   } catch (err) {
     console.error("Error updating profile:", err);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+
+router.post("/upload-profile-photo", authenticate, uploadprofile.single("photo"), async (req, res) => {
+  console.log(req.file)
+  try {
+    const file = req.file;
+    const photoUrl = file.path; // Cloudinary URL
+    const userId = req.user.UserId;
+
+    // Update photo URL in the user table
+   await User.update(
+        { profilePhoto: photoUrl },
+        { where: { UserId: userId } }
+      );
+
+
+    res.json({ photoUrl });
+  } catch (err) {
+    console.error("Upload error:", err);
+    res.status(500).json({ message: "Upload failed" });
+  }
+});
+
+
 
 export default router;

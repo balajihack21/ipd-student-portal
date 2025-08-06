@@ -30,9 +30,11 @@ app.use(
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+      imgSrc: ["'self'", "data:", "https://res.cloudinary.com"],
     },
   })
 );
+
 
 // Middleware
 app.use(cors());
