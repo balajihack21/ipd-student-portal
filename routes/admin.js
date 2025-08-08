@@ -2,14 +2,12 @@
 import express from 'express';
 import User from '../models/User.js';
 import Mentor from '../models/Mentor.js';
-import Student from '../models/Student.js'
+import Student from '../models/Student.js';
 import TeamUpload from '../models/TeamUpload.js';
 
 const router = express.Router();
 
 // GET all teams with mentor
-
-
 router.get("/teams", async (req, res) => {
   try {
     const teams = await User.findAll({
@@ -24,79 +22,119 @@ router.get("/teams", async (req, res) => {
   }
 });
 
-
 // GET all assigned teams
 router.get('/assigned-teams', async (req, res) => {
-    try {
-        const teams = await User.findAll();
-        res.json(teams);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+  try {
+    const teams = await User.findAll();
+    res.json(teams);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // GET all mentors
 router.get('/mentors', async (req, res) => {
-    try {
-        const mentors = await Mentor.findAll();
-        res.json(mentors);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+  try {
+    const mentors = await Mentor.findAll();
+    res.json(mentors);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // PUT assign mentor
 router.put('/assign-mentor', async (req, res) => {
-    const { team_id, mentor_id } = req.body;
-    try {
-        await User.update({ MentorId: mentor_id }, { where: { UserId: team_id } });
-        res.json({ success: true });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+  const { team_id, mentor_id } = req.body;
+  try {
+    await User.update({ MentorId: mentor_id }, { where: { UserId: team_id } });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
-
-//get all team-history
-
-
 
 // GET team history by ID
 router.get('/team-history/:id', async (req, res) => {
-    const teamId = req.params.id;
-    try {
-        const team = await User.findByPk(teamId, {
-            include: [
-                {
-                    model: Mentor,
-                    as: 'mentor', // ✅ required
-                    attributes: ['name', 'email','department']
-                },
-                {
-                    model: Student,
-                    attributes: ['student_name', 'register_no','dept' , "is_leader","section"]
-                },
-                {
-                    model: TeamUpload,
-                    attributes: ['week_number', 'file_url', 'createdAt','status','review_comment']
-                }
-            ]
-        });
-        if (!team) return res.status(404).json({ error: 'Team not found' });
-        res.json(team);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+  const teamId = req.params.id;
+  try {
+    const team = await User.findByPk(teamId, {
+      include: [
+        {
+          model: Mentor,
+          as: 'mentor',
+          attributes: ['name', 'email', 'department']
+        },
+        {
+          model: Student,
+          attributes: ['student_name', 'register_no', 'dept', 'is_leader', 'section', 'mobile']
+        },
+        {
+          model: TeamUpload,
+          attributes: ['week_number', 'file_url', 'createdAt', 'status', 'review_comment']
+        }
+      ]
+    });
+    if (!team) return res.status(404).json({ error: 'Team not found' });
+    res.json(team);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // DELETE a team
 router.delete('/delete-team/:id', async (req, res) => {
-    const teamId = req.params.id;
-    try {
-        await User.destroy({ where: { UserId: teamId } });
-        res.json({ success: true });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+  const teamId = req.params.id;
+  try {
+    await User.destroy({ where: { UserId: teamId } });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ✅ DELETE a student from a team
+router.delete('/delete-student/:teamId/:registerNo', async (req, res) => {
+  const { teamId, registerNo } = req.params;
+  try {
+    const student = await Student.findOne({
+      where: {
+        user_id: teamId,
+        register_no: registerNo
+      }
+    });
+
+    if (!student) return res.status(404).json({ error: 'Student not found' });
+
+    await student.destroy();
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ✅ PUT update student
+router.put('/edit-student', async (req, res) => {
+  const { teamId, registerNo, student_name, section, dept } = req.body;
+  try {
+    const student = await Student.findOne({
+      where: {
+        user_id: teamId,
+        register_no: registerNo
+      }
+    });
+
+    if (!student) return res.status(404).json({ error: 'Student not found' });
+
+    student.student_name = student_name;
+    student.section = section;
+    student.dept = dept;
+
+    await student.save();
+
+    res.json({ success: true, updatedStudent: student });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 export default router;

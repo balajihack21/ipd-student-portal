@@ -57,12 +57,18 @@
       
 
     <div id="assignTab" class="tab-content hidden">
-      <div class="bg-white p-6 rounded-lg shadow-lg space-y-4">
-        <select id="teamSelect" class="border p-3 rounded w-full shadow-sm"></select>
-        <select id="mentorSelect" class="border p-3 rounded w-full shadow-sm"></select>
-        <button id="assignBtn" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg shadow-md transition">✅ Assign Mentor</button>
-      </div>
-    </div>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+  <input type="text" id="filterTeamId" placeholder="🔍 Search by Team ID..." class="p-3 border rounded shadow-sm">
+  <input type="text" id="filterTeamName" placeholder="🔍 Search by Team Name..." class="p-3 border rounded shadow-sm">
+  <input type="text" id="filterLeaderName" placeholder="🔍 Search by Leader Name..." class="p-3 border rounded shadow-sm">
+  <input type="text" id="filterMentorName" placeholder="🔍 Search by Mentor Name..." class="p-3 border rounded shadow-sm">
+</div>
+
+
+  <!-- 🆕 Add this below the manual assign section -->
+  <div id="reassignTableContainer" class="mt-6"></div>
+</div>
+
 
     <div id="historyTab" class="tab-content hidden">
       <input type="text" id="historySearch" placeholder="🔎 Enter Team ID..." class="mb-6 p-3 border border-gray-300 rounded-lg w-full max-w-md shadow-sm">

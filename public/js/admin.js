@@ -7,8 +7,15 @@ tabs.forEach(tab => {
     contents.forEach(c => c.classList.add("hidden"));
     tab.classList.add("active", "border-b-2", "border-blue-500");
     document.getElementById(tab.dataset.tab).classList.remove("hidden");
+
+    if (tab.dataset.tab === "assignTab") {
+  renderReassignMentorTable();
+}
+
   });
 });
+
+let allMentors=[];
 
 let currentTeams = [];
 let filteredTeams = [];
@@ -19,7 +26,7 @@ async function fetchTeams() {
   filteredTeams = [...currentTeams];
   renderTeams(filteredTeams);
   attachFilters()
-  
+
 
 }
 
@@ -73,12 +80,11 @@ const itemsPerPage = 10;
 
 function renderTeams(teams) {
   const container = document.getElementById("teamsTable");
-  const paginationContainer = document.getElementById("paginationControls");
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedTeams = teams.slice(startIndex, startIndex + itemsPerPage);
 
   container.innerHTML = `
-    <table id="teamsTableData" class="min-w-full table-auto border rounded overflow-hidden shadow text-sm text-left">
+    <table class="min-w-full table-auto border rounded overflow-hidden shadow text-sm text-left">
       <thead class="bg-blue-100">
         <tr>
           <th class="p-3">Team ID</th>
@@ -97,7 +103,7 @@ function renderTeams(teams) {
       </thead>
       <tbody id="teamBody" class="bg-white divide-y">
         ${paginatedTeams.map((team) =>
-          team.Students?.map((student, i) => `
+    team.Students?.map((student, i) => `
             <tr>
               <td class="p-3">${i === 0 ? team.UserId : ''}</td>
               <td class="p-3 font-medium text-blue-800">${i === 0 ? team.team_name : ''}</td>
@@ -111,20 +117,141 @@ function renderTeams(teams) {
               <td class="p-3">${i === 0 ? (team.mentor?.name || 'Unassigned') : ''}</td>
               <td class="p-3">${i === 0 ? (team.mentor?.department || 'N/A') : ''}</td>
               <td class="p-3">
-                ${i === 0 ? `
-                  <button onclick="editTeam('${team.id}')" class="text-blue-600 hover:underline">Edit</button>
-                  <button onclick="deleteTeam('${team.id}')" class="text-red-600 hover:underline ml-2">Delete</button>
-                ` : ''}
+                <button class="edit-btn text-blue-600 hover:underline" data-team-id="${team.UserId}" data-reg="${student.register_no}">Edit</button>
+                <button class="delete-btn text-red-600 hover:underline ml-2" data-team-id="${team.UserId}" data-reg="${student.register_no}" data-is-leader="${student.is_leader}">Delete</button>
               </td>
             </tr>
           `).join('')
-        ).join('')}
+  ).join('')}
       </tbody>
     </table>
   `;
 
   renderPaginationControls(teams.length);
+  bindActionButtons(); // bind all buttons
 }
+
+function renderReassignMentorTable() {
+  const container = document.getElementById("reassignTableContainer");
+
+  const rows = filteredTeams.map(team => {
+    const leader = team.Students?.find(s => s.is_leader);
+    return `
+      <tr>
+        <td class="p-3">${team.UserId}</td>
+        <td class="p-3">${team.team_name}</td>
+        <td class="p-3">${leader?.student_name || ''}</td>
+        <td class="p-3">${team.email}</td>
+        <td class="p-3">${leader?.dept || ''}</td>
+        <td class="p-3">${leader?.section || ''}</td>
+        <td class="p-3">${team.mobile}</td>
+        <td class="p-3">${team.mentor?.name || 'Unassigned'}</td>
+        <td class="p-3">${team.mentor?.department || 'N/A'}</td>
+        <td class="p-3">
+          <select id="reassign-${team.UserId}" class="border rounded px-2 py-1 text-sm">
+            <option value="">Select Mentor</option>
+            ${allMentors.map(m => `
+              <option value="${m.MentorId}" ${team.mentor?.MentorId === m.MentorId ? "selected" : ""}>
+                ${m.name} (${m.department})
+              </option>
+            `).join("")}
+          </select>
+          <button onclick="reassignMentor('${team.UserId}')" class="ml-2 px-2 py-1 bg-blue-600 text-white rounded text-sm">Reassign</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <table class="min-w-full table-auto border rounded overflow-hidden shadow text-sm text-left mt-4">
+      <thead class="bg-blue-100">
+        <tr>
+          <th class="p-3">Team ID</th>
+          <th class="p-3">Team Name</th>
+          <th class="p-3">Leader Name</th>
+          <th class="p-3">Email</th>
+          <th class="p-3">Dept</th>
+          <th class="p-3">Section</th>
+          <th class="p-3">Mobile</th>
+          <th class="p-3">Mentor</th>
+          <th class="p-3">Mentor Dept</th>
+          <th class="p-3">Reassign</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+}
+
+
+
+
+function bindActionButtons() {
+  document.querySelectorAll(".edit-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const teamId = btn.getAttribute("data-team-id");
+      const regNo = btn.getAttribute("data-reg");
+      console.log(teamId,regNo)
+      editStudent(teamId, regNo);
+    });
+  });
+
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const teamId = btn.getAttribute("data-team-id");
+      const regNo = btn.getAttribute("data-reg");
+      const isLeader = btn.getAttribute("data-is-leader") === "true";
+      deleteStudent(teamId, regNo, isLeader);
+    });
+  });
+}
+
+async function deleteStudent(teamId, registerNo, isLeader) {
+  if (isLeader) {
+    if (!confirm("This is the team leader. Deleting will remove the entire team. Proceed?")) return;
+    await axios.delete(`/admin/delete-team/${teamId}`);
+  } else {
+    if (!confirm("Are you sure you want to delete this student from the team?")) return;
+    await axios.delete(`/admin/delete-student/${teamId}/${registerNo}`);
+  }
+  fetchTeams();
+}
+
+async function editStudent(teamId, registerNo) {
+  const team = filteredTeams.find(t => t.UserId === teamId);
+  if (!team) return alert("Team not found");
+
+  const student = team.Students.find(s =>
+    String(s.register_no).trim() === String(registerNo).trim()
+  );
+  if (!student) return alert("Student not found");
+  console.log(student)
+
+  const newName = prompt("Enter new student name:", student.student_name);
+  const newSection = prompt("Enter new section:", student.section);
+  // const newreg=prompt("Enter new Register No:",student.register_no)
+  const newDept = prompt("Enter new department:", student.dept);
+
+  if (newName && newSection && newDept) {
+    try {
+      await axios.put('/admin/edit-student', {
+        teamId,
+        registerNo,
+        student_name: newName,
+        section: newSection,
+        dept: newDept
+      });
+      fetchTeams();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update student.");
+    }
+  }
+}
+
+
+
+
 function renderPaginationControls(totalItems) {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const paginationContainer = document.getElementById("paginationControls");
@@ -134,22 +261,37 @@ function renderPaginationControls(totalItems) {
     return;
   }
 
-  let buttons = `
-    <button class="px-3 py-1 border rounded mr-1 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">Prev</button>
-  `;
+  // Clear existing buttons and listeners
+  paginationContainer.innerHTML = '';
 
+  const createButton = (text, page, disabled = false, isActive = false) => {
+    const btn = document.createElement("button");
+    btn.textContent = text;
+    btn.className = `px-3 py-1 border rounded mr-1 ${isActive ? "bg-blue-500 text-white" : ""
+      } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`;
+    if (!disabled) {
+      btn.addEventListener("click", () => {
+        currentPage = page;
+        renderTeams(filteredTeams);
+      });
+    } else {
+      btn.disabled = true;
+    }
+    return btn;
+  };
+
+  // Prev Button
+  paginationContainer.appendChild(createButton("Prev", currentPage - 1, currentPage === 1));
+
+  // Page Buttons
   for (let i = 1; i <= totalPages; i++) {
-    buttons += `
-      <button class="px-3 py-1 border rounded mr-1 ${currentPage === i ? 'bg-blue-500 text-white' : ''}" onclick="changePage(${i})">${i}</button>
-    `;
+    paginationContainer.appendChild(createButton(i, i, false, currentPage === i));
   }
 
-  buttons += `
-    <button class="px-3 py-1 border rounded ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">Next</button>
-  `;
-
-  paginationContainer.innerHTML = buttons;
+  // Next Button
+  paginationContainer.appendChild(createButton("Next", currentPage + 1, currentPage === totalPages));
 }
+
 
 window.changePage = function (page) {
   currentPage = page;
@@ -159,20 +301,22 @@ window.changePage = function (page) {
 
 
 
+
 function attachFilters() {
   const searchUserId = document.getElementById("searchUserId");
   const searchTeamName = document.getElementById("searchTeamName");
   const searchMentorDept = document.getElementById("searchMentorDept");
   const searchLeaderDept = document.getElementById("searchLeaderDept");
-  const searchStudentName=document.getElementById("searchStudentName");
+  const searchStudentName = document.getElementById("searchStudentName");
 
-  [searchUserId, searchTeamName, searchMentorDept, searchLeaderDept,searchStudentName].forEach(input => {
+  [searchUserId, searchTeamName, searchMentorDept, searchLeaderDept, searchStudentName].forEach(input => {
     input.addEventListener("input", () => {
+      currentPage = 1; // 🔥 Reset to first page
       const userVal = searchUserId.value.toLowerCase();
       const teamVal = searchTeamName.value.toLowerCase();
       const mentorVal = searchMentorDept.value.toLowerCase();
       const leaderVal = searchLeaderDept.value.toLowerCase();
-      const studentnameVal=searchStudentName.value.toLowerCase();
+      const studentnameVal = searchStudentName.value.toLowerCase();
 
       filteredTeams = currentTeams.filter(team =>
         team.UserId.toString().toLowerCase().includes(userVal) &&
@@ -184,6 +328,7 @@ function attachFilters() {
 
       renderTeams(filteredTeams);
     });
+
   });
 }
 
@@ -221,35 +366,43 @@ document.getElementById("exportExcel").addEventListener("click", () => {
 
 
 async function fetchMentorsAndTeams() {
-  const [mentorsRes, teamsRes] = await Promise.all([
-    axios.get('/admin/mentors'),
-    axios.get('/admin/assigned-teams')
-  ]);
-  const mentorSelect = document.getElementById("mentorSelect");
-  const teamSelect = document.getElementById("teamSelect");
+  // const [mentorsRes, teamsRes] = await Promise.all([
+  //   axios.get('/admin/mentors'),
+  //   axios.get('/admin/assigned-teams')
+  // ]);
 
-  mentorsRes.data.forEach(m => {
-    const opt = document.createElement("option");
-    opt.value = m.MentorId;
-    opt.textContent = `${m.name} (${m.department})`;
-    mentorSelect.appendChild(opt);
-  });
+  // allMentors = mentorsRes.data;
 
-  teamsRes.data.forEach(t => {
-    const opt = document.createElement("option");
-    opt.value = t.UserId;
-    opt.textContent = t.team_name;
-    teamSelect.appendChild(opt);
-  });
+  // const mentorSelect = document.getElementById("mentorSelect");
+  // const teamSelect = document.getElementById("teamSelect");
+
+  // mentorSelect.innerHTML = `<option value="">Select Mentor</option>`;
+  // mentorsRes.data.forEach(m => {
+  //   const opt = document.createElement("option");
+  //   opt.value = m.MentorId;
+  //   opt.textContent = `${m.name} (${m.department})`;
+  //   mentorSelect.appendChild(opt);
+  // });
+
+  // teamSelect.innerHTML = `<option value="">Select Team</option>`;
+  // teamsRes.data.forEach(t => {
+  //   const opt = document.createElement("option");
+  //   opt.value = t.UserId;
+  //   opt.textContent = t.team_name;
+  //   teamSelect.appendChild(opt);
+  // });
+  const mentorsRes = await axios.get('/admin/mentors');
+  allMentors = mentorsRes.data;
 }
 
-document.getElementById("assignBtn").addEventListener("click", async () => {
-  const team_id = document.getElementById("teamSelect").value;
-  const mentor_id = document.getElementById("mentorSelect").value;
-  await axios.put('/admin/assign-mentor', { team_id, mentor_id });
-  alert("Mentor assigned successfully");
-  location.reload();
-});
+
+// document.getElementById("assignBtn").addEventListener("click", async () => {
+//   const team_id = document.getElementById("teamSelect").value;
+//   const mentor_id = document.getElementById("mentorSelect").value;
+//   await axios.put('/admin/assign-mentor', { team_id, mentor_id });
+//   alert("Mentor assigned successfully");
+//   location.reload();
+// });
 
 // document.getElementById("historySearch").addEventListener("keypress", async (e) => {
 //   if (e.key === 'Enter') {
@@ -299,8 +452,8 @@ document.getElementById("historySearch").addEventListener("keypress", async (e) 
           <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
           <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
             ${data.Students.map(s =>
-              `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
-            ).join('')}
+      `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
+    ).join('')}
           </ul>
         </div>
 
@@ -327,6 +480,33 @@ document.getElementById("historySearch").addEventListener("keypress", async (e) 
   }
 });
 
+function attachReassignFilters() {
+  const teamIdInput = document.getElementById("filterTeamId");
+  const teamNameInput = document.getElementById("filterTeamName");
+  const leaderNameInput = document.getElementById("filterLeaderName");
+  const mentorNameInput = document.getElementById("filterMentorName");
+
+  [teamIdInput, teamNameInput, leaderNameInput, mentorNameInput].forEach(input => {
+    input.addEventListener("input", () => {
+      const idVal = teamIdInput.value.toLowerCase();
+      const nameVal = teamNameInput.value.toLowerCase();
+      const leaderVal = leaderNameInput.value.toLowerCase();
+      const mentorVal = mentorNameInput.value.toLowerCase();
+
+      const filtered = currentTeams.filter(team =>
+        team.UserId.toLowerCase().includes(idVal) &&
+        team.team_name.toLowerCase().includes(nameVal) &&
+        (team.Students.find(s => s.is_leader)?.student_name || "").toLowerCase().includes(leaderVal) &&
+        (team.mentor?.name || "").toLowerCase().includes(mentorVal)
+      );
+
+      filteredTeams = filtered;
+      renderReassignMentorTable();
+    });
+  });
+}
+
+
 window.editTeam = async (id) => {
   alert(`Edit functionality for team ${id} not implemented yet.`);
 };
@@ -338,5 +518,25 @@ window.deleteTeam = async (id) => {
   }
 };
 
+window.reassignMentor = async function (teamId) {
+  const select = document.getElementById(`reassign-${teamId}`);
+  const mentorId = select.value;
+  if (!mentorId) return alert("Please select a mentor.");
+
+  try {
+    await axios.put('/admin/assign-mentor', {
+      team_id: teamId,
+      mentor_id: mentorId
+    });
+    alert("Mentor reassigned successfully.");
+    fetchTeams();
+  } catch (err) {
+    console.error(err);
+    alert("Failed to reassign mentor.");
+  }
+};
+
+
 fetchTeams();
 fetchMentorsAndTeams();
+attachReassignFilters()

@@ -13,6 +13,9 @@ import Student from '../models/Student.js'
 import TeamUpload from '../models/TeamUpload.js';
 import authenticate from '../middleware/authenticate.js';
 import { supabase } from "../config/cloudinary.js";
+import multer from 'multer';
+// const storage = multer.memoryStorage();
+// const upload = multer({ storage });
 
 dotenv.config();
 
@@ -113,6 +116,79 @@ router.get("/dashboard", authenticate, async (req, res) => {
 // routes/upload.js
 
 
+// router.post("/upload", authenticate, upload.single("file"), async (req, res) => {
+//   try {
+//     const file = req.file;
+//     const fileName = file.originalname;
+//     const mimeType = file.mimetype;
+
+//     const supabaseUrl = await uploadToSupabase(file.buffer, fileName, mimeType);
+//     const userId = req.user.UserId;
+//     const weekNumber = req.body.week_number;
+
+//     const user = await User.findByPk(userId);
+//     const mentorId = user.mentor_id;
+//     const mentor = await Mentor.findByPk(mentorId);
+
+//     const [uploadEntry, created] = await TeamUpload.findOrCreate({
+//       where: { user_id: userId, week_number: weekNumber },
+//       defaults: {
+//         file_url: supabaseUrl,
+//         status: "SUBMITTED",
+//         mentor_id: mentorId,
+//       },
+//     });
+
+//     if (!created) {
+//       uploadEntry.file_url = supabaseUrl;
+//       uploadEntry.uploaded_at = new Date();
+//       uploadEntry.status = "SUBMITTED";
+//       uploadEntry.mentor_id = mentorId;
+//       await uploadEntry.save();
+//     }
+
+//     // Send email with Brevo (Sendinblue)
+//     const client = Sib.ApiClient.instance;
+//     const apiKey = client.authentications["api-key"];
+//     apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+//     const transEmailApi = new Sib.TransactionalEmailsApi();
+//     const sender = {
+//       email: process.env.EMAIL_USER,
+//       name: "IPD-TEAM",
+//     };
+// //[{ email: mentor.email }]
+// // console.log(mentor.email)
+//     await transEmailApi.sendTransacEmail({
+//   sender,
+//   to: [{ email: "balajiaru06@gmail.com" }],
+//   subject: `Team Upload Notification - Week ${weekNumber}`,
+//   htmlContent: `<h3>Dear ${mentor.name},</h3>
+//     <p>Your mentee has uploaded a file for <strong>Week ${weekNumber}</strong>.</p>
+//     <p>You can view or download the file using the attachment or from the dashboard.</p>
+//     <p><a href="https://ipd-portal.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
+//     <p><a href="${supabaseUrl}" target="_blank">${fileName}</a></p>
+//     <p>Team Name: <strong>${user.team_name}</strong></p>
+//     <br />
+//     <p>Best Regards,<br />IPD Team</p>`,
+//   attachment: [
+//     {
+//       url: supabaseUrl,
+//       name: fileName,
+//     },
+//   ],
+// });
+
+
+//     res.status(200).json({ message: "Upload successful", url: supabaseUrl });
+//   } catch (err) {
+//     console.error("Upload error:", err);
+//     res.status(500).json({ message: "Upload failed", error: err.message });
+//   }
+// });
+
+
+
 router.post("/upload", authenticate, upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
@@ -183,6 +259,7 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
     res.status(500).json({ message: "Upload failed", error: err.message });
   }
 });
+
 
 
 router.get("/upload-history", authenticate, async (req, res) => {

@@ -5,7 +5,8 @@ import User from './User.js';
 const Student = sequelize.define('Student', {
   register_no: {
     type: DataTypes.BIGINT,
-    allowNull: false
+    allowNull: false,
+    unique: true,
   },
   student_name: {
     type: DataTypes.STRING,
