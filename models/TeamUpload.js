@@ -4,7 +4,7 @@ import User from './User.js';
 
 const TeamUpload = sequelize.define('TeamUpload', {
   file_url: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.TEXT,
     allowNull: false
   },
   week_number: {

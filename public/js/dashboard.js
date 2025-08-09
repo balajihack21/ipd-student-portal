@@ -41,8 +41,8 @@ window.onload = async () => {
     // document.getElementById("progressFill").textContent = `${progress}%`;
 
   } catch (err) {
-    alert("Error loading dashboard");
-    //  window.location.href = "/login.html";
+    // alert("Error loading dashboard");
+     window.location.href = "/login.html";
     console.error(err);
   }
 };
