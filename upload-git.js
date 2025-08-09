@@ -1,28 +1,32 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+// seedAdmin.js
+import sequelize from './models/index.js';
+import Admin from './models/Admin.js';
+import jwt from 'jsonwebtoken';
 
-// Handle __dirname in ES module
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+async function seedAdmin() {
+  await sequelize.sync(); // Make sure DB & table exist
 
-// Input and output file paths
-const inputFile = path.join(__dirname, "contacts.vcf"); // Your original file
-const outputFile = path.join(__dirname, "fixed_contacts.vcf"); // Fixed file
+  const email = "head.ipd@act.edu.in";
+  const password = "admin2025"; // plain here, recommend bcrypt in production
 
-// Read the original file
-let vcfData = fs.readFileSync(inputFile, "utf8");
+  const existingAdmin = await Admin.findOne({ where: { email } });
+  if (existingAdmin) {
+    console.log("✅ Admin already exists.");
+    return;
+  }
 
-// Convert NOTE with phone numbers into TEL
-let fixedVcf = vcfData.replace(
-  /NOTE:Phone Numbers\\: *\+?([0-9]+)/g,
-  (match, number) => `TEL;TYPE=CELL:+${number}`
-);
+  // Generate a token for admin
+  const token = jwt.sign({ email, role: "admin" }, process.env.JWT_SECRET, {
+    expiresIn: "1h"
+  });
 
-// Remove any trailing "\n" artifacts inside TEL
-fixedVcf = fixedVcf.replace(/\\n/g, "");
+  await Admin.create({
+    email,
+    password,
+    token
+  });
 
-// Save the fixed vCard
-fs.writeFileSync(outputFile, fixedVcf, "utf8");
+  console.log("✅ Admin created successfully with token:", token);
+}
 
-console.log("✅ Fixed contacts saved as:", outputFile);
+seedAdmin().then(() => process.exit());

@@ -23,8 +23,9 @@ const router = Router();
 
 router.get("/dashboard", authenticate, async (req, res) => {
   try {
-    const user = await User.findByPk(req.user.UserId);
-    const students = await Student.findAll({ where: { user_id: req.user.UserId } });
+    console.log(req.user)
+    const user = await User.findByPk(req.user.userId);
+    const students = await Student.findAll({ where: { user_id: req.user.userId } });
     const mentor = await Mentor.findOne({ where: { mentorId: user.mentor_id } });
 
     res.json({
@@ -196,7 +197,7 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
     const mimeType = file.mimetype;
 
     const supabaseUrl = await uploadToSupabase(file.buffer, fileName, mimeType);
-    const userId = req.user.UserId;
+    const userId = req.user.userId;
     const weekNumber = req.body.week_number;
 
     const user = await User.findByPk(userId);
@@ -265,7 +266,7 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
 router.get("/upload-history", authenticate, async (req, res) => {
   try {
     const uploads = await TeamUpload.findAll({
-      where: { user_id: req.user.UserId },
+      where: { user_id: req.user.userId },
       order: [["week_number", "ASC"]],
     });
 
@@ -297,7 +298,7 @@ router.get("/upload-history", authenticate, async (req, res) => {
 // PUT /profile - Update mobile numbers
 router.put('/profile', authenticate, async (req, res) => {
   try {
-    const userId = req.user.UserId;
+    const userId = req.user.userId;
     const { mobile, studentMobiles = [] } = req.body;
 
     // Validate team leader mobile
@@ -331,7 +332,7 @@ router.post("/upload-profile-photo", authenticate, uploadprofile.single("photo")
   try {
     const file = req.file;
     const photoUrl = file.path; // Cloudinary URL
-    const userId = req.user.UserId;
+    const userId = req.user.userId;
 
     // Update photo URL in the user table
    await User.update(

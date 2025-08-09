@@ -1,28 +1,45 @@
 document.getElementById("resetForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-     const newPassword = document.getElementById("newPassword").value.trim();
+  e.preventDefault();
+
+  const newPassword = document.getElementById("newPassword").value.trim();
   const confirmPassword = document.getElementById("confirmPassword").value.trim();
-    const userId = localStorage.getItem("userId");
-    console.log(newPassword,userId)
-    if (newPassword !== confirmPassword) {
+  const userId = localStorage.getItem("userId");
+  const resetMessage = document.getElementById("resetMessage");
+
+  if (!newPassword || !confirmPassword) {
+    resetMessage.textContent = "Please fill in all fields.";
+    resetMessage.classList.remove("text-green-600");
+    resetMessage.classList.add("text-red-600");
+    return;
+  }
+
+  if (newPassword !== confirmPassword) {
     resetMessage.textContent = "Passwords do not match.";
     resetMessage.classList.remove("text-green-600");
     resetMessage.classList.add("text-red-600");
     return;
   }
 
-    try {
-      const response = await axios.post("/api/auth/reset-password", {
-        userId,
-        newPassword,
-      });
+  try {
+    const response = await axios.post("/api/auth/reset-password", {
+      userId,
+      newPassword,
+    });
+    console.log(response)
 
-      document.getElementById("resetMessage").innerText = "Password updated. Redirecting...";
-      setTimeout(() => {
+    resetMessage.textContent = "Password updated successfully. Redirecting...";
+    resetMessage.classList.remove("text-red-600");
+    resetMessage.classList.add("text-green-600");
+
+    setTimeout(() => {
+      
         window.location.href = "/login.html";
-      }, 2000);
-    } catch (err) {
-      document.getElementById("resetMessage").innerText =
-        err.response?.data?.message || "Reset failed";
-    }
-  });
+
+    }, 1500);
+
+  } catch (err) {
+    resetMessage.textContent = err.response?.data?.message || "Reset failed";
+    resetMessage.classList.remove("text-green-600");
+    resetMessage.classList.add("text-red-600");
+  }
+});

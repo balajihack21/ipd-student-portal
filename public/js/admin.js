@@ -885,6 +885,15 @@ function attachHistoryGeneralSearch() {
   });
 }
 
+    
+ document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("role");
+      window.location.href = "/login.html";
+    });
+
+
 
 
 fetchTeams();

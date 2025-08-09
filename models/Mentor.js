@@ -35,7 +35,11 @@ const Mentor = sequelize.define('Mentor', {
   token: {
     type: DataTypes.STRING(255),
     allowNull: true
-  }
+  },
+  firstLogin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    }
 }, {
   tableName: 'mentors'
 });

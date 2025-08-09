@@ -12,19 +12,29 @@ document.getElementById("loginForm").addEventListener("submit", async function (
   btnSpinner.classList.remove("hidden");
 
   try {
-
-      if(email.toLowerCase()=="ipdadmin@act.edu.in" && password.toLowerCase()=="admin2025"){
-        window.location.href="/admin-dashboard.html"
-      }
     const response = await axios.post("/api/auth/login", { email, password });
+    const { role, token, firstLogin, userId } = response.data;
 
-    if (response.data.firstLogin) {
-      localStorage.setItem("userId", response.data.userId);
+    if (firstLogin) {
+      localStorage.setItem("userId", userId);
       window.location.href = "/reset-password.html";
-    } else {
-      localStorage.setItem("token", response.data.token);
-      window.location.href = "/dashboard.html";
+      return;
     }
+
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+
+    // Redirect based on role
+   if (role === "admin") {
+  window.location.href = "/admin-dashboard.html";
+} else if (role === "mentor") {
+  window.location.href = "/mentor-dashboard.html";
+} else {
+  window.location.href = "/dashboard.html";
+}
+
+
   } catch (error) {
     const errorMsg = error.response?.data?.message || "Login failed";
     document.getElementById("error").innerText = errorMsg;
