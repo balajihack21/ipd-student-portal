@@ -54,10 +54,36 @@ router.put('/assign-mentor', async (req, res) => {
 });
 
 // GET team history by ID
-router.get('/team-history/:id', async (req, res) => {
-  const teamId = req.params.id;
+// router.get('/team-history/:id', async (req, res) => {
+//   const teamId = req.params.id;
+//   try {
+//     const team = await User.findByPk(teamId, {
+//       include: [
+//         {
+//           model: Mentor,
+//           as: 'mentor',
+//           attributes: ['name', 'email', 'department']
+//         },
+//         {
+//           model: Student,
+//           attributes: ['student_name', 'register_no', 'dept', 'is_leader', 'section', 'mobile']
+//         },
+//         {
+//           model: TeamUpload,
+//           attributes: ['week_number', 'file_url', 'createdAt', 'status', 'review_comment']
+//         }
+//       ]
+//     });
+//     if (!team) return res.status(404).json({ error: 'Team not found' });
+//     res.json(team);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+// Get all teams' history
+router.get('/team-history', async (req, res) => {
   try {
-    const team = await User.findByPk(teamId, {
+    const teams = await User.findAll({
       include: [
         {
           model: Mentor,
@@ -72,14 +98,20 @@ router.get('/team-history/:id', async (req, res) => {
           model: TeamUpload,
           attributes: ['week_number', 'file_url', 'createdAt', 'status', 'review_comment']
         }
+      ],
+      order: [
+        ['UserId', 'ASC'], // Optional: Order by team id
+        [TeamUpload, 'week_number', 'ASC'] // Optional: Order uploads by week
       ]
     });
-    if (!team) return res.status(404).json({ error: 'Team not found' });
-    res.json(team);
+
+    res.json(teams);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 // DELETE a team
 router.delete('/delete-team/:id', async (req, res) => {

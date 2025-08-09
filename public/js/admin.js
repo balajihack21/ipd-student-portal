@@ -11,6 +11,10 @@ tabs.forEach(tab => {
     if (tab.dataset.tab === "assignTab") {
   renderReassignMentorTable();
 }
+if (tab.dataset.tab === "historyTab") {
+  fetchAllTeamHistories();
+}
+
 
   });
 });
@@ -29,6 +33,10 @@ async function fetchTeams() {
 
 
 }
+
+
+
+
 
 // function renderTeams(teams) {
 //   const container = document.getElementById("teamsTable");
@@ -76,7 +84,247 @@ async function fetchTeams() {
 
 let currentPage = 1;
 const itemsPerPage = 10;
+let historyData = [];  // will store all team histories
+let historyCurrentPage = 1;
+let historyRowsPerPage = 5; // you can change to 10
 
+
+async function fetchAllTeamHistories() {
+  try {
+    const res = await axios.get(`/admin/team-history`); // should return all
+    historyData = res.data; // store for pagination
+    historyCurrentPage = 1; // reset to first page
+    renderHistoryTable();
+    attachHistoryFilters();
+
+  } catch (err) {
+    console.error(err);
+    document.getElementById("historyContent").innerHTML = `<p class="text-red-500">Failed to load team histories.</p>`;
+  }
+}
+
+function attachHistoryFilters() {
+  const teamIdInput = document.getElementById("historyFilterTeamId");
+  const teamNameInput = document.getElementById("historyFilterTeamName");
+  const statusSelect = document.getElementById("historyFilterStatus");
+  const mentorInput = document.getElementById("historyFilterMentorName");
+  const leaderDeptInput = document.getElementById("historyFilterLeaderDept");
+
+  [teamIdInput, teamNameInput, statusSelect, mentorInput, leaderDeptInput].forEach(el => {
+    el.addEventListener("input", applyHistoryFilters);
+    if (el.tagName === "SELECT") {
+      el.addEventListener("change", applyHistoryFilters);
+    }
+  });
+}
+
+function applyHistoryFilters() {
+  const idVal = document.getElementById("historyFilterTeamId").value.toLowerCase();
+  const nameVal = document.getElementById("historyFilterTeamName").value.toLowerCase();
+  const statusVal = document.getElementById("historyFilterStatus").value.toLowerCase();
+  const mentorVal = document.getElementById("historyFilterMentorName").value.toLowerCase();
+  const leaderDeptVal = document.getElementById("historyFilterLeaderDept").value.toLowerCase();
+
+  let filtered = historyData.filter(team =>
+    team.UserId.toLowerCase().includes(idVal) &&
+    team.team_name.toLowerCase().includes(nameVal) &&
+    (mentorVal === "" || (team.mentor?.name || "").toLowerCase().includes(mentorVal)) &&
+    (leaderDeptVal === "" || (team.Students.find(s => s.is_leader)?.dept || "").toLowerCase().includes(leaderDeptVal)) &&
+    (statusVal === "" || team.TeamUploads.some(u => (u.status || "").toLowerCase() === statusVal))
+  );
+
+  // Reset pagination and re-render
+  historyCurrentPage = 1;
+  renderHistoryTableFiltered(filtered);
+}
+
+// render filtered instead of all
+function renderHistoryTableFiltered(filteredTeams) {
+  const start = (historyCurrentPage - 1) * historyRowsPerPage;
+  const end = start + historyRowsPerPage;
+  const paginatedTeams = filteredTeams.slice(start, end);
+
+  let html = paginatedTeams.map(team => `
+    <div class="bg-white shadow rounded p-6 space-y-4 mb-6">
+      <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+        <p><strong>Email:</strong> ${team.email}</p>
+        <p><strong>Mentor:</strong> ${team.mentor?.name || 'None'} (${team.mentor?.department || 'N/A'})</p>
+        <p><strong>Mentor Email:</strong> ${team.mentor?.email || 'None'}</p>
+      </div>
+      <div>
+        <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
+        <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
+          ${team.Students.map(s =>
+            `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
+          ).join('')}
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
+        <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
+          ${team.TeamUploads.map(u => `
+            <li>
+              <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
+              <span class="text-xs text-gray-500 ml-1">(${new Date(u.createdAt).toLocaleString()})</span>
+              <div class="ml-4 mt-1 text-gray-600">
+                <div><strong>Status:</strong> <span class="font-medium ${u.status === 'REVIEWED' ? 'text-green-600' : u.status === 'SUBMITTED' ? 'text-red-600' : 'text-yellow-600'}">${u.status || 'Pending'}</span></div>
+                <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
+              </div>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById("historyContent").innerHTML = html;
+  renderHistoryPaginationControlsFiltered(filteredTeams.length);
+}
+
+function renderHistoryPaginationControlsFiltered(totalItems) {
+  const totalPages = Math.ceil(totalItems / historyRowsPerPage);
+  const container = document.getElementById("historyPaginationControls");
+
+  if (totalPages <= 1) {
+    container.innerHTML = '';
+    return;
+  }
+
+  container.innerHTML = '';
+
+  const createButton = (text, onClick, disabled = false) => {
+    const btn = document.createElement('button');
+    btn.textContent = text;
+    btn.className = 'px-3 py-1 bg-gray-200 rounded mr-1';
+    if (disabled) {
+      btn.disabled = true;
+      btn.classList.add('opacity-50', 'cursor-not-allowed');
+    } else {
+      btn.addEventListener('click', onClick);
+    }
+    return btn;
+  };
+
+  // Prev button
+  container.appendChild(
+    createButton(
+      'Prev',
+      () => historyPrevPageFiltered(),
+      historyCurrentPage === 1
+    )
+  );
+
+  // Page info span
+  const pageInfo = document.createElement('span');
+  pageInfo.className = 'px-3';
+  pageInfo.textContent = `Page ${historyCurrentPage} of ${totalPages}`;
+  container.appendChild(pageInfo);
+
+  // Next button
+  container.appendChild(
+    createButton(
+      'Next',
+      () => historyNextPageFiltered(totalItems),
+      historyCurrentPage === totalPages
+    )
+  );
+}
+
+
+
+function historyPrevPageFiltered() {
+  if (historyCurrentPage > 1) {
+    historyCurrentPage--;
+    applyHistoryFilters();
+  }
+}
+
+function historyNextPageFiltered(totalItems) {
+  const totalPages = Math.ceil(totalItems / historyRowsPerPage);
+  if (historyCurrentPage < totalPages) {
+    historyCurrentPage++;
+    applyHistoryFilters();
+  }
+}
+
+function renderHistoryTable() {
+  const start = (historyCurrentPage - 1) * historyRowsPerPage;
+  const end = start + historyRowsPerPage;
+  const paginatedTeams = historyData.slice(start, end);
+
+  let html = paginatedTeams.map(team => `
+    <div class="bg-white shadow rounded p-6 space-y-4 mb-6">
+      <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+        <p><strong>Email:</strong> ${team.email}</p>
+        <p><strong>Mentor:</strong> ${team.mentor?.name || 'None'} (${team.mentor?.department || 'N/A'})</p>
+        <p><strong>Mentor Email:</strong> ${team.mentor?.email || 'None'}</p>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
+        <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
+          ${team.Students.map(s =>
+            `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
+          ).join('')}
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
+        <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
+          ${team.TeamUploads.map(u => `
+            <li>
+              <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
+              <span class="text-xs text-gray-500 ml-1">(${new Date(u.createdAt).toLocaleString()})</span>
+              <div class="ml-4 mt-1 text-gray-600">
+                <div><strong>Status:</strong> <span class="font-medium ${u.status === 'REVIEWED' ? 'text-green-600' : u.status === 'SUBMITTED' ? 'text-red-600' : 'text-yellow-600'}">${u.status || 'Pending'}</span></div>
+                <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
+              </div>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById("historyContent").innerHTML = html;
+  renderHistoryPaginationControls();
+}
+
+function renderHistoryPaginationControls() {
+  const totalPages = Math.ceil(historyData.length / historyRowsPerPage);
+  let buttons = '';
+
+  if (historyCurrentPage > 1) {
+    buttons += `<button onclick="historyPrevPage()" class="px-3 py-1 bg-gray-200 rounded">Prev</button>`;
+  }
+
+  buttons += `<span class="px-3">Page ${historyCurrentPage} of ${totalPages}</span>`;
+
+  if (historyCurrentPage < totalPages) {
+    buttons += `<button onclick="historyNextPage()" class="px-3 py-1 bg-gray-200 rounded">Next</button>`;
+  }
+
+  document.getElementById("historyPaginationControls").innerHTML = buttons;
+}
+
+function historyPrevPage() {
+  if (historyCurrentPage > 1) {
+    historyCurrentPage--;
+    renderHistoryTable();
+  }
+}
+
+function historyNextPage() {
+  const totalPages = Math.ceil(historyData.length / historyRowsPerPage);
+  if (historyCurrentPage < totalPages) {
+    historyCurrentPage++;
+    renderHistoryTable();
+  }
+}
 
 function renderTeams(teams) {
   const container = document.getElementById("teamsTable");
@@ -131,10 +379,16 @@ function renderTeams(teams) {
   bindActionButtons(); // bind all buttons
 }
 
+let currentReassignPage = 1;
+const reassignItemsPerPage = 10;
+
 function renderReassignMentorTable() {
   const container = document.getElementById("reassignTableContainer");
+  
+  const startIndex = (currentReassignPage - 1) * reassignItemsPerPage;
+  const paginatedTeams = filteredTeams.slice(startIndex, startIndex + reassignItemsPerPage);
 
-  const rows = filteredTeams.map(team => {
+  const rows = paginatedTeams.map(team => {
     const leader = team.Students?.find(s => s.is_leader);
     return `
       <tr>
@@ -180,7 +434,45 @@ function renderReassignMentorTable() {
       </thead>
       <tbody>${rows}</tbody>
     </table>
+    <div id="reassignPaginationControls" class="mt-4 flex flex-wrap gap-2"></div>
   `;
+
+  renderReassignPaginationControls(filteredTeams.length);
+}
+
+function renderReassignPaginationControls(totalItems) {
+  const totalPages = Math.ceil(totalItems / reassignItemsPerPage);
+  const paginationContainer = document.getElementById("reassignPaginationControls");
+
+  if (totalPages <= 1) {
+    paginationContainer.innerHTML = '';
+    return;
+  }
+
+  paginationContainer.innerHTML = '';
+
+  const createButton = (text, page, disabled = false, isActive = false) => {
+    const btn = document.createElement("button");
+    btn.textContent = text;
+    btn.className = `px-3 py-1 border rounded mr-1 ${isActive ? "bg-blue-500 text-white" : ""} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`;
+    if (!disabled) {
+      btn.addEventListener("click", () => {
+        currentReassignPage = page;
+        renderReassignMentorTable();
+      });
+    } else {
+      btn.disabled = true;
+    }
+    return btn;
+  };
+
+  paginationContainer.appendChild(createButton("Prev", currentReassignPage - 1, currentReassignPage === 1));
+  
+  for (let i = 1; i <= totalPages; i++) {
+    paginationContainer.appendChild(createButton(i, i, false, currentReassignPage === i));
+  }
+  
+  paginationContainer.appendChild(createButton("Next", currentReassignPage + 1, currentReassignPage === totalPages));
 }
 
 
@@ -432,53 +724,54 @@ async function fetchMentorsAndTeams() {
 //   }
 // });
 
-document.getElementById("historySearch").addEventListener("keypress", async (e) => {
-  if (e.key === 'Enter') {
-    const teamId = e.target.value.trim();
-    const res = await axios.get(`/admin/team-history/${teamId}`);
-    const data = res.data;
 
-    let html = `
-      <div class="bg-white shadow rounded p-6 space-y-4">
-        <h2 class="text-2xl font-semibold text-blue-700">${data.team_name}</h2>
+// document.getElementById("historySearch").addEventListener("keypress", async (e) => {
+//   if (e.key === 'Enter') {
+//     const teamId = e.target.value.trim();
+//     const res = await axios.get(`/admin/team-history/${teamId}`);
+//     const data = res.data;
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-          <p><strong>Email:</strong> ${data.email}</p>
-          <p><strong>Mentor:</strong> ${data.mentor?.name || 'None'} (${data.mentor?.department || 'N/A'})</p>
-          <p><strong>Mentor Email:</strong> ${data.mentor?.email || 'None'}</p>
-        </div>
+//     let html = `
+//       <div class="bg-white shadow rounded p-6 space-y-4">
+//         <h2 class="text-2xl font-semibold text-blue-700">${data.team_name}</h2>
 
-        <div>
-          <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
-          <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
-            ${data.Students.map(s =>
-      `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
-    ).join('')}
-          </ul>
-        </div>
+//         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+//           <p><strong>Email:</strong> ${data.email}</p>
+//           <p><strong>Mentor:</strong> ${data.mentor?.name || 'None'} (${data.mentor?.department || 'N/A'})</p>
+//           <p><strong>Mentor Email:</strong> ${data.mentor?.email || 'None'}</p>
+//         </div>
 
-        <div>
-  <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
-  <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
-    ${data.TeamUploads.map(u => `
-      <li>
-        <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
-        <span class="text-xs text-gray-500 ml-1">(${new Date(u.createdAt).toLocaleString()})</span>
-        <div class="ml-4 mt-1 text-gray-600">
-          <div><strong>Status:</strong> <span class="font-medium ${u.status === 'REVIEWED' ? 'text-green-600' : u.status === 'SUBMITTED' ? 'text-red-600' : 'text-yellow-600'}">${u.status || 'Pending'}</span></div>
-          <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
-        </div>
-      </li>
-    `).join('')}
-  </ul>
-</div>
+//         <div>
+//           <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
+//           <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
+//             ${data.Students.map(s =>
+//       `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
+//     ).join('')}
+//           </ul>
+//         </div>
 
-      </div>
-    `;
+//         <div>
+//   <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
+//   <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
+//     ${data.TeamUploads.map(u => `
+//       <li>
+//         <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
+//         <span class="text-xs text-gray-500 ml-1">(${new Date(u.createdAt).toLocaleString()})</span>
+//         <div class="ml-4 mt-1 text-gray-600">
+//           <div><strong>Status:</strong> <span class="font-medium ${u.status === 'REVIEWED' ? 'text-green-600' : u.status === 'SUBMITTED' ? 'text-red-600' : 'text-yellow-600'}">${u.status || 'Pending'}</span></div>
+//           <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
+//         </div>
+//       </li>
+//     `).join('')}
+//   </ul>
+// </div>
 
-    document.getElementById("historyContent").innerHTML = html;
-  }
-});
+//       </div>
+//     `;
+
+//     document.getElementById("historyContent").innerHTML = html;
+//   }
+// });
 
 function attachReassignFilters() {
   const teamIdInput = document.getElementById("filterTeamId");
@@ -501,7 +794,9 @@ function attachReassignFilters() {
       );
 
       filteredTeams = filtered;
-      renderReassignMentorTable();
+currentReassignPage = 1; // reset page when filtering
+renderReassignMentorTable();
+
     });
   });
 }
@@ -537,6 +832,64 @@ window.reassignMentor = async function (teamId) {
 };
 
 
+function attachTeamsGeneralSearch() {
+  const searchInput = document.getElementById("teamsGeneralSearch");
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase();
+    let filtered = currentTeams.filter(team =>
+      JSON.stringify(team).toLowerCase().includes(query)
+    );
+    currentPage = 1;
+    filteredTeams = filtered;
+    renderTeams(filteredTeams);
+  });
+}
+
+
+// TEAMS GENERAL SEARCH
+function attachTeamsGeneralSearch() {
+  const searchInput = document.getElementById("teamsGeneralSearch");
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase();
+    filteredTeams = currentTeams.filter(team =>
+      JSON.stringify(team).toLowerCase().includes(query)
+    );
+    currentPage = 1; // reset pagination
+    renderTeams(filteredTeams);
+  });
+}
+
+// ASSIGN GENERAL SEARCH
+function attachAssignGeneralSearch() {
+  const searchInput = document.getElementById("assignGeneralSearch");
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase();
+    filteredAssign = allMentors.filter(assign =>
+      JSON.stringify(assign).toLowerCase().includes(query)
+    );
+    assignCurrentPage = 1;
+    renderAssign(filteredAssign);
+  });
+}
+
+// HISTORY GENERAL SEARCH
+function attachHistoryGeneralSearch() {
+  const searchInput = document.getElementById("historyGeneralSearch");
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase();
+    filteredHistory = historyData.filter(record =>
+      JSON.stringify(record).toLowerCase().includes(query)
+    );
+    historyCurrentPage = 1;
+    renderHistoryTableFiltered(filteredHistory);
+  });
+}
+
+
+
 fetchTeams();
 fetchMentorsAndTeams();
 attachReassignFilters()
+attachTeamsGeneralSearch();
+attachAssignGeneralSearch();
+attachHistoryGeneralSearch();

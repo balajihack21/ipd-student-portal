@@ -22,41 +22,53 @@
 
     <!-- Tab Content -->
     <div id="teamsTab" class="tab-content">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-        <input type="text" id="searchTeamName" placeholder="🔍 Search by team name..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
-        <input type="text" id="searchUserId" placeholder="🔍 Search by User ID..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
-        <input type="text" id="searchLeaderDept" placeholder="🔍 Search by Leader Dept..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
-        <input type="text" id="searchMentorDept" placeholder="🔍 Search by Mentor Dept..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
-        <input type="text" id="searchStudentName" placeholder="🔍 Search by Student Name..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
-      </div>
+      <div class="mb-4">
+  <input type="text" id="teamsGeneralSearch" placeholder="🔍 Search anything..." class="p-3 border rounded shadow-sm w-full">
+</div>
 
-      <button id="exportExcel" class="mb-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-        Export to Excel
-      </button>
-<div id="paginationControls" class="mt-4 flex flex-wrap gap-2"></div>
-    </div>
-      <div id="teamsTable" class="bg-white rounded-lg shadow-lg p-6 overflow-x-auto">
-        <table class="min-w-full table-auto text-left">
-          <thead>
-            <tr class="bg-gray-100 text-gray-700">
-              <th class="p-2">User ID</th>
-              <th class="p-2">Team Name</th>
-              <th class="p-2">Team Leader</th>
-              <th class="p-2">Leader Dept</th>
-              <th class="p-2">Mentor</th>
-              <th class="p-2">Mentor Dept</th>
-              <th class="p-2">Members</th>
-              <th class="p-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="teamsBody">
-            <!-- JavaScript will populate rows -->
-          </tbody>
-        </table>
-      </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+    <input type="text" id="searchTeamName" placeholder="🔍 Search by team name..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
+    <input type="text" id="searchUserId" placeholder="🔍 Search by User ID..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
+    <input type="text" id="searchLeaderDept" placeholder="🔍 Search by Leader Dept..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
+    <input type="text" id="searchMentorDept" placeholder="🔍 Search by Mentor Dept..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
+    <input type="text" id="searchStudentName" placeholder="🔍 Search by Student Name..." class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
+  </div>
+
+  <button id="exportExcel" class="mb-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+    Export to Excel
+  </button>
+  
+  <div id="paginationControls" class="mt-4 flex flex-wrap gap-2"></div>
+
+  <!-- ✅ Move this inside teamsTab -->
+  <div id="teamsTable" class="bg-white rounded-lg shadow-lg p-6 overflow-x-auto">
+    <table class="min-w-full table-auto text-left">
+      <thead>
+        <tr class="bg-gray-100 text-gray-700">
+          <th class="p-2">User ID</th>
+          <th class="p-2">Team Name</th>
+          <th class="p-2">Team Leader</th>
+          <th class="p-2">Leader Dept</th>
+          <th class="p-2">Mentor</th>
+          <th class="p-2">Mentor Dept</th>
+          <th class="p-2">Members</th>
+          <th class="p-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="teamsBody">
+        <!-- JavaScript will populate rows -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
       
 
     <div id="assignTab" class="tab-content hidden">
+      <div class="mb-4">
+  <input type="text" id="assignGeneralSearch" placeholder="🔍 Search anything..." class="p-3 border rounded shadow-sm w-full">
+</div>
+
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
   <input type="text" id="filterTeamId" placeholder="🔍 Search by Team ID..." class="p-3 border rounded shadow-sm">
   <input type="text" id="filterTeamName" placeholder="🔍 Search by Team Name..." class="p-3 border rounded shadow-sm">
@@ -71,11 +83,29 @@
 
 
     <div id="historyTab" class="tab-content hidden">
-      <input type="text" id="historySearch" placeholder="🔎 Enter Team ID..." class="mb-6 p-3 border border-gray-300 rounded-lg w-full max-w-md shadow-sm">
-      <div id="historyContent" class="bg-white p-6 rounded-lg shadow-lg">
-        <!-- Full history will be shown here -->
-      </div>
-    </div>
+      <div class="mb-4">
+  <input type="text" id="historyGeneralSearch" placeholder="🔍 Search anything..." class="p-3 border rounded shadow-sm w-full">
+</div>
+  <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
+  <input type="text" id="historyFilterTeamId" placeholder="🔍 Team ID" class="p-3 border rounded shadow-sm">
+  <input type="text" id="historyFilterTeamName" placeholder="🔍 Team Name" class="p-3 border rounded shadow-sm">
+  
+  <select id="historyFilterStatus" class="p-3 border rounded shadow-sm">
+    <option value="">All Statuses</option>
+    <option value="SUBMITTED">Submitted</option>
+    <option value="REVIEWED">Reviewed</option>
+  </select>
+  
+  <input type="text" id="historyFilterMentorName" placeholder="🔍 Mentor Name" class="p-3 border rounded shadow-sm">
+  <input type="text" id="historyFilterLeaderDept" placeholder="🔍 Leader Dept" class="p-3 border rounded shadow-sm">
+</div>
+
+  <div id="historyContent"></div>
+  
+  <!-- Pagination controls -->
+  <div id="historyPaginationControls" class="mt-4 flex justify-center gap-2"></div>
+</div>
+
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
