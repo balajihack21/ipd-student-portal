@@ -36,6 +36,10 @@ const Mentor = sequelize.define('Mentor', {
     type: DataTypes.STRING(255),
     allowNull: true
   },
+  is_coordinator:{
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
   firstLogin: {
       type: DataTypes.BOOLEAN,
       defaultValue: true

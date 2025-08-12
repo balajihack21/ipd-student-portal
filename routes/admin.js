@@ -96,7 +96,7 @@ router.get('/team-history', async (req, res) => {
         },
         {
           model: TeamUpload,
-          attributes: ['week_number', 'file_url', 'createdAt', 'status', 'review_comment']
+          attributes: ['week_number', 'file_url','uploaded_at', 'createdAt', 'status', 'review_comment']
         }
       ],
       order: [

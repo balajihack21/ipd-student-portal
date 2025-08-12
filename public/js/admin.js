@@ -9,17 +9,17 @@ tabs.forEach(tab => {
     document.getElementById(tab.dataset.tab).classList.remove("hidden");
 
     if (tab.dataset.tab === "assignTab") {
-  renderReassignMentorTable();
-}
-if (tab.dataset.tab === "historyTab") {
-  fetchAllTeamHistories();
-}
+      renderReassignMentorTable();
+    }
+    if (tab.dataset.tab === "historyTab") {
+      fetchAllTeamHistories();
+    }
 
 
   });
 });
 
-let allMentors=[];
+let allMentors = [];
 
 let currentTeams = [];
 let filteredTeams = [];
@@ -140,41 +140,69 @@ function applyHistoryFilters() {
 
 // render filtered instead of all
 function renderHistoryTableFiltered(filteredTeams) {
+
   const start = (historyCurrentPage - 1) * historyRowsPerPage;
   const end = start + historyRowsPerPage;
   const paginatedTeams = filteredTeams.slice(start, end);
 
   let html = paginatedTeams.map(team => `
     <div class="bg-white shadow rounded p-6 space-y-4 mb-6">
+      <h2 class="text-2xl font-semibold text-blue-700">${team.UserId}</h2>
       <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
         <p><strong>Email:</strong> ${team.email}</p>
         <p><strong>Mentor:</strong> ${team.mentor?.name || 'None'} (${team.mentor?.department || 'N/A'})</p>
         <p><strong>Mentor Email:</strong> ${team.mentor?.email || 'None'}</p>
+        <img 
+    src="${team?.profilePhoto || '/images/christmas-celebration-concept.jpg'}" 
+    alt="Profile photo of ${team.team_name || 'Team Member'}"
+    class="w-20 h-20 object-cover rounded-full border border-gray-300 shadow-sm"
+  >
       </div>
       <div>
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
         <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
           ${team.Students.map(s =>
-            `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
-          ).join('')}
+    `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
+  ).join('')}
         </ul>
       </div>
       <div>
-        <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
-        <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
-          ${team.TeamUploads.map(u => `
-            <li>
-              <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
-              <span class="text-xs text-gray-500 ml-1">(${new Date(u.createdAt).toLocaleString()})</span>
-              <div class="ml-4 mt-1 text-gray-600">
-                <div><strong>Status:</strong> <span class="font-medium ${u.status === 'REVIEWED' ? 'text-green-600' : u.status === 'SUBMITTED' ? 'text-red-600' : 'text-yellow-600'}">${u.status || 'Pending'}</span></div>
-                <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
-              </div>
-            </li>
-          `).join('')}
-        </ul>
-      </div>
+  <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
+  <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
+    ${team.TeamUploads.map(u => {
+    const daysPending = Math.floor(
+      (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
+    );
+    const isPendingTooLong =
+      u.status !== 'REVIEWED' && daysPending > 2;
+
+    return `
+        <li>
+          <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
+          <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
+          ${isPendingTooLong
+        ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
+        : ''}
+          <div class="ml-4 mt-1 text-gray-600">
+            <div>
+              <strong>Status:</strong>
+              <span class="font-medium ${u.status === 'REVIEWED'
+        ? 'text-green-600'
+        : u.status === 'SUBMITTED'
+          ? 'text-red-600'
+          : 'text-yellow-600'}">
+                ${u.status || 'Pending'}
+              </span>
+            </div>
+            <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
+          </div>
+        </li>
+      `;
+  }).join('')}
+  </ul>
+</div>
+
     </div>
   `).join('');
 
@@ -255,38 +283,65 @@ function renderHistoryTable() {
 
   let html = paginatedTeams.map(team => `
     <div class="bg-white shadow rounded p-6 space-y-4 mb-6">
+    <h2 class="text-2xl font-semibold text-blue-700">${team.UserId}</h2>
       <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-        <p><strong>Email:</strong> ${team.email}</p>
-        <p><strong>Mentor:</strong> ${team.mentor?.name || 'None'} (${team.mentor?.department || 'N/A'})</p>
-        <p><strong>Mentor Email:</strong> ${team.mentor?.email || 'None'}</p>
-      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 items-center">
+  <p><strong>Email:</strong> ${team.email}</p>
+  <p><strong>Mentor:</strong> ${team.mentor?.name || 'None'} (${team.mentor?.department || 'N/A'})</p>
+  <p><strong>Mentor Email:</strong> ${team.mentor?.email || 'None'}</p>
+  <img 
+    src="${team?.profilePhoto || '/images/christmas-celebration-concept.jpg'}" 
+    alt="Profile photo of ${team.team_name || 'Team Member'}"
+    class="w-20 h-20 object-cover rounded-full border border-gray-300 shadow-sm"
+  >
+</div>
+
 
       <div>
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
         <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
           ${team.Students.map(s =>
-            `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
-          ).join('')}
+    `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
+  ).join('')}
         </ul>
       </div>
 
       <div>
-        <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
-        <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
-          ${team.TeamUploads.map(u => `
-            <li>
-              <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
-              <span class="text-xs text-gray-500 ml-1">(${new Date(u.createdAt).toLocaleString()})</span>
-              <div class="ml-4 mt-1 text-gray-600">
-                <div><strong>Status:</strong> <span class="font-medium ${u.status === 'REVIEWED' ? 'text-green-600' : u.status === 'SUBMITTED' ? 'text-red-600' : 'text-yellow-600'}">${u.status || 'Pending'}</span></div>
-                <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
-              </div>
-            </li>
-          `).join('')}
-        </ul>
-      </div>
+  <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
+  <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
+    ${team.TeamUploads.map(u => {
+    const daysPending = Math.floor(
+      (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
+    );
+    const isPendingTooLong =
+      u.status !== 'REVIEWED' && daysPending > 2;
+
+    return `
+        <li>
+          <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
+          <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
+          ${isPendingTooLong
+        ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
+        : ''}
+          <div class="ml-4 mt-1 text-gray-600">
+            <div>
+              <strong>Status:</strong>
+              <span class="font-medium ${u.status === 'REVIEWED'
+        ? 'text-green-600'
+        : u.status === 'SUBMITTED'
+          ? 'text-red-600'
+          : 'text-yellow-600'}">
+                ${u.status || 'Pending'}
+              </span>
+            </div>
+            <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
+          </div>
+        </li>
+      `;
+  }).join('')}
+  </ul>
+</div>
     </div>
   `).join('');
 
@@ -384,7 +439,7 @@ const reassignItemsPerPage = 10;
 
 function renderReassignMentorTable() {
   const container = document.getElementById("reassignTableContainer");
-  
+
   const startIndex = (currentReassignPage - 1) * reassignItemsPerPage;
   const paginatedTeams = filteredTeams.slice(startIndex, startIndex + reassignItemsPerPage);
 
@@ -467,11 +522,11 @@ function renderReassignPaginationControls(totalItems) {
   };
 
   paginationContainer.appendChild(createButton("Prev", currentReassignPage - 1, currentReassignPage === 1));
-  
+
   for (let i = 1; i <= totalPages; i++) {
     paginationContainer.appendChild(createButton(i, i, false, currentReassignPage === i));
   }
-  
+
   paginationContainer.appendChild(createButton("Next", currentReassignPage + 1, currentReassignPage === totalPages));
 }
 
@@ -483,7 +538,7 @@ function bindActionButtons() {
     btn.addEventListener("click", () => {
       const teamId = btn.getAttribute("data-team-id");
       const regNo = btn.getAttribute("data-reg");
-      console.log(teamId,regNo)
+      console.log(teamId, regNo)
       editStudent(teamId, regNo);
     });
   });
@@ -794,8 +849,8 @@ function attachReassignFilters() {
       );
 
       filteredTeams = filtered;
-currentReassignPage = 1; // reset page when filtering
-renderReassignMentorTable();
+      currentReassignPage = 1; // reset page when filtering
+      renderReassignMentorTable();
 
     });
   });
@@ -885,20 +940,25 @@ function attachHistoryGeneralSearch() {
   });
 }
 
-    
- document.getElementById("logoutBtn").addEventListener("click", () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("role");
-      window.location.href = "/login.html";
-    });
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("userId");
+  localStorage.removeItem("role");
+  window.location.href = "/login.html";
+});
 
 
 
-
-fetchTeams();
-fetchMentorsAndTeams();
-attachReassignFilters()
-attachTeamsGeneralSearch();
-attachAssignGeneralSearch();
-attachHistoryGeneralSearch();
+try {
+  fetchTeams();
+  fetchMentorsAndTeams();
+  attachReassignFilters()
+  attachTeamsGeneralSearch();
+  attachAssignGeneralSearch();
+  attachHistoryGeneralSearch();
+}
+catch (err) {
+  window.location.href = "/login.html";
+  console.error(err);
+}

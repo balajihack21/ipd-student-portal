@@ -21,6 +21,7 @@ import Mentor from './models/Mentor.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import adminRoutes from './routes/admin.js'
+import mentorRoutes from './routes/mentor.js'
 
 const app = express();
 
@@ -58,6 +59,7 @@ app.get('/adminpage', (req, res) => {
 });
 
 app.use('/templates', express.static(path.join(__dirname, 'public/templates')));
+app.use('/mentor',mentorRoutes)
 app.use('/api', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/admin',adminRoutes)
