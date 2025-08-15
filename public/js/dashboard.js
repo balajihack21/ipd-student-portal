@@ -10,7 +10,7 @@ window.onload = async () => {
     const { teamName, mobile, students = [], mentor = {}, progress = 0 ,profilePhoto} = res.data;
     document.getElementById("teamName").textContent = `${teamName}`;
     document.getElementById("contactNo").textContent = ` ${mobile}`;
-    console.log(res.data)
+    
 
     if (profilePhoto) {
   document.getElementById("profilePhoto").src = profilePhoto;
@@ -30,7 +30,7 @@ window.onload = async () => {
     });
 
     // // Mentor
-    console.log(mentor)
+   
     document.getElementById("mentorName").innerHTML = `${mentor.title}${mentor.name}<br> ${mentor.designation} - ${mentor.department}<br> ${mentor.email}`;
 
     await loadUploadHistory();
