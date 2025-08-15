@@ -12,6 +12,7 @@ tabs.forEach(tab => {
       renderReassignMentorTable();
     }
     if (tab.dataset.tab === "historyTab") {
+
       fetchAllTeamHistories();
     }
 
@@ -23,6 +24,7 @@ let allMentors = [];
 
 let currentTeams = [];
 let filteredTeams = [];
+let filteredHistory = [];
 
 async function fetchTeams() {
   const res = await axios.get("/admin/teams");
@@ -92,10 +94,18 @@ let historyRowsPerPage = 5; // you can change to 10
 async function fetchAllTeamHistories() {
   try {
     const res = await axios.get(`/admin/team-history`); // should return all
-    historyData = res.data; // store for pagination
+    historyData = res.data.teams; // store for pagination
+    filteredHistory =[...historyData];
+    console.log(res.data)
+    document.getElementById('uploadedTeamsCount').textContent =
+      `Uploaded Teams: ${res.data.uploadedCount}`;
+    document.getElementById('notUploadedTeamsCount').textContent =
+      `Not Uploaded Teams: ${res.data.notUploadedCount}`;
     historyCurrentPage = 1; // reset to first page
     renderHistoryTable();
     attachHistoryFilters();
+document.getElementById("uploadStatusFilter").addEventListener("change", applyHistoryFilters);
+
 
   } catch (err) {
     console.error(err);
@@ -124,19 +134,28 @@ function applyHistoryFilters() {
   const statusVal = document.getElementById("historyFilterStatus").value.toLowerCase();
   const mentorVal = document.getElementById("historyFilterMentorName").value.toLowerCase();
   const leaderDeptVal = document.getElementById("historyFilterLeaderDept").value.toLowerCase();
+  const uploadStatusFilter = document.getElementById("uploadStatusFilter").value;
 
-  let filtered = historyData.filter(team =>
-    team.UserId.toLowerCase().includes(idVal) &&
-    team.team_name.toLowerCase().includes(nameVal) &&
-    (mentorVal === "" || (team.mentor?.name || "").toLowerCase().includes(mentorVal)) &&
-    (leaderDeptVal === "" || (team.Students.find(s => s.is_leader)?.dept || "").toLowerCase().includes(leaderDeptVal)) &&
-    (statusVal === "" || team.TeamUploads.some(u => (u.status || "").toLowerCase() === statusVal))
-  );
+  filteredHistory = historyData.filter(team => {
+    const matchesUploadStatus =
+      uploadStatusFilter === "all" ||
+      (uploadStatusFilter === "uploaded" && team.TeamUploads && team.TeamUploads.length > 0) ||
+      (uploadStatusFilter === "not_uploaded" && (!team.TeamUploads || team.TeamUploads.length === 0));
+
+    const matchesId = team.UserId.toLowerCase().includes(idVal);
+    const matchesName = team.team_name.toLowerCase().includes(nameVal);
+    const matchesMentor = mentorVal === "" || (team.mentor?.name || "").toLowerCase().includes(mentorVal);
+    const matchesLeaderDept = leaderDeptVal === "" || (team.Students.find(s => s.is_leader)?.dept || "").toLowerCase().includes(leaderDeptVal);
+    const matchesStatus = statusVal === "" || team.TeamUploads.some(u => (u.status || "").toLowerCase() === statusVal);
+
+    return matchesUploadStatus && matchesId && matchesName && matchesMentor && matchesLeaderDept && matchesStatus;
+  });
 
   // Reset pagination and re-render
   historyCurrentPage = 1;
-  renderHistoryTableFiltered(filtered);
+  renderHistoryTableFiltered(filteredHistory);
 }
+
 
 // render filtered instead of all
 function renderHistoryTableFiltered(filteredTeams) {
@@ -710,6 +729,89 @@ document.getElementById("exportExcel").addEventListener("click", () => {
 
   XLSX.writeFile(workbook, "filtered_teams_export.xlsx");
 });
+
+
+document.getElementById("exportHistoryExcel").addEventListener("click", () => {
+  if (!filteredHistory.length) {
+    alert("No data to export!");
+    return;
+  }
+
+  // Find max week number across all teams
+  const maxWeek = Math.max(
+    0,
+    ...filteredHistory.map(t =>
+      t.TeamUploads ? t.TeamUploads.map(u => u.week_number || 0) : [0]
+    ).flat()
+  );
+
+  const headers = [
+    "Team ID", "Team Name", "Name", "Section", "Register No", "Mobile", "Email", "Dept", "Role",
+    "Mentor Name", "Mentor Department","Status"
+  ];
+
+  for (let w = 1; w <= maxWeek; w++) {
+    headers.push(`Week ${w}`);
+  }
+
+  const rows = [headers];
+
+  filteredHistory.forEach(team => {
+    // Sort students so leader comes first
+    const studentsSorted = [...(team.Students || [])].sort((a, b) => b.is_leader - a.is_leader);
+
+    studentsSorted.forEach((student, i) => {
+      const rowBase = [
+        i === 0 ? team.UserId : "",
+        i === 0 ? team.team_name : "",
+        student.student_name || "",
+        student.section || "",
+        student.register_no || "",
+        i === 0 ? team.mobile : "",
+        i === 0 ? team.email : "",
+        student.dept || "",
+        student.is_leader ? "TeamLeader" : `Student ${i}`,
+        i === 0 ? (team.mentor?.name || "Unassigned") : "",
+        i === 0 ? (team.mentor?.department || "N/A") : ""
+      ];
+
+      // Week columns
+      if (i === 0) {
+        if (team.TeamUploads && team.TeamUploads.length > 0) {
+          for (let w = 1; w <= maxWeek; w++) {
+            const upload = team.TeamUploads.find(u => u.week_number === w);
+            rowBase.push(upload.status);
+             rowBase.push(upload ? upload.file_url : "");
+          }
+        } else {
+          // No uploads → Week 1 = "No uploads", rest blank
+          rowBase.push("No uploads");
+          for (let w = 2; w <= maxWeek; w++) {
+            rowBase.push("");
+          }
+        }
+      } else {
+        // Other students get empty week columns
+        for (let w = 1; w <= maxWeek; w++) {
+          rowBase.push("");
+        }
+      }
+
+      rows.push(rowBase);
+    });
+  });
+
+  // Create XLSX
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  XLSX.utils.book_append_sheet(wb, ws, "History");
+  XLSX.writeFile(wb, "history_export.xlsx");
+});
+
+
+
+
+
 
 
 async function fetchMentorsAndTeams() {

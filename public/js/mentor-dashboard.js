@@ -56,13 +56,117 @@ async function loadMentorDetails() {
     });
 
     const mentor = res.data;
-    document.getElementById('mentorName').textContent =`${mentor.title}${mentor.name}`;
+    document.getElementById('mentorName').textContent = `${mentor.title}${mentor.name}`;
     document.getElementById('mentorEmail').textContent = mentor.email;
-    document.getElementById('mentordept').textContent = mentor.department;
+    document.getElementById('mentordept').textContent = `${mentor.designation} - ${mentor.department}`;
+
+    if (mentor.is_coordinator) {
+      document.getElementById('rubricsSection').classList.remove('hidden');
+    }
   } catch (err) {
     console.error('Failed to load mentor details:', err);
   }
 }
+
+async function loadRubricsTeams() {
+  try {
+    const token = localStorage.getItem('token');
+    const mentorRes = await axios.get('/mentor/details', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const mentor = mentorRes.data;
+    if (!mentor.is_coordinator) return; // only coordinators see rubrics
+
+    document.getElementById('rubricsSection').classList.remove('hidden');
+
+    // Fetch teams in mentor department
+    const teamRes = await axios.get(`/mentor/teams?department=${mentor.department}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const teamSelect = document.getElementById('teamSelect');
+    teamRes.data.forEach(team => {
+      const option = document.createElement('option');
+      option.value = team.id;
+      option.textContent = `${team.team_name} (${team.email})`;
+      teamSelect.appendChild(option);
+    });
+
+    // When team is selected → load rubrics
+    teamSelect.addEventListener('change', () => {
+      const teamId = teamSelect.value;
+      if (!teamId) {
+        document.getElementById('rubricsForm').classList.add('hidden');
+        return;
+      }
+      renderRubricsForm(teamId);
+    });
+
+  } catch (err) {
+    console.error('Error loading rubrics teams:', err);
+  }
+}
+
+function renderRubricsForm(teamId) {
+  const criteria = [
+    "Problem Identification",
+    "Problem Statement Canvas",
+    "Idea Generation & Affinity diagram",
+    "Team Presentation & Clarity",
+    "Mentor Interaction & Progress Tracking"
+  ];
+
+  const rubricsForm = document.getElementById('rubricsForm');
+  rubricsForm.innerHTML = '';
+
+  criteria.forEach((criterion, index) => {
+    const row = document.createElement('div');
+    row.className = "mb-4";
+    row.innerHTML = `
+      <p class="font-semibold mb-2">${criterion}</p>
+      <div class="flex space-x-4">
+        ${[1, 2, 3, 4, 5].map(score => `
+          <label class="flex items-center space-x-1">
+            <input type="radio" name="criterion_${index}" value="${score}" class="rubric-score">
+            <span>${score}</span>
+          </label>
+        `).join('')}
+      </div>
+    `;
+    rubricsForm.appendChild(row);
+  });
+
+  // Submit button
+  const submitBtn = document.createElement('button');
+  submitBtn.textContent = "Submit Rubrics";
+  submitBtn.className = "bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600";
+  submitBtn.addEventListener('click', () => submitRubrics(teamId));
+  rubricsForm.appendChild(submitBtn);
+
+  rubricsForm.classList.remove('hidden');
+}
+
+async function submitRubrics(teamId) {
+  const scores = {};
+  document.querySelectorAll('.rubric-score:checked').forEach(input => {
+    const critIndex = input.name.split('_')[1];
+    scores[critIndex] = parseInt(input.value, 10);
+  });
+
+  const token = localStorage.getItem('token');
+  try {
+    await axios.post(`/mentor/teams/${teamId}/rubrics`, { scores }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    alert('Rubrics submitted successfully!');
+  } catch (err) {
+    console.error('Error submitting rubrics:', err);
+    alert('Failed to submit rubrics.');
+  }
+}
+
+
 
 
 // Fetch assigned teams & uploads (replace with API)
@@ -91,18 +195,18 @@ async function loadTeams() {
         </div>
         <div class="uploads mt-4 hidden space-y-3">
           ${team.TeamUploads.map(upload => {
-            const alreadyReviewed = !!upload.review_comment;
-            const stat=upload.status; // check if review exists
-            return `
+        const alreadyReviewed = !!upload.review_comment;
+        const stat = upload.status; // check if review exists
+        return `
               <div class="p-3 border rounded bg-gray-50">
                 <p class="font-semibold">Week -${upload.week_number}</p>
                 <a href="${upload.file_url}" class="text-blue-600 underline" target="_blank">Download</a>
-                ${alreadyReviewed && stat=="REVIEWED"
-                  ? `
+                ${alreadyReviewed && stat == "REVIEWED"
+            ? `
                     <textarea class="w-full mt-2 p-2 border rounded bg-gray-100" readonly>${upload.review_comment}</textarea>
                     <button class="mt-2 bg-gray-400 text-white px-3 py-1 rounded cursor-not-allowed" disabled>Reviewed</button>
                   `
-                  : `
+            : `
                     <textarea placeholder="Write your review..." class="w-full mt-2 p-2 border rounded review-text"></textarea>
                     <button 
                       class="mt-2 bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 submitReviewBtn"
@@ -111,10 +215,10 @@ async function loadTeams() {
                       Submit Review
                     </button>
                   `
-                }
+          }
               </div>
             `;
-          }).join('')}
+      }).join('')}
         </div>
       `;
       teamList.appendChild(teamCard);
@@ -129,3 +233,4 @@ async function loadTeams() {
 
 loadTeams();
 loadMentorDetails();
+loadRubricsTeams();

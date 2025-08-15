@@ -148,10 +148,18 @@ menuItems.forEach(item => {
 document.getElementById("uploadForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const fileInput = document.getElementById("fileInput");
-  const weekNumber = document.getElementById("weekNumber").value;
+  const weekNumber = parseInt(document.getElementById("weekNumber").value, 10);
   const file = fileInput.files[0];
 
-  if (!file || !weekNumber) return alert("All fields required!");
+  // Validation for empty fields
+  if (!file || !weekNumber) {
+    return alert("All fields required!");
+  }
+
+  // Restrict to only week 1 and week 2
+  if (![1, 2].includes(weekNumber)) {
+    return alert("You can only upload for Week 1 or Week 2.");
+  }
 
   const formData = new FormData();
   formData.append("file", file);
@@ -177,16 +185,16 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
 
     document.getElementById("uploadStatus").textContent = "Uploaded successfully!";
     progressBar.style.backgroundColor = "#16a34a"; // green on success
-    alert("Uploaded Successfully!!")
+    alert("Uploaded Successfully!!");
     console.log("Cloudinary URL:", res.data.url);
 
     setTimeout(() => {
       progressBar.style.width = "0%";
       progressBar.textContent = "0%";
-      progressBar.style.backgroundColor = "#3b82f6"; // reset to default blue or whatever your original color is
+      progressBar.style.backgroundColor = "#3b82f6"; // reset
     }, 1000);
 
-    await loadUploadHistory(); // refresh uploads
+    await loadUploadHistory();
   } catch (err) {
     document.getElementById("uploadStatus").textContent = "Upload failed!";
     progressBar.style.backgroundColor = "#dc2626"; // red on error

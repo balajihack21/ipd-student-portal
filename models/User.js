@@ -47,6 +47,26 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   },
+   rubric1: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  rubric2: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  rubric3: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  rubric4: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  rubric5: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  }
   
 }, { tableName: 'users' });
 

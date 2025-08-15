@@ -96,7 +96,7 @@ router.get('/team-history', async (req, res) => {
         },
         {
           model: TeamUpload,
-          attributes: ['week_number', 'file_url','uploaded_at', 'createdAt', 'status', 'review_comment']
+          attributes: ['week_number', 'file_url', 'uploaded_at', 'createdAt', 'status', 'review_comment']
         }
       ],
       order: [
@@ -105,12 +105,29 @@ router.get('/team-history', async (req, res) => {
       ]
     });
 
-    res.json(teams);
+    // Calculate counts
+    let uploadedCount = 0;
+    let notUploadedCount = 0;
+
+    teams.forEach(team => {
+      if (team.TeamUploads && team.TeamUploads.length > 0) {
+        uploadedCount++;
+      } else {
+        notUploadedCount++;
+      }
+    });
+
+    res.json({
+      uploadedCount,
+      notUploadedCount,
+      teams
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
+
 
 
 // DELETE a team

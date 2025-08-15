@@ -132,7 +132,7 @@ router.get('/details', authenticate, async (req, res) => {
     const mentorId = req.user.mentorId; // from JWT/session
 
     const mentor = await Mentor.findByPk(mentorId, {
-      attributes: ['MentorId', 'name', 'email', 'title','department'] // add fields as needed
+      attributes: ['MentorId', 'name', 'email', 'title','department','is_coordinator','designation'] // add fields as needed
     });
 
     if (!mentor) {
