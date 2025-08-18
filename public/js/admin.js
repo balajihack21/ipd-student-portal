@@ -702,12 +702,14 @@ document.getElementById("exportExcel").addEventListener("click", () => {
   console.log(typeof XLSX);
 
   const rows = [
-    ["Team ID", "Team Name", "Name", "Register No", "Mobile", "Email", "Dept","Section", "Role", "Mentor Name"]
+    ["SNo","Team ID", "Team Name", "Name", "Register No", "Mobile", "Email", "Dept","Section", "Role", "Mentor Name"]
   ];
 
+   let idx=1
   filteredTeams.forEach(team => {
     team.Students?.forEach((student, i) => {
       rows.push([
+        i==0?idx++:"",
         i === 0 ? team.UserId : "",
         i === 0 ? team.team_name : "",
         student.student_name || "",
@@ -744,7 +746,7 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
     ).flat()
   );
 
-  const headers = [
+  const headers = ["SNo",
     "Team ID", "Team Name", "Name", "Register No", "Mobile", "Email", "Dept", "Section", "Role",
     "Mentor Name","Status"
   ];
@@ -758,9 +760,10 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
   filteredHistory.forEach(team => {
     // Sort students so leader comes first
     const studentsSorted = [...(team.Students || [])].sort((a, b) => b.is_leader - a.is_leader);
-
+   let idx2=1
     studentsSorted.forEach((student, i) => {
       const rowBase = [
+        i==0?idx2++:"",
         i === 0 ? team.UserId : "",
         i === 0 ? team.team_name : "",
         student.student_name || "",
