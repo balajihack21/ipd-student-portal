@@ -702,7 +702,7 @@ document.getElementById("exportExcel").addEventListener("click", () => {
   console.log(typeof XLSX);
 
   const rows = [
-    ["Team ID", "Team Name", "Name", "Section", "Register No", "Mobile", "Email", "Dept", "Role", "Mentor Name", "Mentor Department"]
+    ["Team ID", "Team Name", "Name", "Register No", "Mobile", "Email", "Dept","Section", "Role", "Mentor Name"]
   ];
 
   filteredTeams.forEach(team => {
@@ -711,14 +711,13 @@ document.getElementById("exportExcel").addEventListener("click", () => {
         i === 0 ? team.UserId : "",
         i === 0 ? team.team_name : "",
         student.student_name || "",
-        student.section || "",
         student.register_no || "",
         i === 0 ? team.mobile : "",
         i === 0 ? team.email : "",
         student.dept || "",
-        student.is_leader ? "TeamLeader" : `Student ${i}`,
+        student.section || "",
+        student.is_leader ? "TeamLeader" : `Team Member ${i}`,
         i === 0 ? (team.mentor?.name || "Unassigned") : "",
-        i === 0 ? (team.mentor?.department || "N/A") : ""
       ]);
     });
   });
@@ -746,8 +745,8 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
   );
 
   const headers = [
-    "Team ID", "Team Name", "Name", "Section", "Register No", "Mobile", "Email", "Dept", "Role",
-    "Mentor Name", "Mentor Department","Status"
+    "Team ID", "Team Name", "Name", "Register No", "Mobile", "Email", "Dept", "Section", "Role",
+    "Mentor Name","Status"
   ];
 
   for (let w = 1; w <= maxWeek; w++) {
@@ -765,14 +764,13 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
         i === 0 ? team.UserId : "",
         i === 0 ? team.team_name : "",
         student.student_name || "",
-        student.section || "",
         student.register_no || "",
         i === 0 ? team.mobile : "",
         i === 0 ? team.email : "",
         student.dept || "",
-        student.is_leader ? "TeamLeader" : `Student ${i}`,
+        student.section || "",
+        student.is_leader ? "TeamLeader" : `Team Member ${i}`,
         i === 0 ? (team.mentor?.name || "Unassigned") : "",
-        i === 0 ? (team.mentor?.department || "N/A") : ""
       ];
 
       // Week columns
