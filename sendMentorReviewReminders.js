@@ -184,9 +184,6 @@ async function sendMentorReviewReminders() {
         console.log(`📧 Reminder sent to ${mentor.email} (${uploads.length} uploads)`);
       }
     }
-
-    
-
   } catch (error) {
     console.error('❌ Error sending reminders:', error);
   } finally {

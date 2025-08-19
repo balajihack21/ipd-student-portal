@@ -203,6 +203,7 @@ async function submitRubrics(teamId) {
 
 // Fetch assigned teams & uploads (replace with API)
 // Fetch assigned teams & uploads (replace with API)
+// Fetch assigned teams & uploads (replace with API)
 async function loadTeams() {
   try {
     const token = localStorage.getItem('token');
@@ -217,6 +218,42 @@ async function loadTeams() {
       const teamCard = document.createElement('div');
       teamCard.className = 'border rounded-lg p-4 shadow-sm';
 
+      // Check if uploads exist
+      let uploadsContent = '';
+      if (team.TeamUploads && team.TeamUploads.length > 0) {
+        uploadsContent = team.TeamUploads.map(upload => {
+          const alreadyReviewed = !!upload.review_comment;
+          const stat = upload.status;
+          return `
+            <div class="p-3 border rounded bg-gray-50">
+              <p class="font-semibold">Week - ${upload.week_number}</p>
+              <a href="${upload.file_url}" class="text-blue-600 underline" target="_blank">Download</a>
+              ${alreadyReviewed && stat === "REVIEWED"
+                ? `
+                  <textarea class="w-full mt-2 p-2 border rounded bg-gray-100" readonly>${upload.review_comment}</textarea>
+                  <button class="mt-2 bg-gray-400 text-white px-3 py-1 rounded cursor-not-allowed" disabled>Reviewed</button>
+                `
+                : `
+                  <textarea placeholder="Write your review..." class="w-full mt-2 p-2 border rounded review-text"></textarea>
+                  <button 
+                    class="mt-2 bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 submitReviewBtn"
+                    data-team-id="${team.id}" 
+                    data-upload-id="${upload.id}">
+                    Submit Review
+                  </button>
+                `
+              }
+            </div>
+          `;
+        }).join('');
+      } else {
+        uploadsContent = `
+          <div class="p-3 border rounded bg-gray-50 text-gray-600 italic">
+            No uploads yet
+          </div>
+        `;
+      }
+
       teamCard.innerHTML = `
         <div class="flex justify-between items-center">
           <div>
@@ -226,40 +263,18 @@ async function loadTeams() {
           <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 toggleUploads">View Uploads</button>
         </div>
         <div class="uploads mt-4 hidden space-y-3">
-          ${team.TeamUploads.map(upload => {
-        const alreadyReviewed = !!upload.review_comment;
-        const stat = upload.status; // check if review exists
-        return `
-              <div class="p-3 border rounded bg-gray-50">
-                <p class="font-semibold">Week -${upload.week_number}</p>
-                <a href="${upload.file_url}" class="text-blue-600 underline" target="_blank">Download</a>
-                ${alreadyReviewed && stat == "REVIEWED"
-            ? `
-                    <textarea class="w-full mt-2 p-2 border rounded bg-gray-100" readonly>${upload.review_comment}</textarea>
-                    <button class="mt-2 bg-gray-400 text-white px-3 py-1 rounded cursor-not-allowed" disabled>Reviewed</button>
-                  `
-            : `
-                    <textarea placeholder="Write your review..." class="w-full mt-2 p-2 border rounded review-text"></textarea>
-                    <button 
-                      class="mt-2 bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 submitReviewBtn"
-                      data-team-id="${team.id}" 
-                      data-upload-id="${upload.id}">
-                      Submit Review
-                    </button>
-                  `
-          }
-              </div>
-            `;
-      }).join('')}
+          ${uploadsContent}
         </div>
       `;
+
       teamList.appendChild(teamCard);
     });
   } catch (err) {
-    // window.location.href = "/login.html";
     console.error(err);
+    // window.location.href = "/login.html";
   }
 }
+
 
 
 
