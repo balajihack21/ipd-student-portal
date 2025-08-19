@@ -314,7 +314,7 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
       htmlContent: `<h3>Hello ${mentor.title}${mentor.name},</h3>
         <p>Your mentee has uploaded a file for <strong>Week ${weekNumber}</strong>.</p>
         <p>You can view or download the file using the attachment or from the dashboard.</p>
-        <p><a href="https://ipd-portal.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
+        <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
         <p><a href="${fileUrl}" target="_blank">${fileName}</a></p>
         <p>Team Name: <strong>${user.team_name}</strong></p>
         <p>Contact No: <strong>${user.mobile}</strong></p>

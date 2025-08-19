@@ -1075,51 +1075,149 @@ catch (err) {
   console.error(err);
 }
 
-async function loadTimelineDates() {
-  const token = localStorage.getItem('token');
-  try {
-    const res = await axios.get('/rubrics/review1-deadline', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+// async function loadTimelineDates() {
+//   const token = localStorage.getItem('token');
+//   try {
+//     const res = await axios.get('/rubrics/deadline/review1', {
+//       headers: { Authorization: `Bearer ${token}` }
+//     });
 
-    const { start, deadline } = res.data;
+//     const { start, deadline } = res.data;
 
-    // Fill inputs
-    if (start) document.getElementById("review1Start").value = new Date(start).toISOString().slice(0, 16);
-    if (deadline) document.getElementById("review1Deadline").value = new Date(deadline).toISOString().slice(0, 16);
+//     // Fill inputs
+//     if (start) document.getElementById("review1Start").value = new Date(start).toISOString().slice(0, 16);
+//     if (deadline) document.getElementById("review1Deadline").value = new Date(deadline).toISOString().slice(0, 16);
 
-    // Show display
-    if (start || deadline) {
-      document.getElementById("currentTimeline").classList.remove("hidden");
-      document.getElementById("currentStart").textContent = new Date(start).toLocaleString();
-      document.getElementById("currentEnd").textContent = new Date(deadline).toLocaleString();
+//     // Show display
+//     if (start || deadline) {
+//       document.getElementById("currentTimeline").classList.remove("hidden");
+//       document.getElementById("currentStart").textContent = new Date(start).toLocaleString();
+//       document.getElementById("currentEnd").textContent = new Date(deadline).toLocaleString();
+//     }
+//   } catch (err) {
+//     console.error("Failed to load review1 deadline:", err);
+//   }
+// }
+
+
+// document.getElementById("saveReview1").addEventListener("click", async () => {
+//   const token = localStorage.getItem("token");
+//   const startDate = document.getElementById("review1Start").value;
+//   const deadline = document.getElementById("review1Deadline").value;
+
+//   if (!startDate || !deadline) {
+//     return alert("Please enter both start and deadline.");
+//   }
+
+//   try {
+//     await axios.post("/rubrics/deadline/review1",
+//       { start: startDate, deadline: deadline },
+//       { headers: { Authorization: `Bearer ${token}` } }
+//     );
+
+//     alert("Timeline saved successfully!");
+//     loadTimelineDates(); // refresh display
+//   } catch (err) {
+//     console.error("Failed to save timeline:", err);
+//     alert("Failed to save timeline.");
+//   }
+// });
+
+
+// Define all stages
+const stages = [
+  { key: "review1", label: "Review 1" },
+  { key: "problem", label: "Problem Statement" },
+  { key: "swot", label: "SWOT Analysis" },
+  { key: "value", label: "Value Proposition" },
+  { key: "review2", label: "Review 2" }
+];
+
+// Dynamically render sections
+function renderTimelineSections() {
+  const container = document.getElementById("timelineSections");
+  container.innerHTML = "";
+
+  stages.forEach(({ key, label }) => {
+    container.innerHTML += `
+      <div class="p-4 bg-white rounded shadow">
+        <h3 class="text-md font-semibold mb-4">⏳ ${label} Timeline</h3>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block font-medium text-gray-700">Start Date</label>
+            <input type="datetime-local" id="${key}Start" class="p-2 border rounded shadow-sm w-full max-w-sm" data-stage="${key}">
+          </div>
+          <div>
+            <label class="block font-medium text-gray-700">Deadline</label>
+            <input type="datetime-local" id="${key}Deadline" class="p-2 border rounded shadow-sm w-full max-w-sm" data-stage="${key}">
+          </div>
+          <button class="saveTimeline bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow" data-stage="${key}">
+            💾 Save ${label}
+          </button>
+        </div>
+
+        <!-- Current timeline display -->
+        <div id="${key}CurrentTimeline" class="mt-4 p-3 bg-gray-50 rounded hidden">
+          <p><strong>Start:</strong> <span id="${key}CurrentStart">-</span></p>
+          <p><strong>Deadline:</strong> <span id="${key}CurrentEnd">-</span></p>
+        </div>
+      </div>
+    `;
+  });
+}
+
+// Load deadlines for all stages
+async function loadAllTimelineDates() {
+  const token = localStorage.getItem("token");
+  for (let { key } of stages) {
+    try {
+      const res = await axios.get(`/rubrics/deadline/${key}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const { start, deadline } = res.data;
+
+      if (start) document.getElementById(`${key}Start`).value = new Date(start).toISOString().slice(0, 16);
+      if (deadline) document.getElementById(`${key}Deadline`).value = new Date(deadline).toISOString().slice(0, 16);
+
+      if (start || deadline) {
+        document.getElementById(`${key}CurrentTimeline`).classList.remove("hidden");
+        document.getElementById(`${key}CurrentStart`).textContent = start ? new Date(start).toLocaleString() : "-";
+        document.getElementById(`${key}CurrentEnd`).textContent = deadline ? new Date(deadline).toLocaleString() : "-";
+      }
+    } catch (err) {
+      console.error(`Failed to load ${key} deadline:`, err);
     }
-  } catch (err) {
-    console.error("Failed to load review1 deadline:", err);
   }
 }
 
+// Save handler
+document.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("saveTimeline")) {
+    const stage = e.target.dataset.stage;
+    const token = localStorage.getItem("token");
+    const startDate = document.getElementById(`${stage}Start`).value;
+    const deadline = document.getElementById(`${stage}Deadline`).value;
 
-document.getElementById("saveReview1").addEventListener("click", async () => {
-  const token = localStorage.getItem("token");
-  const startDate = document.getElementById("review1Start").value;
-  const deadline = document.getElementById("review1Deadline").value;
+    if (!startDate || !deadline) {
+      return alert("Please enter both start and deadline.");
+    }
 
-  if (!startDate || !deadline) {
-    return alert("Please enter both start and deadline.");
-  }
-
-  try {
-    await axios.post("/rubrics/review1-deadline",
-      { start: startDate, deadline: deadline },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
-    alert("Timeline saved successfully!");
-    loadTimelineDates(); // refresh display
-  } catch (err) {
-    console.error("Failed to save timeline:", err);
-    alert("Failed to save timeline.");
+    try {
+      await axios.post(`/rubrics/deadline/${stage}`,
+        { start: startDate, deadline: deadline },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert(`${stage} timeline saved successfully!`);
+      loadAllTimelineDates(); // refresh
+    } catch (err) {
+      console.error(`Failed to save ${stage} timeline:`, err);
+      alert("Failed to save timeline.");
+    }
   }
 });
+
+// Initialize timelines on page load
+renderTimelineSections();
+loadAllTimelineDates();
 
