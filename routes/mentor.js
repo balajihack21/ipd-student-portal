@@ -3,6 +3,7 @@ import { Op } from 'sequelize';
 import authenticate  from '../middleware/authenticate.js';
 import User from '../models/User.js';
 import Mentor from '../models/Mentor.js'
+import Student from '../models/Student.js'
 import TeamUpload from '../models/TeamUpload.js';
 import dotenv from 'dotenv';
 import Sib from 'sib-api-v3-sdk';
@@ -13,6 +14,83 @@ const router = express.Router();
  * GET Assigned Teams + their uploads
  */
 router.get('/teams', authenticate, async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId; // comes from JWT
+
+    // Find mentor details (to get department)
+    const mentor = await Mentor.findByPk(mentorId);
+    if (!mentor) {
+      return res.status(404).json({ error: 'Mentor not found' });
+    }
+
+    // Fetch all teams whose leader belongs to same department as mentor
+    const teams = await User.findAll({
+      attributes: ['UserId', 'team_name', 'email', 'mobile'],
+      include: [
+        {
+          model: Student,
+          attributes: ['student_name', 'dept', 'section', 'register_no', 'mobile'],
+          where: {
+            is_leader: true,
+            dept: mentor.department   // ✅ filter by leader’s dept
+          }
+        }
+      ]
+    });
+
+    res.json(teams);
+  } catch (err) {
+    console.error('Error fetching department teams:', err);
+    res.status(500).json({ error: 'Server error fetching teams' });
+  }
+});
+
+
+router.post("/teams/:teamId/rubrics", authenticate, async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId; // from token (must map properly in auth)
+    const { teamId } = req.params;
+    const { scores } = req.body; // { rubric1: x, rubric2: y, ... }
+
+    if (!scores || typeof scores !== "object") {
+      return res.status(400).json({ error: "Scores are required" });
+    }
+
+    // Check mentor role
+    const mentor = await Mentor.findByPk(mentorId);
+    if (!mentor || !mentor.is_coordinator) {
+      return res.status(403).json({ error: "Only coordinators can submit rubrics" });
+    }
+
+    // Find the team leader user (team row)
+    const team = await User.findByPk(teamId);
+    console.log(team)
+    if (!team) return res.status(404).json({ error: "Team not found" });
+
+    // Extract only rubric fields
+const rubricFields = {};
+for (let i = 1; i <= 10; i++) {
+  if (scores[`rubric${i}`] !== undefined) {
+    rubricFields[`rubric${i}`] = scores[`rubric${i}`];
+  }
+}
+
+// Update in DB
+await User.update(rubricFields, {
+  where: { UserId: teamId }
+});
+
+
+
+    res.json({ message: "Rubrics submitted successfully", team });
+  } catch (err) {
+    console.error("Error submitting rubrics:", err);
+    res.status(500).json({ error: "Failed to submit rubrics" });
+  }
+});
+
+
+router.get('/my-teams', authenticate, async (req, res) => {
   try {
     const mentorId = req.user.mentorId; // from JWT/session
   console.log(req.user)
@@ -35,6 +113,38 @@ router.get('/teams', authenticate, async (req, res) => {
     res.status(500).json({ error: 'Server error fetching teams' });
   }
 });
+
+// router.get("/teams", authenticate, async (req, res) => {
+//   try {
+//     const { department } = req.query;
+
+//     if (!department) {
+//       return res.status(400).json({ error: "Department is required" });
+//     }
+
+//     // Find teams in that department
+//     const teams = await User.findAll({
+//       include: [
+//         {
+//           model: Mentor,
+//           as: "mentor",
+//           attributes: ["mentorId", "name", "department"]
+//         }
+//       ],
+//       where: {},
+//     });
+
+//     // Filter users (teams) that map to given department
+//     const filteredTeams = teams.filter(
+//       (t) => t.mentor && t.mentor.department === department
+//     );
+
+//     res.json(filteredTeams);
+//   } catch (err) {
+//     console.error("Error fetching teams:", err);
+//     res.status(500).json({ error: "Failed to fetch teams" });
+//   }
+// });
 
 /**
  * POST Add/Update review comment

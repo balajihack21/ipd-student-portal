@@ -33,23 +33,42 @@
 
 
 
-// // addCoordinatorColumn.js
-// import sequelize from './models/index.js';
+// // // addCoordinatorColumn.js
+// // import sequelize from './models/index.js';
 
-// async function addCoordinatorColumn() {
-//   try {
-//     // Add column if it doesn't exist
-//     await sequelize.query(`
-//       ALTER TABLE mentors
-//       ADD COLUMN IF NOT EXISTS is_coordinator TINYINT(1) DEFAULT 0
-//     `);
+// // async function addCoordinatorColumn() {
+// //   try {
+// //     // Add column if it doesn't exist
+// //     await sequelize.query(`
+// //       ALTER TABLE mentors
+// //       ADD COLUMN IF NOT EXISTS is_coordinator TINYINT(1) DEFAULT 0
+// //     `);
 
-//     console.log("✅ is_coordinator column added (or already exists).");
-//   } catch (error) {
-//     console.error("❌ Error adding column:", error);
-//   } finally {
-//     process.exit();
-//   }
-// }
+// //     console.log("✅ is_coordinator column added (or already exists).");
+// //   } catch (error) {
+// //     console.error("❌ Error adding column:", error);
+// //   } finally {
+// //     process.exit();
+// //   }
+// // }
 
-// addCoordinatorColumn();
+// // addCoordinatorColumn();
+
+// // import Admin from './models/Admin.js';
+// // import sequelize from './models/index.js';
+
+// // (async () => {
+// //   try {
+// //     // Drop only the Admin table
+// //     await Admin.drop();
+// //     console.log("✅ Admin table dropped");
+
+// //     // Recreate it
+// //     await Admin.sync({ force: true }); 
+// //     console.log("✅ Admin table recreated");
+    
+// //     await sequelize.close();
+// //   } catch (err) {
+// //     console.error("❌ Error resetting Admin table:", err);
+// //   }
+// // })();

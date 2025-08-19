@@ -21,6 +21,14 @@ const Admin = sequelize.define('Admin', {
   token: {
     type: DataTypes.STRING(255),
     allowNull: true
+  },
+  review1_start: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  review1_deadline: {
+    type: DataTypes.DATE,
+    allowNull: true
   }
 }, {
   tableName: 'admins'

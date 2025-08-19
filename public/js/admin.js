@@ -3,22 +3,31 @@ const contents = document.querySelectorAll(".tab-content");
 
 tabs.forEach(tab => {
   tab.addEventListener("click", () => {
+    // Reset all tabs and contents
     tabs.forEach(t => t.classList.remove("active", "border-b-2", "border-blue-500"));
     contents.forEach(c => c.classList.add("hidden"));
+
+    // Activate selected tab
     tab.classList.add("active", "border-b-2", "border-blue-500");
     document.getElementById(tab.dataset.tab).classList.remove("hidden");
 
+    // 🔹 Assign Tab
     if (tab.dataset.tab === "assignTab") {
       renderReassignMentorTable();
     }
-    if (tab.dataset.tab === "historyTab") {
 
+    // 🔹 History Tab
+    if (tab.dataset.tab === "historyTab") {
       fetchAllTeamHistories();
     }
 
-
+    // 🔹 Timeline Tab
+    if (tab.dataset.tab === "timelineTab") {
+      loadTimelineDates(); // 👈 new function to fetch timeline dates
+    }
   });
 });
+
 
 let allMentors = [];
 
@@ -1064,4 +1073,18 @@ try {
 catch (err) {
   window.location.href = "/login.html";
   console.error(err);
+}
+
+async function loadTimelineDates(){
+document.getElementById('saveReview1').addEventListener('click', async () => {
+  const start = document.getElementById('review1Start').value;
+  const deadline = document.getElementById('review1Deadline').value;
+  if (!start || !deadline) return alert('Fill both dates');
+
+  const token = localStorage.getItem('token');
+  await axios.post('/rubrics/review1-deadline', { start, deadline }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  alert('Updated!');
+});
 }

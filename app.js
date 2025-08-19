@@ -22,6 +22,7 @@ import authRoutes from './routes/auth.js';
 import userRoutes from './routes/user.js';
 import adminRoutes from './routes/admin.js'
 import mentorRoutes from './routes/mentor.js'
+import rubricRoutes from './routes/rubrics.js'
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use('/mentor',mentorRoutes)
 app.use('/api', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/admin',adminRoutes)
+app.use('/rubrics',rubricRoutes)
 
 // Sequelize associations
 TeamUpload.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' });

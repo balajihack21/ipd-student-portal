@@ -61,7 +61,10 @@ async function loadMentorDetails() {
     document.getElementById('mentordept').textContent = `${mentor.designation} - ${mentor.department}`;
 
     if (mentor.is_coordinator) {
-      document.getElementById('rubricsSection').classList.remove('hidden');
+      document.getElementById('rubricsSection').style.display = "block";
+    }
+    else{
+      document.getElementById('rubricsSection').style.display = "none"
     }
   } catch (err) {
     console.error('Failed to load mentor details:', err);
@@ -70,6 +73,23 @@ async function loadMentorDetails() {
 
 async function loadRubricsTeams() {
   try {
+    const token = localStorage.getItem('token');
+
+    // Get deadlines
+    const res = await axios.get('/rubrics/review1-deadline', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    const { start, deadline } = res.data;
+
+    const now = new Date();
+    const startDate = new Date(start);
+    const deadlineDate = new Date(deadline);
+    console.log(startDate,deadlineDate)
+
+    // Only show section if in window
+   if (now >= startDate && now <= deadlineDate) {
+    document.getElementById("rubricsSection").style.display = "block";
+    try {
     const token = localStorage.getItem('token');
     const mentorRes = await axios.get('/mentor/details', {
       headers: { Authorization: `Bearer ${token}` }
@@ -81,14 +101,14 @@ async function loadRubricsTeams() {
     document.getElementById('rubricsSection').classList.remove('hidden');
 
     // Fetch teams in mentor department
-    const teamRes = await axios.get(`/mentor/teams?department=${mentor.department}`, {
+    const teamRes = await axios.get(`/mentor/teams`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
     const teamSelect = document.getElementById('teamSelect');
     teamRes.data.forEach(team => {
       const option = document.createElement('option');
-      option.value = team.id;
+      option.value = team.UserId;
       option.textContent = `${team.team_name} (${team.email})`;
       teamSelect.appendChild(option);
     });
@@ -96,6 +116,7 @@ async function loadRubricsTeams() {
     // When team is selected → load rubrics
     teamSelect.addEventListener('change', () => {
       const teamId = teamSelect.value;
+      console.log(teamId)
       if (!teamId) {
         document.getElementById('rubricsForm').classList.add('hidden');
         return;
@@ -106,7 +127,17 @@ async function loadRubricsTeams() {
   } catch (err) {
     console.error('Error loading rubrics teams:', err);
   }
+
+
+} else {
+   document.getElementById("rubricsSection").style.display = "none";
 }
+
+  } catch (err) {
+    console.error('Error loading rubrics teams:', err);
+  }
+}
+
 
 function renderRubricsForm(teamId) {
   const criteria = [
@@ -159,6 +190,7 @@ async function submitRubrics(teamId) {
     await axios.post(`/mentor/teams/${teamId}/rubrics`, { scores }, {
       headers: { Authorization: `Bearer ${token}` }
     });
+    console.log(scores)
     alert('Rubrics submitted successfully!');
   } catch (err) {
     console.error('Error submitting rubrics:', err);
@@ -174,7 +206,7 @@ async function submitRubrics(teamId) {
 async function loadTeams() {
   try {
     const token = localStorage.getItem('token');
-    const res = await axios.get('/mentor/teams', {
+    const res = await axios.get('/mentor/my-teams', {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -224,7 +256,7 @@ async function loadTeams() {
       teamList.appendChild(teamCard);
     });
   } catch (err) {
-    window.location.href = "/login.html";
+    // window.location.href = "/login.html";
     console.error(err);
   }
 }
