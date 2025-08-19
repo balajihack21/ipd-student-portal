@@ -1075,16 +1075,51 @@ catch (err) {
   console.error(err);
 }
 
-async function loadTimelineDates(){
-document.getElementById('saveReview1').addEventListener('click', async () => {
-  const start = document.getElementById('review1Start').value;
-  const deadline = document.getElementById('review1Deadline').value;
-  if (!start || !deadline) return alert('Fill both dates');
-
+async function loadTimelineDates() {
   const token = localStorage.getItem('token');
-  await axios.post('/rubrics/review1-deadline', { start, deadline }, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  alert('Updated!');
-});
+  try {
+    const res = await axios.get('/rubrics/review1-deadline', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const { start, deadline } = res.data;
+
+    // Fill inputs
+    if (start) document.getElementById("review1Start").value = new Date(start).toISOString().slice(0, 16);
+    if (deadline) document.getElementById("review1Deadline").value = new Date(deadline).toISOString().slice(0, 16);
+
+    // Show display
+    if (start || deadline) {
+      document.getElementById("currentTimeline").classList.remove("hidden");
+      document.getElementById("currentStart").textContent = new Date(start).toLocaleString();
+      document.getElementById("currentEnd").textContent = new Date(deadline).toLocaleString();
+    }
+  } catch (err) {
+    console.error("Failed to load review1 deadline:", err);
+  }
 }
+
+
+document.getElementById("saveReview1").addEventListener("click", async () => {
+  const token = localStorage.getItem("token");
+  const startDate = document.getElementById("review1Start").value;
+  const deadline = document.getElementById("review1Deadline").value;
+
+  if (!startDate || !deadline) {
+    return alert("Please enter both start and deadline.");
+  }
+
+  try {
+    await axios.post("/rubrics/review1-deadline",
+      { start: startDate, deadline: deadline },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    alert("Timeline saved successfully!");
+    loadTimelineDates(); // refresh display
+  } catch (err) {
+    console.error("Failed to save timeline:", err);
+    alert("Failed to save timeline.");
+  }
+});
+

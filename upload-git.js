@@ -72,3 +72,13 @@
 // //     console.error("❌ Error resetting Admin table:", err);
 // //   }
 // // })();
+
+
+// somewhere in your startup file (app.js / server.js)
+import sequelize from "./models/index.js";
+import "./models/Admin.js";
+
+(async () => {
+  await sequelize.sync({ alter: true }); 
+  console.log("✅ Admin model updated in DB");
+})();

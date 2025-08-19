@@ -22,6 +22,8 @@ const Admin = sequelize.define('Admin', {
     type: DataTypes.STRING(255),
     allowNull: true
   },
+
+  // Review 1 timeline
   review1_start: {
     type: DataTypes.DATE,
     allowNull: true
@@ -29,7 +31,48 @@ const Admin = sequelize.define('Admin', {
   review1_deadline: {
     type: DataTypes.DATE,
     allowNull: true
+  },
+
+  // Problem Statement timeline
+  problem_start: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  problem_deadline: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+
+  // SWOT Analysis timeline
+  swot_start: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  swot_deadline: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+
+  // Value Proposition timeline
+  value_start: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  value_deadline: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+
+  // Review 2 timeline
+  review2_start: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  review2_deadline: {
+    type: DataTypes.DATE,
+    allowNull: true
   }
+
 }, {
   tableName: 'admins'
 });
