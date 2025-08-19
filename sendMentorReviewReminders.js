@@ -75,7 +75,7 @@ async function sendMentorReviewReminders() {
       //mentor.email 
       await transEmailApi.sendTransacEmail({
         sender,
-        to: [{ email: "balajiaru06@gmail.com"}],
+        to: [{ email: mentor.email}],
         subject: `Reminder: ${uploads.length} pending reviews`,
         htmlContent: `
           <p>Dear ${mentor.title} ${mentor.name},</p>
