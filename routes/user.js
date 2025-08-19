@@ -309,7 +309,7 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
     // Email notification (unchanged, just replaced supabaseUrl with fileUrl)
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email: "balajiaru06@gmail.com" }],
+      to: [{ email: mentor.email }],
       subject: `Team Upload Notification - Week ${weekNumber}`,
       htmlContent: `<h3>Hello ${mentor.title}${mentor.name},</h3>
         <p>Your mentee has uploaded a file for <strong>Week ${weekNumber}</strong>.</p>
