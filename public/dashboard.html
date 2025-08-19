@@ -9,128 +9,129 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         #logo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    margin-top: 30px;
-}
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-top: 30px;
+        }
 
-#logo #act-logo {
-    width: 40%
-}
+        #logo #act-logo {
+            width: 40%
+        }
 
-#logo img {
-    max-height: 60px;
-    max-width: 100%;
-    margin: 5px 0;
-}
+        #logo img {
+            max-height: 60px;
+            max-width: 100%;
+            margin: 5px 0;
+        }
 
-#logo h3 {
-    font-weight: 700;
-    color: #2c3e50;
-    text-align: center;
-    margin: 15px 0;
-    line-height: 1.4;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
+        #logo h3 {
+            font-weight: 700;
+            color: #2c3e50;
+            text-align: center;
+            margin: 15px 0;
+            line-height: 1.4;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
 
-.logo-aside {
-    width: 35%;
-    display: flex;
-    justify-content: space-around;
-}
+        .logo-aside {
+            width: 35%;
+            display: flex;
+            justify-content: space-around;
+        }
 
-#logo .logo-text h1 {
-    font-size: 22px;
-    margin: 0;
-    color: #2c3e50;
-    padding: 0 10px;
-    font-weight: 600;
-}
+        #logo .logo-text h1 {
+            font-size: 22px;
+            margin: 0;
+            color: #2c3e50;
+            padding: 0 10px;
+            font-weight: 600;
+        }
 
-@media (max-width: 600px) {
+        @media (max-width: 600px) {
 
-    html,
-    body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
 
-    body {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: flex-start;
-        background: #f2f5f9;
-        height: 100vh;
-    }
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                justify-content: flex-start;
+                background: #f2f5f9;
+                height: 100vh;
+            }
 
-    #logo {
-        gap: 15px;
-    }
+            #logo {
+                gap: 15px;
+            }
 
-    #logo #act-logo {
-        height: 40%;
-        width: 100%
-    }
+            #logo #act-logo {
+                height: 40%;
+                width: 100%
+            }
 
-    .logo-aside {
-        width: 70%;
-        display: flex;
-         /* border: 1px solid black; */
-        /* flex-direction: column; */
-        justify-content: space-between;
-        align-items: center;
-    }
-   
+            .logo-aside {
+                width: 70%;
+                display: flex;
+                /* border: 1px solid black; */
+                /* flex-direction: column; */
+                justify-content: space-between;
+                align-items: center;
+            }
 
-    #logo img {
-        max-height: 50px;
-        max-width: 80%;
-    }
 
-    #logo h3 {
-        /* border: 1px solid black; */
-        width: 100%;
-        font-size: 14px;
-        font-weight: 600;
-        letter-spacing: 0.3px;
-        font-family: arial black;
-    }
-  .bg-white.rounded-xl.shadow-md.p-4.flex.items-center.justify-between {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+            #logo img {
+                max-height: 50px;
+                max-width: 80%;
+            }
 
-  .bg-white.rounded-xl.shadow-md.p-4.flex.items-center.justify-between img {
-    margin-bottom: 10px;
-  }
+            #logo h3 {
+                /* border: 1px solid black; */
+                width: 100%;
+                font-size: 14px;
+                font-weight: 600;
+                letter-spacing: 0.3px;
+                font-family: arial black;
+            }
 
-  .bg-white.rounded-xl.shadow-md.p-4.flex.items-center.justify-between .flex.items-center.space-x-4 {
-    flex-direction: column;
-    space-x: 0;
-    gap: 10px;
-  }
+            .bg-white.rounded-xl.shadow-md.p-4.flex.items-center.justify-between {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
 
-  #profilePhoto {
-    width: 80px;
-    height: 80px;
-  }
-  #editProfileBtn{
-    margin-top: 30px;
-  }
-  }
+            .bg-white.rounded-xl.shadow-md.p-4.flex.items-center.justify-between img {
+                margin-bottom: 10px;
+            }
 
+            .bg-white.rounded-xl.shadow-md.p-4.flex.items-center.justify-between .flex.items-center.space-x-4 {
+                flex-direction: column;
+                space-x: 0;
+                gap: 10px;
+            }
+
+            #profilePhoto {
+                width: 80px;
+                height: 80px;
+            }
+
+            #editProfileBtn {
+                margin-top: 30px;
+            }
+        }
     </style>
 </head>
 
 <body class="bg-gray-100 font-sans">
-     <!-- Header Section -->
-  <div id="logo">
+    <!-- Header Section -->
+    <div id="logo">
         <img src="./images/AGNI-LOGO-AUTO.png" alt="Agni top header" id="act-logo">
         <div class="logo-aside">
             <img src="./images/1753282856993.jpg" alt="IPD logo">
@@ -168,32 +169,30 @@
             <div class="max-w-6xl mx-auto space-y-6">
 
                 <!-- Profile Card -->
-<!-- Profile Card with Photo -->
-<div class="bg-white rounded-xl shadow-md p-4 flex items-center justify-between">
-  <div class="flex items-center space-x-4">
-    <label for="photoInput" class="cursor-pointer relative">
-      <img
-        id="profilePhoto"
-        src="./images/christmas-celebration-concept.jpg"
-        alt="Profile Photo"
-        class="w-16 h-16 rounded-full object-cover border border-gray-300"
-      />
-      <input type="file" id="photoInput" accept="image/*" class="hidden" />
-    </label>
+                <!-- Profile Card with Photo -->
+                <div class="bg-white rounded-xl shadow-md p-4 flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <label for="photoInput" class="cursor-pointer relative">
+                            <img id="profilePhoto" src="./images/christmas-celebration-concept.jpg" alt="Profile Photo"
+                                class="w-16 h-16 rounded-full object-cover border border-gray-300" />
+                            <input type="file" id="photoInput" accept="image/*" class="hidden" />
+                        </label>
 
-    <div id="profile-div-align">
-      <h2 class="text-xl font-bold">Team Name: <span id="teamName" class="text-blue-600"></span></h2>
-      <p class="text-gray-500">Contact No:<span id="contactNo" class="text-blue-600"></span></p>
-      <div class="w-full bg-gray-200 h-3 rounded-full mt-2">
-        <div id="progressFill" class="bg-blue-500 h-3 rounded-full" style="width: 40%;"></div>
-      </div>
-    </div>
-  </div>
+                        <div id="profile-div-align">
+                            <h2 class="text-xl font-bold">Team Name: <span id="teamName" class="text-blue-600"></span>
+                            </h2>
+                            <p class="text-gray-500">Contact No:<span id="contactNo" class="text-blue-600"></span></p>
+                            <div class="w-full bg-gray-200 h-3 rounded-full mt-2">
+                                <div id="progressFill" class="bg-blue-500 h-3 rounded-full" style="width: 40%;"></div>
+                            </div>
+                        </div>
+                    </div>
 
-  <button id="editProfileBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-    Edit Profile
-  </button>
-</div>
+                    <button id="editProfileBtn"
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                        Edit Profile
+                    </button>
+                </div>
 
 
 
@@ -213,6 +212,7 @@
                 </div>
 
                 <!-- Upload History -->
+
                 <div class="bg-white p-6 rounded-xl shadow-md mt-8">
                     <h3 class="text-lg font-semibold mb-2">Upload History</h3>
                     <div id="uploadHistory" class="space-y-2 text-sm text-gray-700">
@@ -221,19 +221,20 @@
                 </div>
 
 
+                <div id="uploadSection">
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <input type="file" name="file" id="fileInput" accept=".pdf,.jpg,.png,.docx,.pptx" required />
+                        <input type="number" name="week_number" id="weekNumber" placeholder="Week #" required
+                            class="mt-2 border p-1" />
+                        <button type="submit" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">Upload</button>
+                    </form>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mt-2">
+                        <div id="uploadProgressBar" class="bg-blue-500 h-4 rounded-full text-center text-white text-xs"
+                            style="width: 0%">0%</div>
+                    </div>
 
-                <form id="uploadForm" enctype="multipart/form-data">
-                    <input type="file" name="file" id="fileInput" accept=".pdf,.jpg,.png,.docx,.pptx" required />
-                    <input type="number" name="week_number" id="weekNumber" placeholder="Week #" required
-                        class="mt-2 border p-1" />
-                    <button type="submit" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded">Upload</button>
-                </form>
-                <div class="w-full bg-gray-200 rounded-full h-4 mt-2">
-                    <div id="uploadProgressBar" class="bg-blue-500 h-4 rounded-full text-center text-white text-xs"
-                        style="width: 0%">0%</div>
+                    <p id="uploadStatus" class="mt-2 text-sm text-green-600"></p>
                 </div>
-
-                <p id="uploadStatus" class="mt-2 text-sm text-green-600"></p>
 
 
                 <!-- Mentor Info -->
@@ -247,9 +248,9 @@
 
                 <div id="mentorSection" class="bg-white p-6 rounded-xl shadow-md">
                     <h3 class="text-lg font-semibold">Contact Details</h3>
-                    <p  class="text-gray-600">Dr. PURUSHOTHAMAN</p>
-                    <p  class="text-gray-600">HEAD - IPD</p>
-                    <p  class="text-gray-600">head.ipd@act.edu.in</p>
+                    <p class="text-gray-600">Dr. PURUSHOTHAMAN</p>
+                    <p class="text-gray-600">HEAD - IPD</p>
+                    <p class="text-gray-600">head.ipd@act.edu.in</p>
                 </div>
 
             </div>

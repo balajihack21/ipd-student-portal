@@ -10,6 +10,7 @@ import { uploadToBackblaze } from "../middleware/upload.js";
 
 import User from '../models/User.js';
 import Mentor from '../models/Mentor.js';
+import Admin from '../models/Admin.js'
 import Student from '../models/Student.js'
 import TeamUpload from '../models/TeamUpload.js';
 import authenticate from '../middleware/authenticate.js';
@@ -419,6 +420,21 @@ router.post("/upload-profile-photo", authenticate, uploadprofile.single("photo")
   } catch (err) {
     console.error("Upload error:", err);
     res.status(500).json({ message: "Upload failed" });
+  }
+});
+
+
+router.get("/deadlines",authenticate, async (req, res) => {
+  try {
+    const admin = await Admin.findOne(); // assuming only one admin record
+    res.json({
+      problem_deadline: admin.problem_deadline,
+      swot_deadline: admin.swot_deadline,
+      value_deadline: admin.value_deadline
+    });
+  } catch (err) {
+    console.error("Error fetching deadlines:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

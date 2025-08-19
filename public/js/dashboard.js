@@ -443,6 +443,33 @@ document.getElementById("photoInput").addEventListener("change", async function 
 });
 
 
+async function checkDeadlines() {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.get("api/deadlines", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+    const { problem_deadline, swot_deadline, value_deadline } = res.data;
+
+    const now = new Date();
+
+    // Hide upload section if any of the deadlines passed
+    if (
+      (problem_deadline && new Date(problem_deadline) < now) ||
+      (swot_deadline && new Date(swot_deadline) < now) ||
+      (value_deadline && new Date(value_deadline) < now)
+    ) {
+      document.getElementById("uploadSection").style.display = "none";
+    }
+  } catch (err) {
+    console.error("Error checking deadlines:", err);
+  }
+}
+
+// Run on page load
+checkDeadlines();
+
+
 
 
 
