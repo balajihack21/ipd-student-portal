@@ -23,7 +23,7 @@ tabs.forEach(tab => {
 
     // 🔹 Timeline Tab
     if (tab.dataset.tab === "timelineTab") {
-      loadTimelineDates(); // 👈 new function to fetch timeline dates
+      loadAllTimelineDates(); // 👈 new function to fetch timeline dates
     }
   });
 });
@@ -761,55 +761,55 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
   ];
 
   for (let w = 1; w <= maxWeek; w++) {
-    headers.push(`Week ${w}`);
-  }
+  headers.push(`Week ${w} Status`, `Week ${w} File`);
+}
 
-  const rows = [headers];
+const rows = [headers];
+let idx2 = 1;
 
-  filteredHistory.forEach(team => {
-    // Sort students so leader comes first
-    const studentsSorted = [...(team.Students || [])].sort((a, b) => b.is_leader - a.is_leader);
-   let idx2=1
-    studentsSorted.forEach((student, i) => {
-      const rowBase = [
-        i==0?idx2++:"",
-        i === 0 ? team.UserId : "",
-        i === 0 ? team.team_name : "",
-        student.student_name || "",
-        student.register_no || "",
-        i === 0 ? team.mobile : "",
-        i === 0 ? team.email : "",
-        student.dept || "",
-        student.section || "",
-        student.is_leader ? "TeamLeader" : `Team Member ${i}`,
-        i === 0 ? (team.mentor?.name || "Unassigned") : "",
-      ];
+filteredHistory.forEach(team => {
+  const studentsSorted = [...(team.Students || [])].sort((a, b) => b.is_leader - a.is_leader);
+  
 
-      // Week columns
-      if (i === 0) {
-        if (team.TeamUploads && team.TeamUploads.length > 0) {
-          for (let w = 1; w <= maxWeek; w++) {
-            const upload = team.TeamUploads.find(u => u.week_number === w);
-            rowBase.push(upload.status);
-             rowBase.push(upload ? upload.file_url : "");
-          }
+  studentsSorted.forEach((student, i) => {
+    const rowBase = [
+      i === 0 ? idx2++ : "",
+      i === 0 ? team.UserId : "",
+      i === 0 ? team.team_name : "",
+      student.student_name || "",
+      student.register_no || "",
+      i === 0 ? team.mobile : "",
+      i === 0 ? team.email : "",
+      student.dept || "",
+      student.section || "",
+      student.is_leader ? "TeamLeader" : `Team Member ${i}`,
+      i === 0 ? (team.mentor?.name || "Unassigned") : "",
+      i === 0 ? (team.TeamUploads?.length ? "Uploaded" : "No Uploads") : ""
+    ];
+
+    if (i === 0) {
+      for (let w = 1; w <= maxWeek; w++) {
+        // Find if this team has an upload for week `w`
+        const upload = team.TeamUploads?.find(u => Number(u.week_number) === w);
+
+        if (upload) {
+          rowBase.push(upload.status || "Uploaded");
+          rowBase.push(upload.file_url || "");
         } else {
-          // No uploads → Week 1 = "No uploads", rest blank
-          rowBase.push("No uploads");
-          for (let w = 2; w <= maxWeek; w++) {
-            rowBase.push("");
-          }
-        }
-      } else {
-        // Other students get empty week columns
-        for (let w = 1; w <= maxWeek; w++) {
+          rowBase.push("No Upload");
           rowBase.push("");
         }
       }
+    } else {
+      for (let w = 1; w <= maxWeek; w++) {
+        rowBase.push("", ""); // members get empty week columns
+      }
+    }
 
-      rows.push(rowBase);
-    });
+    rows.push(rowBase);
   });
+});
+
 
   // Create XLSX
   const wb = XLSX.utils.book_new();
