@@ -207,7 +207,7 @@ function renderHistoryTableFiltered(filteredTeams) {
 
     return `
         <li>
-          <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
+          <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File -${u.week_number}</a>
           <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
           ${isPendingTooLong
         ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
@@ -761,7 +761,7 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
   ];
 
   for (let w = 1; w <= maxWeek; w++) {
-  headers.push(`Week ${w} Status`, `Week ${w} File`);
+  headers.push(`File ${w} Status`, `File ${w} Url`);
 }
 
 const rows = [headers];

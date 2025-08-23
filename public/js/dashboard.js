@@ -103,7 +103,7 @@ async function loadUploadHistory() {
         <div class="bg-gray-100 p-3 rounded shadow-sm mb-3">
           <div class="flex justify-between items-center">
             <div>
-              <strong>Week ${upload.week_number}</strong><br>
+              <strong>File ${upload.week_number}</strong><br>
               <span class="text-xs text-gray-500">${date}</span>
             </div>
             <a href="${upload.file_url}" target="_blank" class="text-blue-500 underline">View</a>
@@ -145,25 +145,71 @@ menuItems.forEach(item => {
   });
 });
 
+// document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+//   e.preventDefault();
+//   const fileInput = document.getElementById("fileInput");
+//   const weekNumber = parseInt(document.getElementById("weekNumber").value, 10);
+//   const file = fileInput.files[0];
+
+//   // Validation for empty fields
+//   if (!file || !weekNumber) {
+//     return alert("All fields required!");
+//   }
+
+//   // Restrict to only week 1 and week 2
+//   if (![1, 2].includes(weekNumber)) {
+//     return alert("You can only upload for Week 1 or Week 2.");
+//   }
+
+//   const formData = new FormData();
+//   formData.append("file", file);
+//   formData.append("week_number", weekNumber);
+
+//   const token = localStorage.getItem("token");
+//   const progressBar = document.getElementById("uploadProgressBar");
+//   progressBar.style.width = "0%";
+//   progressBar.textContent = "0%";
+
+//   try {
+//     const res = await axios.post("/api/upload", formData, {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         "Content-Type": "multipart/form-data",
+//       },
+//       onUploadProgress: (progressEvent) => {
+//         const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+//         progressBar.style.width = `${percentCompleted}%`;
+//         progressBar.textContent = `${percentCompleted}%`;
+//       },
+//     });
+
+//     document.getElementById("uploadStatus").textContent = "Uploaded successfully!";
+//     progressBar.style.backgroundColor = "#16a34a"; // green on success
+//     alert("Uploaded Successfully!!");
+//     console.log("Cloudinary URL:", res.data.url);
+
+//     setTimeout(() => {
+//       progressBar.style.width = "0%";
+//       progressBar.textContent = "0%";
+//       progressBar.style.backgroundColor = "#3b82f6"; // reset
+//     }, 1000);
+
+//     await loadUploadHistory();
+//   } catch (err) {
+//     document.getElementById("uploadStatus").textContent = "Upload failed!";
+//     progressBar.style.backgroundColor = "#dc2626"; // red on error
+//     console.error(err);
+//   }
+// });
+
+
 document.getElementById("uploadForm").addEventListener("submit", async (e) => {
   e.preventDefault();
-  const fileInput = document.getElementById("fileInput");
-  const weekNumber = parseInt(document.getElementById("weekNumber").value, 10);
-  const file = fileInput.files[0];
 
-  // Validation for empty fields
-  if (!file || !weekNumber) {
-    return alert("All fields required!");
+  const files = document.getElementById("fileInput").files;
+  if (files.length !== 2) {
+    return alert("Please select exactly 2 files!");
   }
-
-  // Restrict to only week 1 and week 2
-  if (![1, 2].includes(weekNumber)) {
-    return alert("You can only upload for Week 1 or Week 2.");
-  }
-
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("week_number", weekNumber);
 
   const token = localStorage.getItem("token");
   const progressBar = document.getElementById("uploadProgressBar");
@@ -171,22 +217,28 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
   progressBar.textContent = "0%";
 
   try {
-    const res = await axios.post("/api/upload", formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
-      },
-      onUploadProgress: (progressEvent) => {
-        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-        progressBar.style.width = `${percentCompleted}%`;
-        progressBar.textContent = `${percentCompleted}%`;
-      },
-    });
+    // Loop through 2 files and upload one by one
+    for (let i = 0; i < 2; i++) {
+      const formData = new FormData();
+      formData.append("file", files[i]);
+      formData.append("week_number", i + 1); // 👈 assign week 1 & 2
 
-    document.getElementById("uploadStatus").textContent = "Uploaded successfully!";
-    progressBar.style.backgroundColor = "#16a34a"; // green on success
-    alert("Uploaded Successfully!!");
-    console.log("Cloudinary URL:", res.data.url);
+      await axios.post("/api/upload", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          progressBar.style.width = `${percentCompleted}%`;
+          progressBar.textContent = `${percentCompleted}%`;
+        },
+      });
+    }
+
+    document.getElementById("uploadStatus").textContent = "Both files uploaded successfully!";
+    progressBar.style.backgroundColor = "#16a34a"; // green
+    alert("Both files uploaded successfully!!");
 
     setTimeout(() => {
       progressBar.style.width = "0%";
@@ -197,11 +249,10 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
     await loadUploadHistory();
   } catch (err) {
     document.getElementById("uploadStatus").textContent = "Upload failed!";
-    progressBar.style.backgroundColor = "#dc2626"; // red on error
+    progressBar.style.backgroundColor = "#dc2626"; // red
     console.error(err);
   }
 });
-
 
 
 

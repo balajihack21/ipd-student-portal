@@ -226,7 +226,7 @@ async function loadTeams() {
           const stat = upload.status;
           return `
             <div class="p-3 border rounded bg-gray-50">
-              <p class="font-semibold">Week - ${upload.week_number}</p>
+              <p class="font-semibold">File - ${upload.week_number}</p>
               <a href="${upload.file_url}" class="text-blue-600 underline" target="_blank">Download</a>
               ${alreadyReviewed && stat === "REVIEWED"
                 ? `

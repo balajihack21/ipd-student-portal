@@ -306,14 +306,14 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
       email: process.env.EMAIL_USER,
       name: "IPD-TEAM",
     };
-
+//mentor.email
     // Email notification (unchanged, just replaced supabaseUrl with fileUrl)
     await transEmailApi.sendTransacEmail({
       sender,
       to: [{ email: mentor.email }],
-      subject: `Team Upload Notification - Week ${weekNumber}`,
+      subject: `Team Upload Notification - File ${weekNumber}`,
       htmlContent: `<h3>Hello ${mentor.title}${mentor.name},</h3>
-        <p>Your mentee has uploaded a file for <strong>Week ${weekNumber}</strong>.</p>
+        <p>Your mentee has uploaded a file for <strong>File ${weekNumber}</strong>.</p>
         <p>You can view or download the file using the attachment or from the dashboard.</p>
         <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
         <p><a href="${fileUrl}" target="_blank">${fileName}</a></p>
