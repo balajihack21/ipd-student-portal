@@ -44,3 +44,16 @@ document.getElementById("loginForm").addEventListener("submit", async function (
     btnSpinner.classList.add("hidden");
   }
 });
+
+
+const togglePassword = document.getElementById("togglePassword");
+const passwordInput = document.getElementById("password");
+
+togglePassword.addEventListener("click", () => {
+  const isPassword = passwordInput.type === "password";
+  passwordInput.type = isPassword ? "text" : "password";
+
+  // Toggle icon (👁️ / 🙈) 
+  togglePassword.textContent = isPassword ? "🙈" : "👁️";
+});
+
