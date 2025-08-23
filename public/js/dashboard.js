@@ -215,13 +215,17 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
   const progressBar = document.getElementById("uploadProgressBar");
   progressBar.style.width = "0%";
   progressBar.textContent = "0%";
+  progressBar.style.backgroundColor = "#3b82f6"; // reset to blue
 
   try {
-    // Loop through 2 files and upload one by one
+    let totalUploaded = 0;
+    let totalSize = files[0].size + files[1].size;
+
+    // Upload both files sequentially
     for (let i = 0; i < 2; i++) {
       const formData = new FormData();
       formData.append("file", files[i]);
-      formData.append("week_number", i + 1); // 👈 assign week 1 & 2
+      formData.append("week_number", i + 1);
 
       await axios.post("/api/upload", formData, {
         headers: {
@@ -229,7 +233,8 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
           "Content-Type": "multipart/form-data",
         },
         onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          totalUploaded += progressEvent.loaded;
+          const percentCompleted = Math.round((totalUploaded / totalSize) * 100);
           progressBar.style.width = `${percentCompleted}%`;
           progressBar.textContent = `${percentCompleted}%`;
         },
@@ -243,8 +248,8 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
     setTimeout(() => {
       progressBar.style.width = "0%";
       progressBar.textContent = "0%";
-      progressBar.style.backgroundColor = "#3b82f6"; // reset
-    }, 1000);
+      progressBar.style.backgroundColor = "#3b82f6"; // reset to blue
+    }, 2000);
 
     await loadUploadHistory();
   } catch (err) {
@@ -253,6 +258,7 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
     console.error(err);
   }
 });
+
 
 
 
