@@ -203,29 +203,78 @@ menuItems.forEach(item => {
 // });
 
 
-document.getElementById("uploadForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+// document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+//   e.preventDefault();
 
-  const files = document.getElementById("fileInput").files;
-  if (files.length !== 2) {
-    return alert("Please select exactly 2 files!");
-  }
+//   const files = document.getElementById("fileInput").files;
+//   if (files.length !== 2) {
+//     return alert("Please select exactly 2 files!");
+//   }
 
-  const token = localStorage.getItem("token");
-  const progressBar = document.getElementById("uploadProgressBar");
-  progressBar.style.width = "0%";
-  progressBar.textContent = "0%";
-  progressBar.style.backgroundColor = "#3b82f6"; // reset to blue
+//   const token = localStorage.getItem("token");
+//   const progressBar = document.getElementById("uploadProgressBar");
+//   progressBar.style.width = "0%";
+//   progressBar.textContent = "0%";
+//   progressBar.style.backgroundColor = "#3b82f6"; // reset to blue
 
-  try {
-    let totalUploaded = 0;
-    let totalSize = files[0].size + files[1].size;
+//   try {
+//     let totalUploaded = 0;
+//     let totalSize = files[0].size + files[1].size;
 
-    // Upload both files sequentially
-    for (let i = 0; i < 2; i++) {
+//     // Upload both files sequentially
+//     for (let i = 0; i < 2; i++) {
+//       const formData = new FormData();
+//       formData.append("file", files[i]);
+//       formData.append("week_number", i + 1);
+
+//       await axios.post("/api/upload", formData, {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           "Content-Type": "multipart/form-data",
+//         },
+//         onUploadProgress: (progressEvent) => {
+//           totalUploaded += progressEvent.loaded;
+//           const percentCompleted = Math.round((totalUploaded / totalSize) * 100);
+//           progressBar.style.width = `${percentCompleted}%`;
+//           progressBar.textContent = `${percentCompleted}%`;
+//         },
+//       });
+//     }
+
+//     document.getElementById("uploadStatus").textContent = "Both files uploaded successfully!";
+//     progressBar.style.backgroundColor = "#16a34a"; // green
+//     alert("Both files uploaded successfully!!");
+
+//     setTimeout(() => {
+//       progressBar.style.width = "0%";
+//       progressBar.textContent = "0%";
+//       progressBar.style.backgroundColor = "#3b82f6"; // reset to blue
+//     }, 2000);
+
+//     await loadUploadHistory();
+//   } catch (err) {
+//     document.getElementById("uploadStatus").textContent = "Upload failed!";
+//     progressBar.style.backgroundColor = "#dc2626"; // red
+//     console.error(err);
+//   }
+// });
+async function handleUpload(formId, fileId, progressId, statusId, weekNumber) {
+  document.getElementById(formId).addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const file = document.getElementById(fileId).files[0];
+    if (!file) return alert("Please select a file!");
+
+    const token = localStorage.getItem("token");
+    const progressBar = document.getElementById(progressId);
+    progressBar.style.width = "0%";
+    progressBar.textContent = "0%";
+    progressBar.style.backgroundColor = "#3b82f6"; // reset to blue
+
+    try {
       const formData = new FormData();
-      formData.append("file", files[i]);
-      formData.append("week_number", i + 1);
+      formData.append("file", file);
+      formData.append("week_number", weekNumber); // 👈 keep schema intact
 
       await axios.post("/api/upload", formData, {
         headers: {
@@ -233,31 +282,34 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
           "Content-Type": "multipart/form-data",
         },
         onUploadProgress: (progressEvent) => {
-          totalUploaded += progressEvent.loaded;
-          const percentCompleted = Math.round((totalUploaded / totalSize) * 100);
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
           progressBar.style.width = `${percentCompleted}%`;
           progressBar.textContent = `${percentCompleted}%`;
         },
       });
-    }
 
-    document.getElementById("uploadStatus").textContent = "Both files uploaded successfully!";
-    progressBar.style.backgroundColor = "#16a34a"; // green
-    alert("Both files uploaded successfully!!");
-
-    setTimeout(() => {
+      document.getElementById(statusId).textContent = "Uploaded successfully!";
+      progressBar.style.backgroundColor = "#16a34a"; // green
+      
+          setTimeout(() => {
       progressBar.style.width = "0%";
       progressBar.textContent = "0%";
       progressBar.style.backgroundColor = "#3b82f6"; // reset to blue
     }, 2000);
 
+    alert("File Uploaded Successfully")
     await loadUploadHistory();
-  } catch (err) {
-    document.getElementById("uploadStatus").textContent = "Upload failed!";
-    progressBar.style.backgroundColor = "#dc2626"; // red
-    console.error(err);
-  }
-});
+    } catch (err) {
+      document.getElementById(statusId).textContent = "Upload failed!";
+      progressBar.style.backgroundColor = "#dc2626"; // red
+      console.error(err);
+    }
+  });
+}
+
+// Attach upload handlers (Week 1 for Problem, Week 2 for Affinity)
+handleUpload("problemForm", "problemFile", "problemProgress", "problemStatus", 1);
+handleUpload("affinityForm", "affinityFile", "affinityProgress", "affinityStatus", 2);
 
 
 
