@@ -13,9 +13,43 @@ const router = express.Router();
 /**
  * GET Assigned Teams + their uploads
  */
+
+router.get("/teams/dropdown", authenticate, async (req, res) => {
+  try {
+    const { reviewType } = req.query; // "review1" or "review2"
+
+    let whereClause = {};
+    if (reviewType === "review1") {
+      whereClause.review1_score = null; // not submitted yet
+    } else if (reviewType === "review2") {
+      whereClause.review2_score = null;
+    }
+
+    const teams = await User.findAll({
+      where: whereClause,
+      attributes: ["UserId", "team_name"]
+    });
+
+    res.json(teams);
+  } catch (err) {
+    console.error("Error fetching teams:", err);
+    res.status(500).json({ error: "Failed to fetch teams" });
+  }
+});
+
+
 router.get('/teams', authenticate, async (req, res) => {
   try {
     const mentorId = req.user.mentorId; // comes from JWT
+    const { reviewType } = req.query;
+
+    let whereClause = {};
+    if (reviewType === "review1") {
+      whereClause.review1_score = null; // not submitted yet
+    } else if (reviewType === "review2") {
+      whereClause.review2_score = null;
+    }
+
 
     // Find mentor details (to get department)
     const mentor = await Mentor.findByPk(mentorId);
@@ -25,6 +59,7 @@ router.get('/teams', authenticate, async (req, res) => {
 
     // Fetch all teams whose leader belongs to same department as mentor
     const teams = await User.findAll({
+      where:whereClause,
       attributes: ['UserId', 'team_name', 'email', 'mobile'],
       include: [
         {
@@ -32,7 +67,7 @@ router.get('/teams', authenticate, async (req, res) => {
           attributes: ['student_name', 'dept', 'section', 'register_no', 'mobile'],
           where: {
             is_leader: true,
-            dept: mentor.department   // ✅ filter by leader’s dept
+            dept: mentor.department , // ✅ filter by leader’s dept
           }
         }
       ]
@@ -46,11 +81,11 @@ router.get('/teams', authenticate, async (req, res) => {
 });
 
 
-router.post("/teams/:teamId/rubrics", authenticate, async (req, res) => {
+router.post("/teams/:teamId/rubrics/:stage", authenticate, async (req, res) => {
   try {
-    const mentorId = req.user.mentorId; // from token (must map properly in auth)
-    const { teamId } = req.params;
-    const { scores } = req.body; // { rubric1: x, rubric2: y, ... }
+    const mentorId = req.user.mentorId;
+    const { teamId, stage } = req.params;
+    const { scores } = req.body;
 
     if (!scores || typeof scores !== "object") {
       return res.status(400).json({ error: "Scores are required" });
@@ -62,32 +97,59 @@ router.post("/teams/:teamId/rubrics", authenticate, async (req, res) => {
       return res.status(403).json({ error: "Only coordinators can submit rubrics" });
     }
 
-    // Find the team leader user (team row)
+    // Ensure team exists
     const team = await User.findByPk(teamId);
-    console.log(team)
     if (!team) return res.status(404).json({ error: "Team not found" });
 
-    // Extract only rubric fields
-const rubricFields = {};
-for (let i = 1; i <= 10; i++) {
-  if (scores[`rubric${i}`] !== undefined) {
-    rubricFields[`rubric${i}`] = scores[`rubric${i}`];
-  }
+    // ✅ Determine rubric range by stage
+    let startIndex, endIndex;
+    if (stage === "review1") {
+  const total = Object.values(scores).reduce((a, b) => a + b, 0);
+
+  await team.update({
+    rubric1: scores.rubric1,
+    rubric2: scores.rubric2,
+    rubric3: scores.rubric3,
+    rubric4: scores.rubric4,
+    rubric5: scores.rubric5,
+    review1_score: total
+  });
+} else if (stage === "review2") {
+  const total = Object.values(scores).reduce((a, b) => a + b, 0);
+
+  await team.update({
+    rubric6: scores.rubric6,
+    rubric7: scores.rubric7,
+    rubric8: scores.rubric8,
+    rubric9: scores.rubric9,
+    rubric10: scores.rubric10,
+    review2_score: total
+  });
 }
+ else {
+      return res.status(400).json({ error: "Invalid review stage" });
+    }
 
-// Update in DB
-await User.update(rubricFields, {
-  where: { UserId: teamId }
-});
+    // ✅ Extract only relevant rubrics
+    const rubricFields = {};
+    for (let i = startIndex; i <= endIndex; i++) {
+      const key = `rubric${i}`;
+      if (scores[key] !== undefined) {
+        rubricFields[key] = scores[key];
+      }
+    }
 
+    await User.update(rubricFields, { where: { UserId: teamId } });
 
-
-    res.json({ message: "Rubrics submitted successfully", team });
+    res.json({ message: `Rubrics for ${stage} submitted successfully`, updated: rubricFields });
   } catch (err) {
     console.error("Error submitting rubrics:", err);
     res.status(500).json({ error: "Failed to submit rubrics" });
   }
 });
+
+
+
 
 
 router.get('/my-teams', authenticate, async (req, res) => {

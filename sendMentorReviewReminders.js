@@ -162,13 +162,13 @@ async function sendMentorReviewReminders() {
       for (const mentorId in mentorMap) {
         const { mentor, uploads } = mentorMap[mentorId];
         const uploadListHtml = uploads.map(u => `
-          <li>Team: <strong>${u.User.team_name}</strong> — Week ${u.week_number} — Uploaded at: ${u.uploaded_at}</li>
+          <li>Team: <strong>${u.User.team_name}</strong> — File ${u.week_number} — Uploaded at: ${u.uploaded_at}</li>
         `).join('');
 
         //mentor.email
         await transEmailApi.sendTransacEmail({
           sender,
-          to: [{ email: "balajiaru06@gmail.com" }],
+          to: [{ email: mentor.email }],
           subject: `Reminder: ${uploads.length} pending reviews`,
           htmlContent: `
             <p>Dear ${mentor.title} ${mentor.name},</p>

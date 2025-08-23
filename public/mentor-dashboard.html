@@ -8,6 +8,20 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <style>
+    .rubric-label {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rubric-label.selected {
+  background-color: #3b82f6; /* Tailwind blue-500 */
+  color: white;
+  border-color: #2563eb;    /* Tailwind blue-600 */
+}
+
     #logo {
       display: flex;
       flex-direction: column;

@@ -76,7 +76,7 @@ async function loadRubricsTeams() {
     const token = localStorage.getItem('token');
 
     // Get deadlines
-    const res = await axios.get('/rubrics/review1-deadline', {
+    const res = await axios.get('/rubrics/deadline/review1', {
       headers: { Authorization: `Bearer ${token}` }
     });
     const { start, deadline } = res.data;
@@ -98,10 +98,11 @@ async function loadRubricsTeams() {
     const mentor = mentorRes.data;
     if (!mentor.is_coordinator) return; // only coordinators see rubrics
 
+    //here
     document.getElementById('rubricsSection').classList.remove('hidden');
 
     // Fetch teams in mentor department
-    const teamRes = await axios.get(`/mentor/teams`, {
+   const teamRes = await axios.get(`/mentor/teams?reviewType=review1`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
@@ -130,6 +131,7 @@ async function loadRubricsTeams() {
 
 
 } else {
+  // here
    document.getElementById("rubricsSection").style.display = "none";
 }
 
@@ -158,8 +160,8 @@ function renderRubricsForm(teamId) {
       <p class="font-semibold mb-2">${criterion}</p>
       <div class="flex space-x-4">
         ${[1, 2, 3, 4, 5].map(score => `
-          <label class="flex items-center space-x-1">
-            <input type="radio" name="criterion_${index}" value="${score}" class="rubric-score">
+          <label class="rubric-label">
+            <input type="radio" name="criterion_${index + 1}" value="${score}" class="rubric-score hidden">
             <span>${score}</span>
           </label>
         `).join('')}
@@ -172,31 +174,54 @@ function renderRubricsForm(teamId) {
   const submitBtn = document.createElement('button');
   submitBtn.textContent = "Submit Rubrics";
   submitBtn.className = "bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600";
-  submitBtn.addEventListener('click', () => submitRubrics(teamId));
+  submitBtn.addEventListener('click', () => submitRubrics(teamId,"review1"));
   rubricsForm.appendChild(submitBtn);
 
   rubricsForm.classList.remove('hidden');
+
+  // 🔥 Add event listener to toggle highlight
+  rubricsForm.querySelectorAll('.rubric-score').forEach(input => {
+    input.addEventListener('change', () => {
+      const group = rubricsForm.querySelectorAll(`input[name="${input.name}"]`);
+      group.forEach(r => r.parentElement.classList.remove('selected'));
+      input.parentElement.classList.add('selected');
+    });
+  });
 }
 
-async function submitRubrics(teamId) {
+
+async function submitRubrics(teamId, stage) {
   const scores = {};
   document.querySelectorAll('.rubric-score:checked').forEach(input => {
-    const critIndex = input.name.split('_')[1];
-    scores[critIndex] = parseInt(input.value, 10);
+    const critIndex = input.name.split('_')[1]; // e.g. "1"
+    scores[`rubric${critIndex}`] = parseInt(input.value, 10);
   });
 
   const token = localStorage.getItem('token');
   try {
-    await axios.post(`/mentor/teams/${teamId}/rubrics`, { scores }, {
+    await axios.post(`/mentor/teams/${teamId}/rubrics/${stage}`, { scores }, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    console.log(scores)
-    alert('Rubrics submitted successfully!');
+    console.log(scores);
+    alert(`Rubrics for ${stage} submitted successfully!`);
+
+     // ✅ Reset radio buttons
+    document.querySelectorAll('.rubric-score').forEach(input => {
+      input.checked = false;
+    });
+
+    // ✅ Re-fetch teams to update dropdown
+    loadRubricsTeams();
+
+    // ✅ Hide form after submission
+    document.getElementById('rubricsForm').classList.add('hidden');
+
   } catch (err) {
     console.error('Error submitting rubrics:', err);
     alert('Failed to submit rubrics.');
   }
 }
+
 
 
 
