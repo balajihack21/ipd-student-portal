@@ -276,7 +276,7 @@ async function handleUpload(formId, fileId, progressId, statusId, weekNumber) {
       formData.append("file", file);
       formData.append("week_number", weekNumber); // 👈 keep schema intact
 
-      await axios.post("/api/upload", formData, {
+      await axios.post("/api/upload/none", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
