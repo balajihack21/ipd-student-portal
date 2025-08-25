@@ -104,7 +104,7 @@ async function fetchAllTeamHistories() {
   try {
     const res = await axios.get(`/admin/team-history`); // should return all
     historyData = res.data.teams; // store for pagination
-    filteredHistory =[...historyData];
+    filteredHistory = [...historyData];
     console.log(res.data)
     document.getElementById('uploadedTeamsCount').textContent =
       `Uploaded Teams: ${res.data.uploadedCount}`;
@@ -113,7 +113,7 @@ async function fetchAllTeamHistories() {
     historyCurrentPage = 1; // reset to first page
     renderHistoryTable();
     attachHistoryFilters();
-document.getElementById("uploadStatusFilter").addEventListener("change", applyHistoryFilters);
+    document.getElementById("uploadStatusFilter").addEventListener("change", applyHistoryFilters);
 
 
   } catch (err) {
@@ -181,6 +181,7 @@ function renderHistoryTableFiltered(filteredTeams) {
         <p><strong>Email:</strong> ${team.email}</p>
         <p><strong>Mentor:</strong> ${team.mentor?.name || 'None'} (${team.mentor?.department || 'N/A'})</p>
         <p><strong>Mentor Email:</strong> ${team.mentor?.email || 'None'}</p>
+        
         <img 
     src="${team?.profilePhoto || '/images/christmas-celebration-concept.jpg'}" 
     alt="Profile photo of ${team.team_name || 'Team Member'}"
@@ -222,9 +223,32 @@ function renderHistoryTableFiltered(filteredTeams) {
           : 'text-yellow-600'}">
                 ${u.status || 'Pending'}
               </span>
-            </div>
+</div>
             <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
           </div>
+              <div class="ml-4 mt-2">
+              
+  <textarea 
+    id="admin-comment-${u.id}" 
+    rows="2" 
+    class="w-full p-2 border rounded text-sm"
+    placeholder="Write admin comment..."
+  >${localStorage.getItem("adminComment-" + u.id) || ""}</textarea>
+
+  <button 
+  class="mt-1 bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 admin-comment-btn"
+  data-upload-id="${u.id}"
+>
+  Send Comment
+</button>
+
+
+  ${localStorage.getItem("adminComment-" + u.id)
+        ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
+        : ""}
+</div>
+
+            
         </li>
       `;
   }).join('')}
@@ -237,6 +261,15 @@ function renderHistoryTableFiltered(filteredTeams) {
   document.getElementById("historyContent").innerHTML = html;
   renderHistoryPaginationControlsFiltered(filteredTeams.length);
 }
+
+
+document.getElementById("historyContent").addEventListener("click", (e) => {
+  if (e.target.classList.contains("admin-comment-btn")) {
+    const uploadId = e.target.dataset.uploadId;
+    submitAdminComment(uploadId);
+  }
+});
+
 
 function renderHistoryPaginationControlsFiltered(totalItems) {
   const totalPages = Math.ceil(totalItems / historyRowsPerPage);
@@ -711,14 +744,14 @@ document.getElementById("exportExcel").addEventListener("click", () => {
   console.log(typeof XLSX);
 
   const rows = [
-    ["SNo","Team ID", "Team Name", "Name", "Register No", "Mobile", "Email", "Dept","Section", "Role", "Mentor Name"]
+    ["SNo", "Team ID", "Team Name", "Name", "Register No", "Mobile", "Email", "Dept", "Section", "Role", "Mentor Name"]
   ];
 
-   let idx=1
+  let idx = 1
   filteredTeams.forEach(team => {
     team.Students?.forEach((student, i) => {
       rows.push([
-        i==0?idx++:"",
+        i == 0 ? idx++ : "",
         i === 0 ? team.UserId : "",
         i === 0 ? team.team_name : "",
         student.student_name || "",
@@ -757,58 +790,58 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
 
   const headers = ["SNo",
     "Team ID", "Team Name", "Name", "Register No", "Mobile", "Email", "Dept", "Section", "Role",
-    "Mentor Name","Status"
+    "Mentor Name", "Status"
   ];
 
   for (let w = 1; w <= maxWeek; w++) {
-  headers.push(`File ${w} Status`, `File ${w} Url`);
-}
+    headers.push(`File ${w} Status`, `File ${w} Url`);
+  }
 
-const rows = [headers];
-let idx2 = 1;
+  const rows = [headers];
+  let idx2 = 1;
 
-filteredHistory.forEach(team => {
-  const studentsSorted = [...(team.Students || [])].sort((a, b) => b.is_leader - a.is_leader);
-  
+  filteredHistory.forEach(team => {
+    const studentsSorted = [...(team.Students || [])].sort((a, b) => b.is_leader - a.is_leader);
 
-  studentsSorted.forEach((student, i) => {
-    const rowBase = [
-      i === 0 ? idx2++ : "",
-      i === 0 ? team.UserId : "",
-      i === 0 ? team.team_name : "",
-      student.student_name || "",
-      student.register_no || "",
-      i === 0 ? team.mobile : "",
-      i === 0 ? team.email : "",
-      student.dept || "",
-      student.section || "",
-      student.is_leader ? "TeamLeader" : `Team Member ${i}`,
-      i === 0 ? (team.mentor?.name || "Unassigned") : "",
-      i === 0 ? (team.TeamUploads?.length ? "Uploaded" : "No Uploads") : ""
-    ];
 
-    if (i === 0) {
-      for (let w = 1; w <= maxWeek; w++) {
-        // Find if this team has an upload for week `w`
-        const upload = team.TeamUploads?.find(u => Number(u.week_number) === w);
+    studentsSorted.forEach((student, i) => {
+      const rowBase = [
+        i === 0 ? idx2++ : "",
+        i === 0 ? team.UserId : "",
+        i === 0 ? team.team_name : "",
+        student.student_name || "",
+        student.register_no || "",
+        i === 0 ? team.mobile : "",
+        i === 0 ? team.email : "",
+        student.dept || "",
+        student.section || "",
+        student.is_leader ? "TeamLeader" : `Team Member ${i}`,
+        i === 0 ? (team.mentor?.name || "Unassigned") : "",
+        i === 0 ? (team.TeamUploads?.length ? "Uploaded" : "No Uploads") : ""
+      ];
 
-        if (upload) {
-          rowBase.push(upload.status || "Uploaded");
-          rowBase.push(upload.file_url || "");
-        } else {
-          rowBase.push("No Upload");
-          rowBase.push("");
+      if (i === 0) {
+        for (let w = 1; w <= maxWeek; w++) {
+          // Find if this team has an upload for week `w`
+          const upload = team.TeamUploads?.find(u => Number(u.week_number) === w);
+
+          if (upload) {
+            rowBase.push(upload.status || "Uploaded");
+            rowBase.push(upload.file_url || "");
+          } else {
+            rowBase.push("No Upload");
+            rowBase.push("");
+          }
+        }
+      } else {
+        for (let w = 1; w <= maxWeek; w++) {
+          rowBase.push("", ""); // members get empty week columns
         }
       }
-    } else {
-      for (let w = 1; w <= maxWeek; w++) {
-        rowBase.push("", ""); // members get empty week columns
-      }
-    }
 
-    rows.push(rowBase);
+      rows.push(rowBase);
+    });
   });
-});
 
 
   // Create XLSX
@@ -1216,6 +1249,44 @@ document.addEventListener("click", async (e) => {
     }
   }
 });
+
+
+async function submitAdminComment(uploadId) {
+  const textarea = document.getElementById(`admin-comment-${uploadId}`);
+  const comment = textarea.value.trim();
+
+  if (!comment) {
+    alert("Please enter a comment before sending.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`/admin/uploads/${uploadId}/comment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ review_comment: comment })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error || "Failed to send comment");
+    }
+
+    // Save comment in localStorage
+    localStorage.setItem("adminComment-" + uploadId, comment);
+
+    alert("Comment mailed successfully ✅");
+
+    // Re-render so "Reviewed by Admin" shows
+    fetchAllTeamHistories() // re-fetch and re-render
+  } catch (error) {
+    console.error(error);
+    alert("Error sending comment ❌");
+  }
+}
+
 
 // Initialize timelines on page load
 renderTimelineSections();

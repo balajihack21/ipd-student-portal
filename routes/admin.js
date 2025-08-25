@@ -4,6 +4,8 @@ import User from '../models/User.js';
 import Mentor from '../models/Mentor.js';
 import Student from '../models/Student.js';
 import TeamUpload from '../models/TeamUpload.js';
+import dotenv from 'dotenv';
+import Sib from 'sib-api-v3-sdk';
 
 const router = express.Router();
 
@@ -96,7 +98,7 @@ router.get('/team-history', async (req, res) => {
         },
         {
           model: TeamUpload,
-          attributes: ['week_number', 'file_url', 'uploaded_at', 'createdAt', 'status', 'review_comment']
+          attributes: ['id','week_number', 'file_url', 'uploaded_at', 'createdAt', 'status', 'review_comment']
         }
       ],
       order: [
@@ -125,6 +127,93 @@ router.get('/team-history', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
+  }
+});
+
+router.post('/uploads/:uploadId/comment', async (req, res) => {
+  try {
+    const { uploadId } = req.params;
+    const { review_comment } = req.body;
+
+    // 1. Get upload + user + mentor
+    const upload = await TeamUpload.findByPk(uploadId, {
+      include: [
+        {
+          model: User,
+          attributes: ['UserId', 'email', 'mobile', 'team_name', 'mentor_id'],
+          include: [{ model: Mentor, as: 'mentor', attributes: ['name', 'email', 'title', 'department'] }]
+        }
+      ]
+    });
+
+    if (!upload) {
+      return res.status(404).json({ error: 'Upload not found' });
+    }
+
+    const student = upload.User;    // Team leader
+    const mentor = student.mentor;  // Mentor
+
+    if (!mentor) {
+      return res.status(400).json({ error: 'No mentor assigned to this team' });
+    }
+
+    // 2. Setup email client
+    const client = Sib.ApiClient.instance;
+    const apiKey = client.authentications['api-key'];
+    apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+    const transEmailApi = new Sib.TransactionalEmailsApi();
+    const sender = {
+      email: process.env.EMAIL_USER,
+      name: "IPD-TEAM",
+    };
+
+    const weekNumber = upload.week_number;
+    const fileName = upload.file_name;
+    const supabaseUrl = upload.file_url;
+//student.email
+//mentor.email
+console.log(student.email,mentor.email)
+    // 3. Send email to Team Leader and Mentor
+    await transEmailApi.sendTransacEmail({
+      sender,
+      to: [
+        { email: student.email },   // Team leader
+        { email:  mentor.email}     // Mentor
+      ],
+      subject: `IPD HEAD Comment - File ${weekNumber}`,
+      htmlContent: `
+        <h3>Hello ${student.team_name},</h3>
+        <p>An <strong>IPD Head</strong> has shared a comment on your <strong>File ${weekNumber}</strong> upload.</p>
+        
+        <p><strong>Comment:</strong></p>
+        <blockquote style="background:#f8f9fa; padding:10px; border-left:4px solid #007bff;">
+          ${review_comment}
+        </blockquote>
+
+        <p>You can also check the file here:</p>
+        <p><a href="${supabaseUrl}" target="_blank">View Uploaded File</a></p>
+
+        <p><strong>Team:</strong> ${student.team_name}</p>
+        <p><strong>Leader Contact:</strong> ${student.mobile}</p>
+        <p><strong>Mentor:</strong> ${mentor.title || ''} ${mentor.name} (${mentor.department})</p>
+
+        <br />
+        <p>Best Regards,<br />IPD Team</p>
+      `,
+      attachment: [
+        {
+          url: supabaseUrl,
+          name: fileName,
+        }
+      ]
+    });
+
+    res.json({ message: 'Admin comment mailed successfully to Team Leader & Mentor' });
+
+  } catch (err) {
+    console.error('Error sending admin comment email:', err);
+    res.status(500).json({ error: 'Server error sending email' });
   }
 });
 
