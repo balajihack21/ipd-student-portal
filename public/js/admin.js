@@ -380,7 +380,7 @@ function renderHistoryTable() {
 
     return `
         <li>
-          <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
+          <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File -${u.week_number}</a>
           <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
           ${isPendingTooLong
         ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
@@ -397,6 +397,28 @@ function renderHistoryTable() {
               </span>
             </div>
             <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
+                </div>
+              <div class="ml-4 mt-2">
+              
+  <textarea 
+    id="admin-comment-${u.id}" 
+    rows="2" 
+    class="w-full p-2 border rounded text-sm"
+    placeholder="Write admin comment..."
+  >${localStorage.getItem("adminComment-" + u.id) || ""}</textarea>
+
+  <button 
+  class="mt-1 bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 admin-comment-btn"
+  data-upload-id="${u.id}"
+>
+  Send Comment
+</button>
+
+
+  ${localStorage.getItem("adminComment-" + u.id)
+        ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
+        : ""}
+</div>
           </div>
         </li>
       `;
