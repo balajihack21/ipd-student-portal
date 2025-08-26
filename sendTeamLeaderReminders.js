@@ -67,20 +67,20 @@ async function sendTeamLeaderReminders() {
           const sender = { email: process.env.EMAIL_USER, name: "IPD-TEAM" };
 // team.email
           for (const team of pendingTeams) {
-            // await transEmailApi.sendTransacEmail({
-            //   sender,
-            //   to: [{ email:team.email}],
-            //   subject: `Reminder: Upload ${task.name} before deadline`,
-            //   htmlContent: `
-            //     <p>Dear ${team.team_name} Leader,</p>
-            //     <p>This is a reminder to upload your <strong>${task.name}</strong> document before the deadline:</p>
-            //     <p><strong>${new Date(deadline).toLocaleString()}</strong></p>
-            //     <p>Please log in and upload your file.</p>
-            //     <p><a href="https://agni-ipd.onrender.com/">Go to IPD Dashboard</a></p>
-            //     <br>
-            //     <p>Best Regards,<br>IPD Team</p>
-            //   `,
-            // });
+            await transEmailApi.sendTransacEmail({
+              sender,
+              to: [{ email:team.email}],
+              subject: `Reminder: Upload ${task.name} before deadline`,
+              htmlContent: `
+                <p>Dear ${team.team_name} Leader,</p>
+                <p>This is a reminder to upload your <strong>${task.name}</strong> document before the deadline:</p>
+                <p><strong>${new Date(deadline).toLocaleString()}</strong></p>
+                <p>Please log in and upload your file.</p>
+                <p><a href="https://agni-ipd.onrender.com/">Go to IPD Dashboard</a></p>
+                <br>
+                <p>Best Regards,<br>IPD Team</p>
+              `,
+            });
 
             console.log(`📧 Reminder sent to ${team.email} for ${task.name}`);
           }
