@@ -137,7 +137,7 @@ function attachHistoryFilters() {
   });
 }
 
-function applyHistoryFilters() {
+function applyHistoryFilters(resetPage = true) {
   const idVal = document.getElementById("historyFilterTeamId").value.toLowerCase();
   const nameVal = document.getElementById("historyFilterTeamName").value.toLowerCase();
   const statusVal = document.getElementById("historyFilterStatus").value.toLowerCase();
@@ -160,8 +160,11 @@ function applyHistoryFilters() {
     return matchesUploadStatus && matchesId && matchesName && matchesMentor && matchesLeaderDept && matchesStatus;
   });
 
-  // Reset pagination and re-render
-  historyCurrentPage = 1;
+  // ✅ Only reset page when a new filter is applied
+  if (resetPage) {
+    historyCurrentPage = 1;
+  }
+
   renderHistoryTableFiltered(filteredHistory);
 }
 
@@ -325,7 +328,7 @@ function renderHistoryPaginationControlsFiltered(totalItems) {
 function historyPrevPageFiltered() {
   if (historyCurrentPage > 1) {
     historyCurrentPage--;
-    applyHistoryFilters();
+    applyHistoryFilters(false); // don't reset to page 1
   }
 }
 
@@ -333,9 +336,10 @@ function historyNextPageFiltered(totalItems) {
   const totalPages = Math.ceil(totalItems / historyRowsPerPage);
   if (historyCurrentPage < totalPages) {
     historyCurrentPage++;
-    applyHistoryFilters();
+    applyHistoryFilters(false); // don't reset to page 1
   }
 }
+
 
 function renderHistoryTable() {
   const start = (historyCurrentPage - 1) * historyRowsPerPage;
@@ -434,20 +438,31 @@ function renderHistoryTable() {
 
 function renderHistoryPaginationControls() {
   const totalPages = Math.ceil(historyData.length / historyRowsPerPage);
-  let buttons = '';
+  const container = document.getElementById("historyPaginationControls");
+  container.innerHTML = ''; // clear old
 
   if (historyCurrentPage > 1) {
-    buttons += `<button onclick="historyPrevPage()" class="px-3 py-1 bg-gray-200 rounded">Prev</button>`;
+    const prevBtn = document.createElement("button");
+    prevBtn.textContent = "Prev";
+    prevBtn.className = "px-3 py-1 bg-gray-200 rounded";
+    prevBtn.addEventListener("click", historyPrevPage);
+    container.appendChild(prevBtn);
   }
 
-  buttons += `<span class="px-3">Page ${historyCurrentPage} of ${totalPages}</span>`;
+  const span = document.createElement("span");
+  span.textContent = `Page ${historyCurrentPage} of ${totalPages}`;
+  span.className = "px-3";
+  container.appendChild(span);
 
   if (historyCurrentPage < totalPages) {
-    buttons += `<button onclick="historyNextPage()" class="px-3 py-1 bg-gray-200 rounded">Next</button>`;
+    const nextBtn = document.createElement("button");
+    nextBtn.textContent = "Next";
+    nextBtn.className = "px-3 py-1 bg-gray-200 rounded";
+    nextBtn.addEventListener("click", historyNextPage);
+    container.appendChild(nextBtn);
   }
-
-  document.getElementById("historyPaginationControls").innerHTML = buttons;
 }
+
 
 function historyPrevPage() {
   if (historyCurrentPage > 1) {
