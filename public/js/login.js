@@ -57,3 +57,20 @@ togglePassword.addEventListener("click", () => {
   togglePassword.textContent = isPassword ? "🙈" : "👁️";
 });
 
+
+document.getElementById("forgotPassword").addEventListener("click", async () => {
+  const email = document.getElementById("email").value.trim();
+  if (!email) {
+    alert("Please enter your email first");
+    return;
+  }
+
+  try {
+    const res = await axios.post("/api/auth/forgot-password", { email });
+    alert(res.data.message);
+  } catch (err) {
+    alert(err.response?.data?.message || "Error sending reset email");
+  }
+});
+
+
