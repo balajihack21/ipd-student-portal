@@ -7,6 +7,14 @@ const TeamUpload = sequelize.define('TeamUpload', {
     type: DataTypes.TEXT,
     allowNull: false
   },
+  file_key: {  // ✅ new field for permanent storage
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  mentor_id: {
+  type: DataTypes.STRING,
+  allowNull: true
+},
   week_number: {
     type: DataTypes.INTEGER,
     allowNull: false

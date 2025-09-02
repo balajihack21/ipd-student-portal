@@ -13,8 +13,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.864.0",
-    "@aws-sdk/s3-request-presigner": "^3.864.0",
+    "@aws-sdk/client-s3": "^3.879.0",
+    "@aws-sdk/s3-request-presigner": "^3.879.0",
     "@octokit/core": "^7.0.3",
     "@octokit/rest": "^22.0.0",
     "@supabase/supabase-js": "^2.53.0",

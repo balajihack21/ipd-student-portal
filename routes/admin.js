@@ -6,6 +6,8 @@ import Student from '../models/Student.js';
 import TeamUpload from '../models/TeamUpload.js';
 import dotenv from 'dotenv';
 import Sib from 'sib-api-v3-sdk';
+import {getSignedFileUrl}  from "../backblaze.js";
+
 
 const router = express.Router();
 
@@ -98,7 +100,7 @@ router.get('/team-history', async (req, res) => {
         },
         {
           model: TeamUpload,
-          attributes: ['id','week_number', 'file_url', 'uploaded_at', 'createdAt', 'status', 'review_comment']
+          attributes: ['id','week_number', 'file_key', 'uploaded_at', 'createdAt', 'status', 'review_comment']
         }
       ],
       order: [
@@ -107,11 +109,34 @@ router.get('/team-history', async (req, res) => {
       ]
     });
 
+    
+    // Extend expiry for 2 months (~60 days)
+    const signedTeams = await Promise.all(
+      teams.map(async (team) => {
+        const uploads = await Promise.all(
+          team.TeamUploads.map(async (u) => {
+            let signedUrl = null;
+            if (u.file_key) {
+              signedUrl = await getSignedFileUrl(u.file_key, 60 * 24 * 60 * 60); 
+              // 60 days in seconds
+            }
+            return {
+              ...u.toJSON(),
+              file_url: signedUrl,
+            };
+          })
+        );
+        return {
+          ...team.toJSON(),
+          TeamUploads: uploads,
+        };
+      })
+    );
+
     // Calculate counts
     let uploadedCount = 0;
     let notUploadedCount = 0;
-
-    teams.forEach(team => {
+    signedTeams.forEach((team) => {
       if (team.TeamUploads && team.TeamUploads.length > 0) {
         uploadedCount++;
       } else {
@@ -122,7 +147,7 @@ router.get('/team-history', async (req, res) => {
     res.json({
       uploadedCount,
       notUploadedCount,
-      teams
+      teams: signedTeams,
     });
   } catch (err) {
     console.error(err);

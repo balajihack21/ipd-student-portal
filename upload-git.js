@@ -85,9 +85,10 @@
 
 
 import sequelize from './models/index.js';
-import User from './models/User.js';
+import TeamUpload from "./models/TeamUpload.js";
 
 (async () => {
-  await sequelize.sync({ alter: true });
-  console.log("✅ Users table updated with isLocked column");
+  await sequelize.sync({ alter: true }); // alters only this table
+  console.log("✅ TeamUpload table updated");
 })();
+
