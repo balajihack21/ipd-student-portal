@@ -95,7 +95,7 @@ async function loadUploadHistory() {
 
     res.data.forEach(upload => {
       const item = document.createElement("div");
-      const date = new Date(upload.updatedAt).toLocaleString();
+      const date = new Date(upload.uploaded_at).toLocaleString();
       const statusColor = upload.status === 'Approved' ? 'text-green-600'
                          : upload.status === 'Rejected' ? 'text-red-600'
                          : 'text-yellow-600';
