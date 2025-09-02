@@ -908,7 +908,7 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
 
   const headers = ["SNo",
     "Team ID", "Team Name", "Name", "Register No", "Mobile", "Email", "Dept", "Section", "Role",
-    "Mentor Name", "Status"
+    "Mentor Name","Mentor Email", "Status"
   ];
 
   for (let w = 1; w <= maxWeek; w++) {
@@ -935,6 +935,7 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
         student.section || "",
         student.is_leader ? "TeamLeader" : `Team Member ${i}`,
         i === 0 ? (team.mentor?.name || "Unassigned") : "",
+        i === 0 ? (team.mentor?.email || "Unassigned") : "",
         i === 0 ? (team.TeamUploads?.length ? "Uploaded" : "No Uploads") : ""
       ];
 
@@ -1409,4 +1410,6 @@ async function submitAdminComment(uploadId) {
 // Initialize timelines on page load
 renderTimelineSections();
 loadAllTimelineDates();
+
+
 
