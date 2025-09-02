@@ -424,13 +424,39 @@ router.post("/upload-profile-photo", authenticate, uploadprofile.single("photo")
 });
 
 
-router.get("/deadlines",authenticate, async (req, res) => {
+// router.get("/deadlines",authenticate, async (req, res) => {
+//   try {
+//     const admin = await Admin.findOne(); // assuming only one admin record
+//     res.json({
+//       problem_deadline: admin.problem_deadline,
+//       swot_deadline: admin.swot_deadline,
+//       value_deadline: admin.value_deadline
+//     });
+//   } catch (err) {
+//     console.error("Error fetching deadlines:", err);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// });
+
+
+// routes/admin.js (or wherever you defined deadlines route)
+
+
+router.get("/deadlines", authenticate, async (req, res) => {
   try {
+    // req.user should be available from authenticate middleware (decoded from JWT)
+    const user = await User.findOne({
+      where: { UserId: req.user.userId }, // adjust key if needed
+      attributes: ["isLocked"]
+    });
+
     const admin = await Admin.findOne(); // assuming only one admin record
+
     res.json({
       problem_deadline: admin.problem_deadline,
       swot_deadline: admin.swot_deadline,
-      value_deadline: admin.value_deadline
+      value_deadline: admin.value_deadline,
+      isLocked: user ? user.isLocked : false
     });
   } catch (err) {
     console.error("Error fetching deadlines:", err);

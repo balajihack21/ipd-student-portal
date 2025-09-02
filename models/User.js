@@ -47,6 +47,11 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: true
   },
+  isLocked: {
+  type: DataTypes.BOOLEAN,
+  allowNull: false,
+  defaultValue: false
+},
    rubric1: {
     type: DataTypes.INTEGER,
     allowNull: true

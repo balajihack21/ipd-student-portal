@@ -275,4 +275,28 @@ router.put('/edit-student', async (req, res) => {
   }
 });
 
+// Lock a team (disable uploads)
+router.post("/teams/:teamId/lock", async (req, res) => {
+  try {
+    const { teamId } = req.params;
+    await User.update({ isLocked: true }, { where: { UserId: teamId } });
+    res.json({ message: `Team ${teamId} locked successfully` });
+  } catch (err) {
+    console.error("Error locking team:", err);
+    res.status(500).json({ error: "Failed to lock team" });
+  }
+});
+
+// Unlock a team (enable uploads)
+router.post("/teams/:teamId/unlock", async (req, res) => {
+  try {
+    const { teamId } = req.params;
+    await User.update({ isLocked: false }, { where: { UserId: teamId } });
+    res.json({ message: `Team ${teamId} unlocked successfully` });
+  } catch (err) {
+    console.error("Error unlocking team:", err);
+    res.status(500).json({ error: "Failed to unlock team" });
+  }
+});
+
 export default router;

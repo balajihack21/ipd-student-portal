@@ -41,7 +41,7 @@ async function sendTeamLeaderReminders() {
       console.log(daysLeft)
 
       // Send reminder if <= 2 days left
-      if (daysLeft <= 3 && daysLeft >= 0) {
+      if (daysLeft <= 7 && daysLeft >= 0) {
         console.log(`⏳ ${task.name} deadline in ${daysLeft} days`);
 
         // 3. Find teams who have NOT uploaded for this week_number

@@ -75,10 +75,19 @@
 
 
 // somewhere in your startup file (app.js / server.js)
-import sequelize from "./models/index.js";
-import "./models/Admin.js";
+// import sequelize from "./models/index.js";
+// import "./models/Admin.js";
+
+// (async () => {
+//   await sequelize.sync({ alter: true }); 
+//   console.log("✅ Admin model updated in DB");
+// })();
+
+
+import sequelize from './models/index.js';
+import User from './models/User.js';
 
 (async () => {
-  await sequelize.sync({ alter: true }); 
-  console.log("✅ Admin model updated in DB");
+  await sequelize.sync({ alter: true });
+  console.log("✅ Users table updated with isLocked column");
 })();

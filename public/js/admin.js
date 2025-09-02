@@ -171,99 +171,136 @@ function applyHistoryFilters(resetPage = true) {
 
 // render filtered instead of all
 function renderHistoryTableFiltered(filteredTeams) {
-
   const start = (historyCurrentPage - 1) * historyRowsPerPage;
   const end = start + historyRowsPerPage;
   const paginatedTeams = filteredTeams.slice(start, end);
 
   let html = paginatedTeams.map(team => `
     <div class="bg-white shadow rounded p-6 space-y-4 mb-6">
-      <h2 class="text-2xl font-semibold text-blue-700">${team.UserId}</h2>
-      <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-2xl font-semibold text-blue-700">${team.UserId}</h2>
+          <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
+        </div>
+        <div>
+          ${team.isLocked
+            ? `<button class="unlock-btn bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700" data-team-id="${team.UserId}">Unlock</button>`
+            : `<button class="lock-btn bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700" data-team-id="${team.UserId}">Lock</button>`
+          }
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
         <p><strong>Email:</strong> ${team.email}</p>
         <p><strong>Mentor:</strong> ${team.mentor?.name || 'None'} (${team.mentor?.department || 'N/A'})</p>
         <p><strong>Mentor Email:</strong> ${team.mentor?.email || 'None'}</p>
         
         <img 
-    src="${team?.profilePhoto || '/images/christmas-celebration-concept.jpg'}" 
-    alt="Profile photo of ${team.team_name || 'Team Member'}"
-    class="w-20 h-20 object-cover rounded-full border border-gray-300 shadow-sm"
-  >
+          src="${team?.profilePhoto || '/images/christmas-celebration-concept.jpg'}" 
+          alt="Profile photo of ${team.team_name || 'Team Member'}"
+          class="w-20 h-20 object-cover rounded-full border border-gray-300 shadow-sm"
+        >
       </div>
+
       <div>
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
         <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
           ${team.Students.map(s =>
-    `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
-  ).join('')}
+            `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
+          ).join('')}
         </ul>
       </div>
+
       <div>
-  <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
-  <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
-    ${team.TeamUploads.map(u => {
-    const daysPending = Math.floor(
-      (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
-    );
-    const isPendingTooLong =
-      u.status !== 'REVIEWED' && daysPending > 2;
+        <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
+        <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
+          ${team.TeamUploads.map(u => {
+            const daysPending = Math.floor(
+              (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
+            );
+            const isPendingTooLong = u.status !== 'REVIEWED' && daysPending > 2;
 
-    return `
-        <li>
-          <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File -${u.week_number}</a>
-          <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
-          ${isPendingTooLong
-        ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
-        : ''}
-          <div class="ml-4 mt-1 text-gray-600">
-            <div>
-              <strong>Status:</strong>
-              <span class="font-medium ${u.status === 'REVIEWED'
-        ? 'text-green-600'
-        : u.status === 'SUBMITTED'
-          ? 'text-red-600'
-          : 'text-yellow-600'}">
-                ${u.status || 'Pending'}
-              </span>
-</div>
-            <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
-          </div>
-              <div class="ml-4 mt-2">
-              
-  <textarea 
-    id="admin-comment-${u.id}" 
-    rows="2" 
-    class="w-full p-2 border rounded text-sm"
-    placeholder="Write admin comment..."
-  >${localStorage.getItem("adminComment-" + u.id) || ""}</textarea>
+            return `
+              <li>
+                <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File -${u.week_number}</a>
+                <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
+                ${isPendingTooLong
+                  ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
+                  : ''}
+                <div class="ml-4 mt-1 text-gray-600">
+                  <div>
+                    <strong>Status:</strong>
+                    <span class="font-medium ${u.status === 'REVIEWED'
+                      ? 'text-green-600'
+                      : u.status === 'SUBMITTED'
+                        ? 'text-red-600'
+                        : 'text-yellow-600'}">
+                      ${u.status || 'Pending'}
+                    </span>
+                  </div>
+                  <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
+                </div>
+                <div class="ml-4 mt-2">
+                  <textarea 
+                    id="admin-comment-${u.id}" 
+                    rows="2" 
+                    class="w-full p-2 border rounded text-sm"
+                    placeholder="Write admin comment..."
+                  >${localStorage.getItem("adminComment-" + u.id) || ""}</textarea>
 
-  <button 
-  class="mt-1 bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 admin-comment-btn"
-  data-upload-id="${u.id}"
->
-  Send Comment
-</button>
+                  <button 
+                    class="mt-1 bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 admin-comment-btn"
+                    data-upload-id="${u.id}"
+                  >
+                    Send Comment
+                  </button>
 
-
-  ${localStorage.getItem("adminComment-" + u.id)
-        ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
-        : ""}
-</div>
-
-            
-        </li>
-      `;
-  }).join('')}
-  </ul>
-</div>
-
+                  ${localStorage.getItem("adminComment-" + u.id)
+                    ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
+                    : ""}
+                </div>
+              </li>
+            `;
+          }).join('')}
+        </ul>
+      </div>
     </div>
   `).join('');
 
   document.getElementById("historyContent").innerHTML = html;
   renderHistoryPaginationControlsFiltered(filteredTeams.length);
+
+  // Attach lock/unlock listeners
+  document.querySelectorAll(".lock-btn").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      const teamId = e.target.dataset.teamId;
+      await toggleLock(teamId, true);
+    });
+  });
+
+  document.querySelectorAll(".unlock-btn").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      const teamId = e.target.dataset.teamId;
+      await toggleLock(teamId, false);
+    });
+  });
 }
+
+// Lock/unlock API call
+async function toggleLock(teamId, lock) {
+  try {
+    const token = localStorage.getItem("token");
+    await axios.post(`/admin/teams/${teamId}/${lock ? "lock" : "unlock"}`, {}, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    alert(`Team ${teamId} ${lock ? "locked" : "unlocked"} successfully`);
+    
+  } catch (err) {
+    console.error("Error updating lock state:", err);
+    alert("Failed to update lock state");
+  }
+}
+
 
 
 document.getElementById("historyContent").addEventListener("click", (e) => {
@@ -347,94 +384,138 @@ function renderHistoryTable() {
   const paginatedTeams = historyData.slice(start, end);
 
   let html = paginatedTeams.map(team => `
-    <div class="bg-white shadow rounded p-6 space-y-4 mb-6">
-    <h2 class="text-2xl font-semibold text-blue-700">${team.UserId}</h2>
+    <div class="bg-white shadow rounded p-6 space-y-4 mb-6 relative">
+      <!-- Lock/Unlock Buttons -->
+      <div class="absolute top-4 right-4 flex gap-2">
+        <button 
+          class="lock-btn bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700"
+          data-team-id="${team.UserId}"
+        >
+          Lock
+        </button>
+        <button 
+          class="unlock-btn bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700"
+          data-team-id="${team.UserId}"
+        >
+          Unlock
+        </button>
+      </div>
+
+      <h2 class="text-2xl font-semibold text-blue-700">${team.UserId}</h2>
       <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 items-center">
-  <p><strong>Email:</strong> ${team.email}</p>
-  <p><strong>Mentor:</strong> ${team.mentor?.name || 'None'} (${team.mentor?.department || 'N/A'})</p>
-  <p><strong>Mentor Email:</strong> ${team.mentor?.email || 'None'}</p>
-  <img 
-    src="${team?.profilePhoto || '/images/christmas-celebration-concept.jpg'}" 
-    alt="Profile photo of ${team.team_name || 'Team Member'}"
-    class="w-20 h-20 object-cover rounded-full border border-gray-300 shadow-sm"
-  >
-</div>
-
+        <p><strong>Email:</strong> ${team.email}</p>
+        <p><strong>Mentor:</strong> ${team.mentor?.name || 'None'} (${team.mentor?.department || 'N/A'})</p>
+        <p><strong>Mentor Email:</strong> ${team.mentor?.email || 'None'}</p>
+        <img 
+          src="${team?.profilePhoto || '/images/christmas-celebration-concept.jpg'}" 
+          alt="Profile photo of ${team.team_name || 'Team Member'}"
+          class="w-20 h-20 object-cover rounded-full border border-gray-300 shadow-sm"
+        >
+      </div>
 
       <div>
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
         <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
           ${team.Students.map(s =>
-    `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
-  ).join('')}
+            `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
+          ).join('')}
         </ul>
       </div>
 
       <div>
-  <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
-  <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
-    ${team.TeamUploads.map(u => {
-    const daysPending = Math.floor(
-      (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
-    );
-    const isPendingTooLong =
-      u.status !== 'REVIEWED' && daysPending > 2;
+        <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
+        <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
+          ${team.TeamUploads.map(u => {
+            const daysPending = Math.floor(
+              (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
+            );
+            const isPendingTooLong =
+              u.status !== 'REVIEWED' && daysPending > 2;
 
-    return `
-        <li>
-          <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File -${u.week_number}</a>
-          <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
-          ${isPendingTooLong
-        ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
-        : ''}
-          <div class="ml-4 mt-1 text-gray-600">
-            <div>
-              <strong>Status:</strong>
-              <span class="font-medium ${u.status === 'REVIEWED'
-        ? 'text-green-600'
-        : u.status === 'SUBMITTED'
-          ? 'text-red-600'
-          : 'text-yellow-600'}">
-                ${u.status || 'Pending'}
-              </span>
-            </div>
-            <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
+            return `
+              <li>
+                <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File -${u.week_number}</a>
+                <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
+                ${isPendingTooLong
+                  ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
+                  : ''}
+                <div class="ml-4 mt-1 text-gray-600">
+                  <div>
+                    <strong>Status:</strong>
+                    <span class="font-medium ${u.status === 'REVIEWED'
+                      ? 'text-green-600'
+                      : u.status === 'SUBMITTED'
+                        ? 'text-red-600'
+                        : 'text-yellow-600'}">
+                      ${u.status || 'Pending'}
+                    </span>
+                  </div>
+                  <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
                 </div>
-              <div class="ml-4 mt-2">
-              
-  <textarea 
-    id="admin-comment-${u.id}" 
-    rows="2" 
-    class="w-full p-2 border rounded text-sm"
-    placeholder="Write admin comment..."
-  >${localStorage.getItem("adminComment-" + u.id) || ""}</textarea>
+                <div class="ml-4 mt-2">
+                  <textarea 
+                    id="admin-comment-${u.id}" 
+                    rows="2" 
+                    class="w-full p-2 border rounded text-sm"
+                    placeholder="Write admin comment..."
+                  >${localStorage.getItem("adminComment-" + u.id) || ""}</textarea>
 
-  <button 
-  class="mt-1 bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 admin-comment-btn"
-  data-upload-id="${u.id}"
->
-  Send Comment
-</button>
+                  <button 
+                    class="mt-1 bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 admin-comment-btn"
+                    data-upload-id="${u.id}"
+                  >
+                    Send Comment
+                  </button>
 
-
-  ${localStorage.getItem("adminComment-" + u.id)
-        ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
-        : ""}
-</div>
-          </div>
-        </li>
-      `;
-  }).join('')}
-  </ul>
-</div>
+                  ${localStorage.getItem("adminComment-" + u.id)
+                    ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
+                    : ""}
+                </div>
+              </li>
+            `;
+          }).join('')}
+        </ul>
+      </div>
     </div>
   `).join('');
 
   document.getElementById("historyContent").innerHTML = html;
+
+  // Attach lock/unlock listeners
+  document.querySelectorAll(".lock-btn").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      const teamId = e.target.dataset.teamId;
+      await toggleLock(teamId, true);
+    });
+  });
+
+  document.querySelectorAll(".unlock-btn").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      const teamId = e.target.dataset.teamId;
+      await toggleLock(teamId, false);
+    });
+  });
+
   renderHistoryPaginationControls();
 }
+
+// Lock/unlock API call
+async function toggleLock(teamId, lock) {
+  try {
+    const token = localStorage.getItem("token");
+    await axios.post(`/admin/teams/${teamId}/${lock ? "lock" : "unlock"}`, {}, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    alert(`Team ${teamId} ${lock ? "locked" : "unlocked"} successfully`);
+  } catch (err) {
+    console.error("Error updating lock state:", err);
+    alert("Failed to update lock state");
+  }
+}
+
+
 
 function renderHistoryPaginationControls() {
   const totalPages = Math.ceil(historyData.length / historyRowsPerPage);

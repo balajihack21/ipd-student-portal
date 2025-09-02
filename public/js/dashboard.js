@@ -91,6 +91,7 @@ async function loadUploadHistory() {
 
     const uploadDiv = document.getElementById("uploadHistory");
     uploadDiv.innerHTML = ""; // Clear previous entries
+    console.log(res.data)
 
     res.data.forEach(upload => {
       const item = document.createElement("div");
@@ -556,18 +557,20 @@ async function checkDeadlines() {
   try {
     const token = localStorage.getItem("token");
     const res = await axios.get("api/deadlines", {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-    const { problem_deadline, swot_deadline, value_deadline } = res.data;
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
+    const { problem_deadline, swot_deadline, value_deadline, isLocked } = res.data;
     const now = new Date();
 
-    // Hide upload section if any of the deadlines passed
-    if (
+    // Condition 1: deadlines
+    const deadlinePassed =
       (problem_deadline && new Date(problem_deadline) < now) ||
       (swot_deadline && new Date(swot_deadline) < now) ||
-      (value_deadline && new Date(value_deadline) < now)
-    ) {
+      (value_deadline && new Date(value_deadline) < now);
+
+    // Condition 2: team locked
+    if (deadlinePassed || isLocked) {
       document.getElementById("uploadSection").style.display = "none";
     }
   } catch (err) {
@@ -577,6 +580,7 @@ async function checkDeadlines() {
 
 // Run on page load
 checkDeadlines();
+
 
 
 
