@@ -155,7 +155,14 @@ function applyHistoryFilters(resetPage = true) {
     const matchesName = team.team_name.toLowerCase().includes(nameVal);
     const matchesMentor = mentorVal === "" || (team.mentor?.name || "").toLowerCase().includes(mentorVal);
     const matchesLeaderDept = leaderDeptVal === "" || (team.Students.find(s => s.is_leader)?.dept || "").toLowerCase().includes(leaderDeptVal);
-    const matchesStatus = statusVal === "" || team.TeamUploads.some(u => (u.status || "").toLowerCase() === statusVal);
+    const matchesStatus =
+  statusVal === "" ||
+  team.TeamUploads.some(
+    u =>
+      (u.status || "").toLowerCase() === statusVal &&
+      (!u.review_comment || u.review_comment.trim() === "")
+  );
+
 
     return matchesUploadStatus && matchesId && matchesName && matchesMentor && matchesLeaderDept && matchesStatus;
   });
