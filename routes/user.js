@@ -266,13 +266,94 @@ router.get("/dashboard", authenticate, async (req, res) => {
 
 
 
+// router.post("/upload", authenticate, upload.single("file"), async (req, res) => {
+//   try {
+//     const file = req.file;
+//     const fileName = file.originalname;
+//     const mimeType = file.mimetype;
+
+//     const fileUrl = await uploadToBackblaze(file.buffer, fileName, mimeType);
+//     const userId = req.user.userId;
+//     const weekNumber = req.body.week_number;
+
+//     const user = await User.findByPk(userId);
+//     const mentorId = user.mentor_id;
+//     const mentor = await Mentor.findByPk(mentorId);
+
+//     const [uploadEntry, created] = await TeamUpload.findOrCreate({
+//       where: { user_id: userId, week_number: weekNumber },
+//       defaults: {
+//         file_url: fileUrl,
+//         status: "SUBMITTED",
+//         mentor_id: mentorId,
+//       },
+//     });
+
+//     if (!created) {
+//       uploadEntry.file_url = fileUrl;
+//       uploadEntry.uploaded_at = new Date();
+//       uploadEntry.status = "SUBMITTED";
+//       uploadEntry.mentor_id = mentorId;
+//       await uploadEntry.save();
+//     }
+
+//         const client = Sib.ApiClient.instance;
+//     const apiKey = client.authentications["api-key"];
+//     apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+//     const transEmailApi = new Sib.TransactionalEmailsApi();
+//     const sender = {
+//       email: process.env.EMAIL_USER,
+//       name: "IPD-TEAM",
+//     };
+// //mentor.email
+//     // Email notification (unchanged, just replaced supabaseUrl with fileUrl)
+//     await transEmailApi.sendTransacEmail({
+//       sender,
+//       to: [{ email:mentor.email }],
+//       subject: `Team Upload Notification - File ${weekNumber}`,
+//       htmlContent: `<h3>Hello ${mentor.title}${mentor.name},</h3>
+//         <p>Your mentee has uploaded a file for <strong>File ${weekNumber}</strong>.</p>
+//         <p>You can view or download the file using the attachment or from the dashboard.</p>
+//         <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
+//         <p><a href="${fileUrl}" target="_blank">${fileName}</a></p>
+//         <p>Team Name: <strong>${user.team_name}</strong></p>
+//         <p>Contact No: <strong>${user.mobile}</strong></p>
+//         <p>Best Regards,<br />IPD Team</p>`,
+//       attachment: [
+//         {
+//           url: fileUrl,
+//           name: fileName,
+//         },
+//       ],
+//     });
+
+//     res.status(200).json({ message: "Upload successful", url: fileUrl });
+//   } catch (err) {
+//     console.error("Upload error:", err);
+//     res.status(500).json({ message: "Upload failed", error: err.message });
+//   }
+// });
+
+
+
 router.post("/upload", authenticate, upload.single("file"), async (req, res) => {
   try {
     const file = req.file;
     const fileName = file.originalname;
     const mimeType = file.mimetype;
 
-    const fileUrl = await uploadToBackblaze(file.buffer, fileName, mimeType);
+    // Upload to Backblaze (returns permanent storage URL)
+    const rawUrl = await uploadToBackblaze(file.buffer, fileName, mimeType);
+
+    // Extract file_key (remove query params + bucket base path)
+    const urlWithoutParams = rawUrl.split("?")[0];
+    const parts = urlWithoutParams.split("/IPDUploads/"); // adjust if folder differs
+    const fileKey = parts.length > 1 ? decodeURIComponent(parts[1]) : fileName;
+
+    // Generate signed URL (7 days max)
+    const signedUrl = await getSignedFileUrl(fileKey);
+
     const userId = req.user.userId;
     const weekNumber = req.body.week_number;
 
@@ -283,21 +364,24 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
     const [uploadEntry, created] = await TeamUpload.findOrCreate({
       where: { user_id: userId, week_number: weekNumber },
       defaults: {
-        file_url: fileUrl,
+        file_url: signedUrl,   // 🔑 signed URL
+        file_key: fileKey,     // 🔑 permanent key
         status: "SUBMITTED",
         mentor_id: mentorId,
       },
     });
 
     if (!created) {
-      uploadEntry.file_url = fileUrl;
+      uploadEntry.file_url = signedUrl;  // always update to fresh signed link
+      uploadEntry.file_key = fileKey;
       uploadEntry.uploaded_at = new Date();
       uploadEntry.status = "SUBMITTED";
       uploadEntry.mentor_id = mentorId;
       await uploadEntry.save();
     }
 
-        const client = Sib.ApiClient.instance;
+    // 📧 Email notification
+    const client = Sib.ApiClient.instance;
     const apiKey = client.authentications["api-key"];
     apiKey.apiKey = process.env.EMAIL_PASSWORD;
 
@@ -307,33 +391,37 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
       name: "IPD-TEAM",
     };
 //mentor.email
-    // Email notification (unchanged, just replaced supabaseUrl with fileUrl)
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email:mentor.email }],
+      to: [{ email:mentor.email  }],
       subject: `Team Upload Notification - File ${weekNumber}`,
-      htmlContent: `<h3>Hello ${mentor.title}${mentor.name},</h3>
+      htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
         <p>Your mentee has uploaded a file for <strong>File ${weekNumber}</strong>.</p>
         <p>You can view or download the file using the attachment or from the dashboard.</p>
         <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
-        <p><a href="${fileUrl}" target="_blank">${fileName}</a></p>
+        <p><a href="${signedUrl}" target="_blank">${fileName}</a></p>
         <p>Team Name: <strong>${user.team_name}</strong></p>
         <p>Contact No: <strong>${user.mobile}</strong></p>
         <p>Best Regards,<br />IPD Team</p>`,
       attachment: [
         {
-          url: fileUrl,
+          url: signedUrl,
           name: fileName,
         },
       ],
     });
 
-    res.status(200).json({ message: "Upload successful", url: fileUrl });
+    res.status(200).json({
+      message: "Upload successful",
+      url: signedUrl,
+      key: fileKey,
+    });
   } catch (err) {
     console.error("Upload error:", err);
     res.status(500).json({ message: "Upload failed", error: err.message });
   }
 });
+
 
 
 
