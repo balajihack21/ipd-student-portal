@@ -235,6 +235,7 @@ async function loadTeams() {
     const res = await axios.get('/mentor/my-teams', {
       headers: { Authorization: `Bearer ${token}` }
     });
+    console.log(res.data)
 
     const teamList = document.getElementById('teamList');
     teamList.innerHTML = '';

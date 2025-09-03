@@ -7,6 +7,7 @@ import Student from '../models/Student.js'
 import TeamUpload from '../models/TeamUpload.js';
 import dotenv from 'dotenv';
 import Sib from 'sib-api-v3-sdk';
+import {getSignedFileUrl}  from "../backblaze.js";
 
 const router = express.Router();
 
@@ -152,29 +153,63 @@ router.post("/teams/:teamId/rubrics/:stage", authenticate, async (req, res) => {
 
 
 
+// ✅ /my-teams route
 router.get('/my-teams', authenticate, async (req, res) => {
   try {
     const mentorId = req.user.mentorId; // from JWT/session
-  console.log(req.user)
-    // Find all students assigned to this mentor
+    console.log("Mentor:", req.user);
+
+    // Find all students/teams assigned to this mentor
     const teams = await User.findAll({
-      where: { mentor_id: mentorId},
+      where: { mentor_id: mentorId },
       attributes: ['UserId', 'team_name', 'email', 'mobile'],
       include: [
         {
           model: TeamUpload,
-          attributes: ['id', 'file_url', 'week_number', 'uploaded_at', 'status', 'review_comment'],
+          attributes: [
+            'id',
+            'file_key',   // we need file_key to generate signed URL
+            'week_number',
+            'uploaded_at',
+            'status',
+            'review_comment'
+          ],
           order: [['uploaded_at', 'DESC']]
         }
       ]
     });
 
-    res.json(teams);
+    // Replace file_url with signed URL
+    const signedTeams = await Promise.all(
+      teams.map(async (team) => {
+        const uploads = await Promise.all(
+          team.TeamUploads.map(async (upload) => {
+            let signedUrl = null;
+            if (upload.file_key) {
+              signedUrl = await getSignedFileUrl(upload.file_key); // 7 days max
+            }
+            return {
+              ...upload.toJSON(),
+              file_url: signedUrl, // replace with signed URL
+            };
+          })
+        );
+
+        return {
+          ...team.toJSON(),
+          TeamUploads: uploads,
+        };
+      })
+    );
+
+    res.json(signedTeams);
+
   } catch (err) {
     console.error('Error fetching assigned teams:', err);
     res.status(500).json({ error: 'Server error fetching teams' });
   }
 });
+
 
 // router.get("/teams", authenticate, async (req, res) => {
 //   try {

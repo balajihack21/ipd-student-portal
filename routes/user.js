@@ -338,6 +338,8 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
 
 
 
+import { getSignedFileUrl } from "../backblaze.js";
+
 router.get("/upload-history", authenticate, async (req, res) => {
   try {
     const uploads = await TeamUpload.findAll({
@@ -345,12 +347,27 @@ router.get("/upload-history", authenticate, async (req, res) => {
       order: [["week_number", "ASC"]],
     });
 
-    res.json(uploads);
+    // Replace file_url with signed Backblaze URL
+    const signedUploads = await Promise.all(
+      uploads.map(async (upload) => {
+        let signedUrl = null;
+        if (upload.file_key) {
+          signedUrl = await getSignedFileUrl(upload.file_key); // 7 days max
+        }
+        return {
+          ...upload.toJSON(),
+          file_url: signedUrl, // replace with signed URL
+        };
+      })
+    );
+
+    res.json(signedUploads);
   } catch (err) {
     console.error("Upload fetch error:", err);
     res.status(500).json({ error: "Server Error" });
   }
 });
+
 
 // router.put('/profile', authenticate, async (req, res) => {
 //   try {
