@@ -60,12 +60,12 @@ async function loadMentorDetails() {
     document.getElementById('mentorEmail').textContent = mentor.email;
     document.getElementById('mentordept').textContent = `${mentor.designation} - ${mentor.department}`;
 
-    if (mentor.is_coordinator) {
-      document.getElementById('rubricsSection').style.display = "block";
-    }
-    else{
-      document.getElementById('rubricsSection').style.display = "none"
-    }
+    // if (mentor.is_coordinator) {
+    //   document.getElementById('rubricsSection').style.display = "block";
+    // }
+    // else{
+    //   document.getElementById('rubricsSection').style.display = "none"
+    // }
   } catch (err) {
     console.error('Failed to load mentor details:', err);
   }
@@ -306,4 +306,4 @@ async function loadTeams() {
 
 loadTeams();
 loadMentorDetails();
-loadRubricsTeams();
+// loadRubricsTeams();

@@ -56,6 +56,12 @@
       justify-content: space-around;
     }
 
+    #logo img {
+            max-height: 72px;
+            max-width: 100%;
+            margin: 5px 0;
+        }
+
     #logo .logo-text h1 {
       font-size: 22px;
       margin: 0;
@@ -105,7 +111,6 @@
         max-height: 50px;
         max-width: 80%;
       }
-
       #logo h3 {
         /* border: 1px solid black; */
         width: 100%;
@@ -114,6 +119,16 @@
         letter-spacing: 0.3px;
         font-family: arial black;
       }
+
+                   .logo-aside img {
+    max-height: 65px;  /* keep it visible but not too large */
+    max-width: 100%;
+}
+
+            #logo #act-logo {
+        max-height: 50px;
+        max-width: 80%;
+    }
 
       .bg-white.rounded-xl.shadow-md.p-4.flex.items-center.justify-between {
         flex-direction: column;
@@ -149,7 +164,7 @@
   <div id="logo" class="flex flex-col items-center mt-6">
     <img src="./images/AGNI-LOGO-AUTO.png" alt="Agni top header" id="act-logo" class="w-40">
     <div class="logo-aside flex items-center mt-2">
-      <img src="./images/1753282856993.jpg" alt="IPD logo" class="h-12">
+      <img src="./images/IPD_Design_Logo.png" alt="IPD logo" class="h-12">
       <h3 class="ml-3 text-lg font-semibold">Innovation and Product Development Cell</h3>
     </div>
   </div>
@@ -219,20 +234,20 @@
           </div>
         </div>
         <!-- Rubrics Section -->
-<div id="rubricsSection" class="bg-white p-6 rounded-xl shadow-md hidden">
-  <h2 class="text-2xl font-bold mb-4 text-blue-600">Rubrics Evaluation</h2>
+<!-- <div id="rubricsSection" class="bg-white p-6 rounded-xl shadow-md hidden">
+  <h2 class="text-2xl font-bold mb-4 text-blue-600">Rubrics Evaluation</h2> -->
 
   <!-- Team Selection -->
-  <label for="teamSelect" class="block mb-2 font-semibold">Select Team:</label>
+  <!-- <label for="teamSelect" class="block mb-2 font-semibold">Select Team:</label>
   <select id="teamSelect" class="border rounded px-3 py-2 w-full mb-4">
     <option value="">-- Select a team --</option>
-  </select>
+  </select> -->
 
   <!-- Rubrics Form -->
-  <div id="rubricsForm" class="hidden">
+  <!-- <div id="rubricsForm" class="hidden"> -->
     <!-- Rubric criteria will be injected here -->
-  </div>
-</div>
+  <!-- </div>
+</div> -->
 
 
 

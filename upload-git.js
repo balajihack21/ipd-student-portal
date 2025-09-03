@@ -85,7 +85,7 @@
 
 
 import sequelize from './models/index.js';
-import TeamUpload from "./models/TeamUpload.js";
+import Student from "./models/Student.js";
 
 (async () => {
   await sequelize.sync({ alter: true }); // alters only this table

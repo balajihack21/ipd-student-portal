@@ -28,6 +28,30 @@ const Student = sequelize.define('Student', {
   is_leader: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
+  },
+  rubric1: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  rubric2: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  rubric3: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  rubric4: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  rubric5: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+ review1_score: {
+    type: DataTypes.INTEGER,
+    allowNull: true
   }
 }, {
   tableName: 'students'
