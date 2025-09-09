@@ -58,18 +58,19 @@ async function loadMentorDetails() {
     const mentor = res.data;
     document.getElementById('mentorName').textContent = `${mentor.title}${mentor.name}`;
     document.getElementById('mentorEmail').textContent = mentor.email;
-    document.getElementById('mentordept').textContent = `${mentor.designation} - ${mentor.department}`;
 
-    // if (mentor.is_coordinator) {
-    //   document.getElementById('rubricsSection').style.display = "block";
-    // }
-    // else{
-    //   document.getElementById('rubricsSection').style.display = "none"
-    // }
+    if (mentor.is_coordinator) {
+      document.getElementById("review1Section").classList.remove("hidden");
+      loadMentorUpload(); // load uploaded file
+    } else {
+      document.getElementById("review1Section").classList.add("hidden");
+    }
+
   } catch (err) {
     console.error('Failed to load mentor details:', err);
   }
 }
+
 
 async function loadRubricsTeams() {
   try {
@@ -301,6 +302,62 @@ async function loadTeams() {
   }
 }
 
+
+document.getElementById("review1Form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const fileInput = document.getElementById("review1File");
+  if (!fileInput.files.length) return;
+
+  const formData = new FormData();
+  formData.append("file", fileInput.files[0]);
+
+  try {
+    const token = localStorage.getItem("token");
+
+    await axios.post("/mentor/upload-excel", formData, {
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+      onUploadProgress: (progressEvent) => {
+        const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        document.getElementById("review1Progress").style.width = `${percent}%`;
+        document.getElementById("review1Progress").textContent = `${percent}%`;
+      },
+    });
+
+    alert("Upload successful!");
+    loadMentorUpload(); // refresh uploaded file info
+  } catch (err) {
+    console.error("Upload failed:", err);
+    alert("Upload failed!");
+  }
+});
+
+async function loadMentorUpload() {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await axios.get("/mentor/my-upload", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const historyDiv = document.getElementById("mentorUploadHistory");
+    historyDiv.innerHTML = "";
+
+    if (res.data.file_url) {
+      historyDiv.innerHTML = `
+        <div class="p-3 border rounded bg-gray-50 mb-2">
+          <p class="font-semibold">${res.data.file_name}</p>
+          <p class="text-sm text-gray-600">Uploaded: ${new Date(res.data.uploaded_at).toLocaleString()}</p>
+          <a href="${res.data.file_url}" target="_blank" class="text-blue-600 underline">Download</a>
+        </div>
+      `;
+    } else {
+      historyDiv.innerHTML = `<p class="text-gray-500 italic">No uploads yet</p>`;
+    }
+
+  } catch (err) {
+    console.error("Error loading upload:", err);
+  }
+}
 
 
 

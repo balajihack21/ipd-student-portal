@@ -36,14 +36,22 @@ const Mentor = sequelize.define('Mentor', {
     type: DataTypes.STRING(255),
     allowNull: true
   },
-  is_coordinator:{
+  is_coordinator: {
     type: DataTypes.BOOLEAN,
     defaultValue: false
   },
   firstLogin: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
-    }
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  },
+  file_url: {   // ✅ new field for storing signed URL or uploaded file path
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  file_key: {   // ✅ permanent file key for fetching signed URL later
+    type: DataTypes.TEXT,
+    allowNull: true
+  }
 }, {
   tableName: 'mentors'
 });

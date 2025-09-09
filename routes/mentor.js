@@ -8,6 +8,8 @@ import TeamUpload from '../models/TeamUpload.js';
 import dotenv from 'dotenv';
 import Sib from 'sib-api-v3-sdk';
 import {getSignedFileUrl}  from "../backblaze.js";
+import { uploadToBackblaze } from "../middleware/upload.js";
+import xlsx from 'xlsx';
 
 const router = express.Router();
 
@@ -353,6 +355,132 @@ router.get('/details', authenticate, async (req, res) => {
   } catch (err) {
     console.error('Error fetching mentor details:', err);
     res.status(500).json({ error: 'Server error fetching mentor details' });
+  }
+});
+
+
+import multer from 'multer';
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+/**
+ * Upload Excel (Only for Coordinators)
+ */
+
+
+/**
+ * Upload Excel (Only for Coordinators)
+ */
+router.post("/upload-excel", authenticate, upload.single("file"), async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId;
+
+    // ✅ check coordinator
+    const mentor = await Mentor.findByPk(mentorId);
+    if (!mentor || !mentor.is_coordinator) {
+      return res.status(403).json({ error: "Only coordinators can upload Excel" });
+    }
+
+    const file = req.file;
+    if (!file) return res.status(400).json({ error: "File is required" });
+
+    const fileName = file.originalname;
+    const mimeType = file.mimetype;
+
+    // ✅ Upload to Backblaze → returns { key, signedUrl }
+    const { key: fileKey, signedUrl } = await uploadToBackblaze(
+      file.buffer,
+      fileName,
+      mimeType
+    );
+
+    // ✅ Save in Mentor table
+    mentor.file_key = fileKey;   // permanent reference
+    mentor.file_url = signedUrl; // temporary signed URL
+    await mentor.save();
+
+   // ✅ Parse Excel
+    const workbook = xlsx.read(file.buffer, { type: "buffer" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const sheetJson = xlsx.utils.sheet_to_json(sheet, { defval: null });
+
+    // Skip first 12 rows (headers/formatting)
+    const rows = sheetJson.slice(12);
+    console.log(rows)
+
+    for (const row of rows) {
+      const teamId = row["Team ID"]?.toString().trim();
+      const registerNo = row["Register No"]?.toString().trim();
+      const studentName = row["Student Name"]?.toString().trim();
+      const dept = row["Dept"]?.toString().trim();
+
+      // Skip empty rows
+      if (!teamId || !registerNo || !studentName) continue;
+
+      // Find the user/team
+      const user = await User.findOne({ where: { team_id: teamId } });
+      if (!user) {
+        console.warn(`No user found for Team ID: ${teamId}, skipping student ${studentName}`);
+        continue;
+      }
+
+      // Upsert student with rubric scores
+      await Student.upsert({
+        register_no: registerNo,
+        student_name: studentName,
+        dept: dept,
+        section: row["Section"] || null,
+        mobile: row["Mobile"] || null,
+        user_id: user.id,
+        rubric1: row["Problem Identification(4)"] || null,
+        rubric2: row["Problem Statement Canvas(4)"] || null,
+        rubric3: row["Idea Generation & Affinity diagram (4)"] || null,
+        rubric4: row["Team Presentation & Clarity(4)"] || null,
+        rubric5: row["Mentor Interaction & Progress Tracking (4)"] || null,
+        review1_score: row["Total Marks(20)"] || null,
+        is_leader: row["Is Leader"] === "Yes" ? true : false,
+      });
+    }
+
+    res.json({
+      message: "Excel uploaded and students/rubrics processed successfully",
+      file_key: fileKey,
+      file_url: signedUrl,
+      processed_rows: rows.length,
+    });
+  } catch (err) {
+    console.error("Upload error:", err);
+    res.status(500).json({ error: "Failed to upload Excel", details: err.message });
+  }
+});
+
+
+
+
+/**
+ * Get Mentor Upload
+ */
+router.get("/my-upload", authenticate, async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId;
+    const mentor = await Mentor.findByPk(mentorId);
+
+    if (!mentor || !mentor.file_key) {
+      return res.json({ message: "No file uploaded yet" });
+    }
+
+    // replace permanent key → signed url
+    const signedUrl = await getSignedFileUrl(mentor.file_key);
+
+    res.json({
+      file_name: mentor.file_key.split("/").pop(),
+      file_url: signedUrl,
+      uploaded_at: mentor.updatedAt,
+    });
+  } catch (err) {
+    console.error("Error fetching upload:", err);
+    res.status(500).json({ error: "Failed to fetch mentor upload" });
   }
 });
 
