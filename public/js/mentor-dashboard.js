@@ -47,7 +47,6 @@ document.addEventListener('click', async (e) => {
 });
 
 
-
 async function loadMentorDetails() {
   try {
     const token = localStorage.getItem('token');
@@ -60,8 +59,27 @@ async function loadMentorDetails() {
     document.getElementById('mentorEmail').textContent = mentor.email;
 
     if (mentor.is_coordinator) {
-      document.getElementById("review1Section").classList.remove("hidden");
-      loadMentorUpload(); // load uploaded file
+      // ✅ Check review1 deadline window
+      try {
+        const deadlineRes = await axios.get('/rubrics/deadline/review1', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const { start, deadline } = deadlineRes.data;
+
+        const now = new Date();
+        const startDate = new Date(start);
+        const deadlineDate = new Date(deadline);
+
+        if (now >= startDate && now <= deadlineDate) {
+          document.getElementById("review1Section").classList.remove("hidden");
+          loadMentorUpload(); // load uploaded file
+        } else {
+          document.getElementById("review1Section").classList.add("hidden");
+        }
+      } catch (err) {
+        console.error("Error checking review1 deadline:", err);
+        document.getElementById("review1Section").classList.add("hidden");
+      }
     } else {
       document.getElementById("review1Section").classList.add("hidden");
     }
@@ -70,6 +88,7 @@ async function loadMentorDetails() {
     console.error('Failed to load mentor details:', err);
   }
 }
+
 
 
 async function loadRubricsTeams() {

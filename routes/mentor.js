@@ -1,13 +1,13 @@
 import express from 'express';
 import { Op } from 'sequelize';
-import authenticate  from '../middleware/authenticate.js';
+import authenticate from '../middleware/authenticate.js';
 import User from '../models/User.js';
 import Mentor from '../models/Mentor.js'
 import Student from '../models/Student.js'
 import TeamUpload from '../models/TeamUpload.js';
 import dotenv from 'dotenv';
 import Sib from 'sib-api-v3-sdk';
-import {getSignedFileUrl}  from "../backblaze.js";
+import { getSignedFileUrl } from "../backblaze.js";
 import { uploadToBackblaze } from "../middleware/upload.js";
 import xlsx from 'xlsx';
 
@@ -62,7 +62,7 @@ router.get('/teams', authenticate, async (req, res) => {
 
     // Fetch all teams whose leader belongs to same department as mentor
     const teams = await User.findAll({
-      where:whereClause,
+      where: whereClause,
       attributes: ['UserId', 'team_name', 'email', 'mobile'],
       include: [
         {
@@ -70,7 +70,7 @@ router.get('/teams', authenticate, async (req, res) => {
           attributes: ['student_name', 'dept', 'section', 'register_no', 'mobile'],
           where: {
             is_leader: true,
-            dept: mentor.department , // ✅ filter by leader’s dept
+            dept: mentor.department, // ✅ filter by leader’s dept
           }
         }
       ]
@@ -107,29 +107,29 @@ router.post("/teams/:teamId/rubrics/:stage", authenticate, async (req, res) => {
     // ✅ Determine rubric range by stage
     let startIndex, endIndex;
     if (stage === "review1") {
-  const total = Object.values(scores).reduce((a, b) => a + b, 0);
+      const total = Object.values(scores).reduce((a, b) => a + b, 0);
 
-  await team.update({
-    rubric1: scores.rubric1,
-    rubric2: scores.rubric2,
-    rubric3: scores.rubric3,
-    rubric4: scores.rubric4,
-    rubric5: scores.rubric5,
-    review1_score: total
-  });
-} else if (stage === "review2") {
-  const total = Object.values(scores).reduce((a, b) => a + b, 0);
+      await team.update({
+        rubric1: scores.rubric1,
+        rubric2: scores.rubric2,
+        rubric3: scores.rubric3,
+        rubric4: scores.rubric4,
+        rubric5: scores.rubric5,
+        review1_score: total
+      });
+    } else if (stage === "review2") {
+      const total = Object.values(scores).reduce((a, b) => a + b, 0);
 
-  await team.update({
-    rubric6: scores.rubric6,
-    rubric7: scores.rubric7,
-    rubric8: scores.rubric8,
-    rubric9: scores.rubric9,
-    rubric10: scores.rubric10,
-    review2_score: total
-  });
-}
- else {
+      await team.update({
+        rubric6: scores.rubric6,
+        rubric7: scores.rubric7,
+        rubric8: scores.rubric8,
+        rubric9: scores.rubric9,
+        rubric10: scores.rubric10,
+        review2_score: total
+      });
+    }
+    else {
       return res.status(400).json({ error: "Invalid review stage" });
     }
 
@@ -297,10 +297,10 @@ router.post('/uploads/:uploadId/review', authenticate, async (req, res) => {
       email: process.env.EMAIL_USER,
       name: "IPD-TEAM",
     };
-//student.email
+    //student.email
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email: student.email}],
+      to: [{ email: student.email }],
       subject: `Review Submitted by ${mentor.title}${mentor.name} - File ${weekNumber}`,
       htmlContent: `
         <h3>Hello ${student.team_name},</h3>
@@ -344,7 +344,7 @@ router.get('/details', authenticate, async (req, res) => {
     const mentorId = req.user.mentorId; // from JWT/session
 
     const mentor = await Mentor.findByPk(mentorId, {
-      attributes: ['MentorId', 'name', 'email', 'title','department','is_coordinator','designation'] // add fields as needed
+      attributes: ['MentorId', 'name', 'email', 'title', 'department', 'is_coordinator', 'designation'] // add fields as needed
     });
 
     if (!mentor) {
@@ -399,56 +399,108 @@ router.post("/upload-excel", authenticate, upload.single("file"), async (req, re
     mentor.file_url = signedUrl; // temporary signed URL
     await mentor.save();
 
-   // ✅ Parse Excel
-    const workbook = xlsx.read(file.buffer, { type: "buffer" });
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
-    const sheetJson = xlsx.utils.sheet_to_json(sheet, { defval: null });
+// Inside your upload route
+const workbook = xlsx.read(file.buffer, { type: "buffer" });
+const sheetName = workbook.SheetNames[0];
+const sheet = workbook.Sheets[sheetName];
 
-    // Skip first 12 rows (headers/formatting)
-    const rows = sheetJson.slice(12);
-    console.log(rows)
+const sheetJson = xlsx.utils.sheet_to_json(sheet, {
+  defval: null,
+  header: 1, // raw array of rows
+});
 
-    for (const row of rows) {
-      const teamId = row["Team ID"]?.toString().trim();
-      const registerNo = row["Register No"]?.toString().trim();
-      const studentName = row["Student Name"]?.toString().trim();
-      const dept = row["Dept"]?.toString().trim();
+// 1️⃣ Find header row dynamically
+const headerIndex = sheetJson.findIndex(r =>
+  r.some(c => typeof c === "string" && c.toLowerCase().includes("team id"))
+);
 
-      // Skip empty rows
-      if (!teamId || !registerNo || !studentName) continue;
+if (headerIndex === -1) {
+  throw new Error("❌ Could not find header row in Excel");
+}
 
-      // Find the user/team
-      const user = await User.findOne({ where: { team_id: teamId } });
-      if (!user) {
-        console.warn(`No user found for Team ID: ${teamId}, skipping student ${studentName}`);
-        continue;
-      }
+// 2️⃣ Normalize headers
+const headerRow = sheetJson[headerIndex].map(h =>
+  h ? h.toString().replace(/\s+/g, " ").trim() : ""
+);
 
-      // Upsert student with rubric scores
-      await Student.upsert({
-        register_no: registerNo,
-        student_name: studentName,
-        dept: dept,
-        section: row["Section"] || null,
-        mobile: row["Mobile"] || null,
-        user_id: user.id,
-        rubric1: row["Problem Identification(4)"] || null,
-        rubric2: row["Problem Statement Canvas(4)"] || null,
-        rubric3: row["Idea Generation & Affinity diagram (4)"] || null,
-        rubric4: row["Team Presentation & Clarity(4)"] || null,
-        rubric5: row["Mentor Interaction & Progress Tracking (4)"] || null,
-        review1_score: row["Total Marks(20)"] || null,
-        is_leader: row["Is Leader"] === "Yes" ? true : false,
-      });
-    }
+// 3️⃣ Extract all student rows (till end of sheet)
+const dataRows = sheetJson.slice(headerIndex + 1);
 
-    res.json({
-      message: "Excel uploaded and students/rubrics processed successfully",
-      file_key: fileKey,
-      file_url: signedUrl,
-      processed_rows: rows.length,
-    });
+const rows = dataRows.map(r => {
+  const obj = {};
+  headerRow.forEach((key, i) => {
+    obj[key] = r[i] ?? null;
+  });
+  return obj;
+});
+
+// Debug
+console.log("✅ Normalized headers:", headerRow);
+console.log("✅ First student row:", rows[0]);
+let lastTeamId = null; // keep track of last seen team ID
+let lastTeamName = null;
+
+for (const row of rows) {
+  let teamId = row["Team ID"]?.toString().trim();
+  let teamName = row["Team Name"]?.toString().trim();
+  const registerNo = row["Register No"]?.toString().trim();
+  const studentName = row["Student Name"]?.toString().trim();
+
+  // If empty → use last seen
+  if (!teamId && lastTeamId) {
+    teamId = lastTeamId;
+  }
+  if (!teamName && lastTeamName) {
+    teamName = lastTeamName;
+  }
+
+  // Skip if still missing
+  if (!teamId || !registerNo || !studentName) continue;
+
+  // Remember for next iteration
+  lastTeamId = teamId;
+  lastTeamName = teamName;
+
+  // Find team/user
+  const user = await User.findOne({ where: { UserId: teamId } });
+  if (!user) {
+    console.warn(`⚠️ No user found for Team ID: ${teamId}`);
+    continue;
+  }
+
+  // Find student
+  const student = await Student.findOne({
+    where: { register_no: registerNo, user_id: user.UserId },
+  });
+
+  if (!student) {
+    console.warn(`⚠️ No student found with RegNo: ${registerNo}, TeamID: ${teamId}`);
+    continue;
+  }
+
+  // Update rubrics
+  await student.update({
+    rubric1: row["Problem Identification(4)"] || null,
+    rubric2: row["Problem Statement Canvas (4)"] || null,
+    rubric3: row["Idea Generation & Affinity diagram (4)"] || null,
+    rubric4: row["Team Presentation & Clarity(4)"] || null,
+    rubric5: row["Mentor Interaction & Progress Tracking (4)"] || null,
+    review1_score: row["Total Marks (20)"] || null,
+  });
+
+  console.log(`✅ Updated student ${studentName} (${registerNo}) in Team ${teamId}`);
+}
+
+
+// 5️⃣ Response
+res.json({
+  message: "Excel uploaded and students/rubrics processed successfully",
+  file_key: fileKey,
+  file_url: signedUrl,
+  processed_rows: rows.length,
+});
+
+
   } catch (err) {
     console.error("Upload error:", err);
     res.status(500).json({ error: "Failed to upload Excel", details: err.message });

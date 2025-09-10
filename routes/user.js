@@ -32,7 +32,7 @@ router.get("/dashboard", authenticate, async (req, res) => {
 
     res.json({
       teamName: user.team_name,
-      profilePhoto:user.profilePhoto,
+      profilePhoto: user.profilePhoto,
       mobile: user.mobile,
       students,
       mentor
@@ -224,15 +224,15 @@ router.get("/dashboard", authenticate, async (req, res) => {
 //     }
 
 //     // Send email with Brevo (Sendinblue)
-    // const client = Sib.ApiClient.instance;
-    // const apiKey = client.authentications["api-key"];
-    // apiKey.apiKey = process.env.EMAIL_PASSWORD;
+// const client = Sib.ApiClient.instance;
+// const apiKey = client.authentications["api-key"];
+// apiKey.apiKey = process.env.EMAIL_PASSWORD;
 
-    // const transEmailApi = new Sib.TransactionalEmailsApi();
-    // const sender = {
-    //   email: process.env.EMAIL_USER,
-    //   name: "IPD-TEAM",
-    // };
+// const transEmailApi = new Sib.TransactionalEmailsApi();
+// const sender = {
+//   email: process.env.EMAIL_USER,
+//   name: "IPD-TEAM",
+// };
 // //[{ email: mentor.email }]
 // // console.log(mentor.email)
 //     await transEmailApi.sendTransacEmail({
@@ -343,16 +343,12 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
     const fileName = file.originalname;
     const mimeType = file.mimetype;
 
-    // Upload to Backblaze (returns permanent storage URL)
-    const rawUrl = await uploadToBackblaze(file.buffer, fileName, mimeType);
-
-    // Extract file_key (remove query params + bucket base path)
-    const urlWithoutParams = rawUrl.split("?")[0];
-    const parts = urlWithoutParams.split("/IPDUploads/"); // adjust if folder differs
-    const fileKey = parts.length > 1 ? decodeURIComponent(parts[1]) : fileName;
-
-    // Generate signed URL (7 days max)
-    const signedUrl = await getSignedFileUrl(fileKey);
+    // Upload to Backblaze (returns { key, signedUrl })
+    const { key: fileKey, signedUrl } = await uploadToBackblaze(
+      file.buffer,
+      fileName,
+      mimeType
+    );
 
     const userId = req.user.userId;
     const weekNumber = req.body.week_number;
@@ -390,10 +386,10 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
       email: process.env.EMAIL_USER,
       name: "IPD-TEAM",
     };
-//mentor.email
+    //mentor.email
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email:mentor.email  }],
+      to: [{ email: mentor.email }],
       subject: `Team Upload Notification - File ${weekNumber}`,
       htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
         <p>Your mentee has uploaded a file for <strong>File ${weekNumber}</strong>.</p>
@@ -515,10 +511,10 @@ router.post("/upload-profile-photo", authenticate, uploadprofile.single("photo")
     const userId = req.user.userId;
 
     // Update photo URL in the user table
-   await User.update(
-        { profilePhoto: photoUrl },
-        { where: { UserId: userId } }
-      );
+    await User.update(
+      { profilePhoto: photoUrl },
+      { where: { UserId: userId } }
+    );
 
 
     res.json({ photoUrl });
