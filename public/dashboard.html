@@ -86,15 +86,16 @@
                 align-items: center;
             }
 
-             .logo-aside img {
-    max-height: 65px;  /* keep it visible but not too large */
-    max-width: 100%;
-}
+            .logo-aside img {
+                max-height: 65px;
+                /* keep it visible but not too large */
+                max-width: 100%;
+            }
 
             #logo #act-logo {
-        max-height: 50px;
-        max-width: 80%;
-    }
+                max-height: 50px;
+                max-width: 80%;
+            }
 
             #logo h3 {
                 /* border: 1px solid black; */
@@ -272,6 +273,77 @@
 
                 </div>
 
+                <!-- Inside #uploadSection (below Affinity Diagram Upload) -->
+                <!-- <div class="max-w-md mx-auto p-4 space-y-4 border rounded-lg shadow-md mt-8">
+                    <h2 class="text-lg font-semibold text-gray-800">Value Proposition Canvas</h2>
+                    <button id="openCanvasBtn"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
+                        Add Value Proposition Canvas
+                    </button>
+                </div> -->
+
+                 <!-- Fullscreen Modal -->
+                <!-- <div id="canvasModal"
+                    class="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center z-50 hidden">
+                    <div class="bg-white p-6 rounded-lg w-full max-w-3xl relative overflow-y-auto max-h-[90vh]">
+                        <h2 class="text-2xl font-bold mb-4">Add Value Proposition Canvas</h2>
+
+                        <form id="canvasForm" class="grid grid-cols-2 gap-6"> -->
+                            <!-- Left: Value Proposition -->
+                            <!-- <div class="space-y-4">
+                                <h3 class="font-semibold text-lg border-b pb-2">Value Proposition</h3>
+                                <div>
+                                    <label class="block font-semibold">Gain Creators</label>
+                                    <textarea id="gainCreators" class="w-full border p-2 rounded" required></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block font-semibold">Pain Relievers</label>
+                                    <textarea id="painRelievers" class="w-full border p-2 rounded" required></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block font-semibold">Products & Services</label>
+                                    <textarea id="productsServices" class="w-full border p-2 rounded"
+                                        required></textarea>
+                                </div>
+                            </div> -->
+
+                            <!-- Right: Customer Segment -->
+                            <!-- <div class="space-y-4">
+                                <h3 class="font-semibold text-lg border-b pb-2">Customer Segment</h3>
+                                <div>
+                                    <label class="block font-semibold">Gains</label>
+                                    <textarea id="customerGains" class="w-full border p-2 rounded" required></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block font-semibold">Pains</label>
+                                    <textarea id="customerPains" class="w-full border p-2 rounded" required></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block font-semibold">Customer Jobs</label>
+                                    <textarea id="customerJobs" class="w-full border p-2 rounded" required></textarea>
+                                </div>
+                            </div> -->
+
+                            <!-- Footer Buttons -->
+                            <!-- <div class="col-span-2 flex justify-end space-x-2">
+                                <button type="button" id="closeCanvasBtn"
+                                    class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded">Cancel</button>
+                                <button type="submit"
+                                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div> -->
+
+
+                <!-- Where output will be displayed -->
+                <!-- <div id="canvasOutput" class="mt-8"></div> -->
+
+
 
                 <!-- Mentor Info -->
                 <div id="mentorSection" class="bg-white p-6 rounded-xl shadow-md">
@@ -326,6 +398,7 @@
         </div>
     </div>
 
+    
 
 
     <script src="/js/dashboard.js"></script>

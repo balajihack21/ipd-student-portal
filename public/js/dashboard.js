@@ -578,8 +578,90 @@ async function checkDeadlines() {
   }
 }
 
+
+// // Modal controls
+// const canvasModal = document.getElementById("canvasModal");
+// document.getElementById("openCanvasBtn").addEventListener("click", () => {
+//   canvasModal.classList.remove("hidden");
+// });
+// document.getElementById("closeCanvasBtn").addEventListener("click", () => {
+//   canvasModal.classList.add("hidden");
+// });
+
+// // Form submission
+// document.getElementById("canvasForm").addEventListener("submit", (e) => {
+//   e.preventDefault();
+
+//   // Value Proposition inputs
+//   const gains = document.getElementById("gainCreators").value.trim();
+//   const pains = document.getElementById("painRelievers").value.trim();
+//   const products = document.getElementById("productsServices").value.trim();
+
+//   // Customer Segment inputs
+//   const customerGains = document.getElementById("customerGains").value.trim();
+//   const customerPains = document.getElementById("customerPains").value.trim();
+//   const customerJobs = document.getElementById("customerJobs").value.trim();
+
+//   // Hide modal
+//   canvasModal.classList.add("hidden");
+
+// // Example data (replace with form inputs)
+
+// // Render canvas using HTML + CSS + SVG
+// canvasOutput.innerHTML = `
+//   <div class="flex justify-center items-center w-full h-full relative bg-gray-50">
+//     <!-- Left square -->
+//     <div class="w-1/3 h-80 border-2 border-gray-400 relative p-4">
+//       <h3 class="text-center font-bold mb-2">Value Proposition</h3>
+//       <div class="absolute inset-0 flex flex-col justify-between p-4">
+//         <div>
+//           <h4 class="font-semibold">Gain Creators</h4>
+//           <p class="text-gray-700 whitespace-pre-line">${gains}</p>
+//         </div>
+//         <div>
+//           <h4 class="font-semibold">Pain Relievers</h4>
+//           <p class="text-gray-700 whitespace-pre-line">${pains}</p>
+//         </div>
+//         <div>
+//           <h4 class="font-semibold">Products & Services</h4>
+//           <p class="text-gray-700 whitespace-pre-line">${products}</p>
+//         </div>
+//       </div>
+//     </div>
+
+//     <!-- Connecting line -->
+//     <div class="w-16"></div>
+
+//     <!-- Right circle -->
+//     <div class="relative w-80 h-80 rounded-full border-2 border-gray-400 flex flex-col justify-center items-center p-6">
+//       <h3 class="text-center font-bold mb-4">Customer Segment</h3>
+//       <div class="absolute top-1/4 left-1/4 w-1/2 h-1/2 flex flex-col justify-between text-center">
+//         <div>
+//           <h4 class="font-semibold">Gains</h4>
+//           <p class="text-gray-700 whitespace-pre-line">${customerGains}</p>
+//         </div>
+//         <div>
+//           <h4 class="font-semibold">Pains</h4>
+//           <p class="text-gray-700 whitespace-pre-line">${customerPains}</p>
+//         </div>
+//         <div>
+//           <h4 class="font-semibold">Customer Jobs</h4>
+//           <p class="text-gray-700 whitespace-pre-line">${customerJobs}</p>
+//         </div>
+//       </div>
+//     </div>
+//   </div>
+// `;
+
+// });
+
+
+
 // Run on page load
 checkDeadlines();
+
+
+
 
 
 

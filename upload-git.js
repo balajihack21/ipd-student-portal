@@ -84,11 +84,31 @@
 // })();
 
 
-import sequelize from './models/index.js';
-import Student from "./models/Student.js";
+// import sequelize from './models/index.js';
+// import Student from "./models/Student.js";
 
-(async () => {
-  await sequelize.sync({ alter: true }); // alters only this table
-  console.log("✅ TeamUpload table updated");
-})();
+// (async () => {
+//   await sequelize.sync({ alter: true }); // alters only this table
+//   console.log("✅ TeamUpload table updated");
+// })();
+
+
+
+import User from './models/User.js';
+
+async function lockAllUsers() {
+  try {
+    const [rowsUpdated] = await User.update(
+      { isLocked: true }, // set isLocked = 1 (true)
+      { where: {} }       // empty where → affects all rows
+    );
+    console.log(`${rowsUpdated} users updated successfully.`);
+  } catch (error) {
+    console.error('Error updating users:', error);
+  }
+}
+
+lockAllUsers();
+
+
 
