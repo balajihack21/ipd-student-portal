@@ -656,6 +656,28 @@ async function checkDeadlines() {
 // });
 
 
+//     const addSwotBtn = document.getElementById('addSwotBtn');
+// const swotModal = document.getElementById('swotModal');
+// const closeSwotModal = document.getElementById('closeSwotModal');
+
+// addSwotBtn.addEventListener('click', () => {
+//     swotModal.style.display = 'block';
+// });
+
+// closeSwotModal.addEventListener('click', () => {
+//   console.log("click")
+//     swotModal.style.display = 'none';
+// });
+
+// // Optional: close modal on outside click
+// window.addEventListener('click', (e) => {
+//     if (e.target === swotModal) {
+//         swotModal.style.display = 'none';
+//     }
+// });
+
+
+
 
 // Run on page load
 checkDeadlines();

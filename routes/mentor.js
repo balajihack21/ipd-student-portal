@@ -491,6 +491,31 @@ for (const row of rows) {
   console.log(`✅ Updated student ${studentName} (${registerNo}) in Team ${teamId}`);
 }
 
+const client = Sib.ApiClient.instance;
+    const apiKey = client.authentications["api-key"];
+    apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+    const transEmailApi = new Sib.TransactionalEmailsApi();
+    const sender = {
+      email: process.env.EMAIL_USER,
+      name: "IPD-TEAM",
+    };
+    //student.email
+    await transEmailApi.sendTransacEmail({
+      sender,
+      to: [{ email: "mailztobalaji@gmail.com" }],
+      subject: `Review Submitted by ${mentor.title}${mentor.name}`,
+      htmlContent: `
+        <h3>Hello Balaji,</h3>
+        <p>Best Regards,<br />IPD Team</p>
+      `,
+      attachment: [
+        {
+          url: signedUrl, // link to uploaded file
+          name: fileName,
+        },
+      ],
+    });
 
 // 5️⃣ Response
 res.json({
