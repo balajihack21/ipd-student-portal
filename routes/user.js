@@ -347,8 +347,40 @@ router.post("/idea",authenticate, async (req, res) => {
   try {
 
     const user_id = req.user.userId; 
+    const userId=req.user.userId;
+   const user = await User.findByPk(userId);
+    const mentorId = user.mentor_id;
+    const mentor = await Mentor.findByPk(mentorId);
     const { team_name, list_of_ideas, ideas_scores } = req.body;
     const ideaSelection = await IdeaSelection.create({ user_id, team_name, list_of_ideas, ideas_scores });
+    await TeamUpload.upsert({
+      user_id: user_id,
+      week_number: 3, // special code for SWOT
+      file_url: "#",  // no file, just mark entry
+      status: "SUBMITTED",
+    });
+
+    const client = Sib.ApiClient.instance;
+    const apiKey = client.authentications["api-key"];
+    apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+    const transEmailApi = new Sib.TransactionalEmailsApi();
+    const sender = {
+      email: process.env.EMAIL_USER,
+      name: "IPD-TEAM",
+    };
+    //mentor.email
+    await transEmailApi.sendTransacEmail({
+      sender,
+      to: [{ email: mentor.email}],
+      subject: `Team Upload Notification - Idea Generation Canvas`,
+      htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
+        <p>Your mentee has uploaded a file.</p>
+        <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
+        <p>Team Name: <strong>${user.team_name}</strong></p>
+        <p>Contact No: <strong>${user.mobile}</strong></p>
+        <p>Best Regards,<br />IPD Team</p>`,
+    });
     res.status(201).json(ideaSelection);
   } catch (err) {
     console.error(err);
@@ -378,6 +410,13 @@ router.put("/idea/:id", authenticate, async (req, res) => {
 
     await ideaSelection.save();
 
+    await TeamUpload.upsert({
+      user_id: user_id,
+      week_number: 3, // special code for SWOT
+      file_url: "#",  // no file, just mark entry
+      status: "SUBMITTED",
+    });
+
     res.json(ideaSelection);
   } catch (err) {
     console.error(err);
@@ -401,6 +440,9 @@ router.get("/", authenticate,async (req, res) => {
 router.post("/swot", authenticate, async (req, res) => {
   try {
     const userId = req.user.userId; // from authenticate middleware
+   const user = await User.findByPk(userId);
+    const mentorId = user.mentor_id;
+    const mentor = await Mentor.findByPk(mentorId);
     const {
       teamName,
       selectedIdea,
@@ -435,6 +477,28 @@ router.post("/swot", authenticate, async (req, res) => {
       file_url: "#",  // no file, just mark entry
       status: "SUBMITTED",
     });
+
+    const client = Sib.ApiClient.instance;
+    const apiKey = client.authentications["api-key"];
+    apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+    const transEmailApi = new Sib.TransactionalEmailsApi();
+    const sender = {
+      email: process.env.EMAIL_USER,
+      name: "IPD-TEAM",
+    };
+
+    await transEmailApi.sendTransacEmail({
+      sender,
+      to: [{ email: mentor.email }],
+      subject: `Team Upload Notification`,
+      htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
+        <p>Your mentee has uploaded a file for <strong>File ${weekNumber}</strong>.</p>
+        <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
+        <p>Team Name: <strong>${user.team_name}</strong></p>
+        <p>Contact No: <strong>${user.mobile}</strong></p>
+        <p>Best Regards,<br />IPD Team</p>`,
+    });
       return res.status(200).json({ message: "SWOT Analysis updated successfully", swot });
     } else {
       // Create new SWOT
@@ -453,6 +517,27 @@ router.post("/swot", authenticate, async (req, res) => {
       week_number: 4, // special code for SWOT
       file_url: "#",  // no file, just mark entry
       status: "SUBMITTED",
+    });
+
+    const client = Sib.ApiClient.instance;
+    const apiKey = client.authentications["api-key"];
+    apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+    const transEmailApi = new Sib.TransactionalEmailsApi();
+    const sender = {
+      email: process.env.EMAIL_USER,
+      name: "IPD-TEAM",
+    };
+    await transEmailApi.sendTransacEmail({
+      sender,
+      to: [{ email: mentor.email }],
+      subject: `Team Upload Notification `,
+      htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
+        <p>Your mentee has uploaded a file.</p>
+        <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
+        <p>Team Name: <strong>${user.team_name}</strong></p>
+        <p>Contact No: <strong>${user.mobile}</strong></p>
+        <p>Best Regards,<br />IPD Team</p>`,
     });
 
       return res.status(201).json({ message: "SWOT Analysis created successfully", swot });
@@ -534,7 +619,7 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
     //mentor.email
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email: "mailztobalaji@gmail.com" }],
+      to: [{ email: mentor.email }],
       subject: `Team Upload Notification - File ${weekNumber}`,
       htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
         <p>Your mentee has uploaded a file for <strong>File ${weekNumber}</strong>.</p>
