@@ -336,6 +336,151 @@ router.get("/dashboard", authenticate, async (req, res) => {
 // });
 
 
+import SwotAnalysis from "../models/Swot.js";
+
+import IdeaSelection from "../models/Idea.js";
+
+
+
+// Create new idea selection
+router.post("/idea",authenticate, async (req, res) => {
+  try {
+
+    const user_id = req.user.userId; 
+    const { team_name, list_of_ideas, ideas_scores } = req.body;
+    const ideaSelection = await IdeaSelection.create({ user_id, team_name, list_of_ideas, ideas_scores });
+    res.status(201).json(ideaSelection);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to create idea selection" });
+  }
+});
+
+// Update existing idea selection
+router.put("/idea/:id", authenticate, async (req, res) => {
+  try {
+    const user_id = req.user.userId;
+    const { id } = req.params;
+    const { team_name, list_of_ideas, ideas_scores } = req.body;
+
+    const ideaSelection = await IdeaSelection.findOne({
+      where: { id, user_id },
+    });
+
+    if (!ideaSelection) {
+      return res.status(404).json({ error: "Idea selection not found" });
+    }
+
+    // Update fields
+    ideaSelection.team_name = team_name || ideaSelection.team_name;
+    ideaSelection.list_of_ideas = list_of_ideas || ideaSelection.list_of_ideas;
+    ideaSelection.ideas_scores = ideas_scores || ideaSelection.ideas_scores;
+
+    await ideaSelection.save();
+
+    res.json(ideaSelection);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to update idea selection" });
+  }
+});
+
+// Get all idea selections
+router.get("/", authenticate,async (req, res) => {
+  try {
+    const data = await IdeaSelection.findAll({ include: User });
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch data" });
+  }
+});
+
+
+
+// POST /api/swot - create or update SWOT data
+router.post("/swot", authenticate, async (req, res) => {
+  try {
+    const userId = req.user.userId; // from authenticate middleware
+    const {
+      teamName,
+      selectedIdea,
+      strengths,
+      weakness,
+      opportunities,
+      threats
+    } = req.body;
+
+    // Validate required fields
+    if (!teamName || !selectedIdea) {
+      return res.status(400).json({ message: "Team Name and Selected Idea are required" });
+    }
+
+    // Check if SWOT already exists for this user
+    let swot = await SwotAnalysis.findOne({ where: { user_id: userId } });
+
+    if (swot) {
+      // Update existing SWOT
+      await swot.update({
+        team_name: teamName,
+        selected_idea: selectedIdea,
+        strengths,
+        weakness,
+        opportunities,
+        threats
+      });
+
+      await TeamUpload.upsert({
+      user_id: userId,
+      week_number: 4, // special code for SWOT
+      file_url: "#",  // no file, just mark entry
+      status: "SUBMITTED",
+    });
+      return res.status(200).json({ message: "SWOT Analysis updated successfully", swot });
+    } else {
+      // Create new SWOT
+      swot = await SwotAnalysis.create({
+        user_id: userId,
+        team_name: teamName,
+        selected_idea: selectedIdea,
+        strengths,
+        weakness,
+        opportunities,
+        threats
+      });
+
+      await TeamUpload.upsert({
+      user_id: userId,
+      week_number: 4, // special code for SWOT
+      file_url: "#",  // no file, just mark entry
+      status: "SUBMITTED",
+    });
+
+      return res.status(201).json({ message: "SWOT Analysis created successfully", swot });
+    }
+  } catch (err) {
+    console.error("Error saving SWOT:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
+// GET logged-in user's SWOT
+router.get("/swot/mine", authenticate, async (req, res) => {
+  try {
+    const swot = await SwotAnalysis.findOne({
+      where: { user_id: req.user.userId }
+    });
+
+    if (!swot) return res.status(404).json(null); // no data
+    res.json(swot);
+  } catch (err) {
+    console.error("Error fetching SWOT:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+
+
 
 router.post("/upload", authenticate, upload.single("file"), async (req, res) => {
   try {
@@ -389,7 +534,7 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
     //mentor.email
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email: mentor.email }],
+      to: [{ email: "mailztobalaji@gmail.com" }],
       subject: `Team Upload Notification - File ${weekNumber}`,
       htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
         <p>Your mentee has uploaded a file for <strong>File ${weekNumber}</strong>.</p>

@@ -684,6 +684,46 @@ checkDeadlines();
 
 
 
+// Open SWOT Modal
+document.getElementById("addSwotBtn").addEventListener("click", () => {
+  document.getElementById("swotModal").classList.remove("hidden");
+});
+
+// Close SWOT Modal
+document.getElementById("closeSwotModal").addEventListener("click", () => {
+  document.getElementById("swotModal").classList.add("hidden");
+});
+
+// Optional: Close modal if user clicks outside the iframe box
+document.getElementById("swotModal").addEventListener("click", (e) => {
+  if (e.target.id === "swotModal") {
+    document.getElementById("swotModal").classList.add("hidden");
+  }
+});
+
+
+
+// Open SWOT Modal
+document.getElementById("addIdeaBtn").addEventListener("click", () => {
+  document.getElementById("ideaModal").classList.remove("hidden");
+});
+
+// Close SWOT Modal
+document.getElementById("closeIdeaModal").addEventListener("click", () => {
+  document.getElementById("ideaModal").classList.add("hidden");
+});
+
+// Optional: Close modal if user clicks outside the iframe box
+document.getElementById("ideaModal").addEventListener("click", (e) => {
+  if (e.target.id === "ideaModal") {
+    document.getElementById("ideaModal").classList.add("hidden");
+  }
+});
+
+
+
+
+
 
 
 

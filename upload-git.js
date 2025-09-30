@@ -94,21 +94,29 @@
 
 
 
-import User from './models/User.js';
+// import User from './models/User.js';
 
-async function lockAllUsers() {
-  try {
-    const [rowsUpdated] = await User.update(
-      { isLocked: true }, // set isLocked = 1 (true)
-      { where: {} }       // empty where → affects all rows
-    );
-    console.log(`${rowsUpdated} users updated successfully.`);
-  } catch (error) {
-    console.error('Error updating users:', error);
-  }
-}
+// async function lockAllUsers() {
+//   try {
+//     const [rowsUpdated] = await User.update(
+//       { isLocked: true }, // set isLocked = 1 (true)
+//       { where: {} }       // empty where → affects all rows
+//     );
+//     console.log(`${rowsUpdated} users updated successfully.`);
+//   } catch (error) {
+//     console.error('Error updating users:', error);
+//   }
+// }
 
-lockAllUsers();
+// lockAllUsers();
 
 
+
+import sequelize from './models/index.js';
+import IdeaSelection from "./models/Idea.js";
+
+(async () => {
+  await IdeaSelection.sync({ alter: true }); // drops 'date' column from table
+  console.log("✅ IdeaSelection table updated (date removed)");
+})();
 
