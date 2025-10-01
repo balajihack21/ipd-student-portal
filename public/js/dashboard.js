@@ -146,12 +146,12 @@ if (ideaSubmitBtn) ideaSubmitBtn.style.display = "none";
     // Close buttons
     document.getElementById("closeSwotModal").addEventListener("click", () => {
       document.getElementById("swotModal").classList.add("hidden");
-      document.getElementById("swotIframe").src = ""; // reset iframe
+      //document.getElementById("swotIframe").src = ""; // reset iframe
     });
 
     document.getElementById("closeIdeaModal").addEventListener("click", () => {
       document.getElementById("ideaModal").classList.add("hidden");
-      document.getElementById("ideaIframe").src = ""; // reset iframe
+      //document.getElementById("ideaIframe").src = ""; // reset iframe
     });
 
   } catch (err) {

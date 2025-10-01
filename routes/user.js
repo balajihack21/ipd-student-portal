@@ -565,10 +565,10 @@ router.post("/swot", authenticate, async (req, res) => {
 
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email: mentor.email }],
+      to: [{ email:mentor.email }],
       subject: `Team Upload Notification - Swot Analysis`,
       htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
-        <p>Your mentee has uploaded a file for <strong>File ${weekNumber}</strong>.</p>
+        <p>Your mentee has uploaded a file for <strong>Swot Analysis</strong>.</p>
         <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
         <p>Team Name: <strong>${user.team_name}</strong></p>
         <p>Contact No: <strong>${user.mobile}</strong></p>
@@ -605,7 +605,7 @@ router.post("/swot", authenticate, async (req, res) => {
     };
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email: mentor.email }],
+      to: [{ email: mentor.email}],
       subject: `Team Upload Notification - Swot Analysis`,
       htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
         <p>Your mentee has uploaded a file.</p>
