@@ -63,8 +63,10 @@ IdeaSelection.beforeSave((record) => {
     let totalCount = 0;
 
     // Define groups
-    const group1 = ["func", "tech", "appeal", "design", "problem", "practical"];
-    const group2 = ["retention", "experience", "uniqueness", "scalability"];
+
+    
+    const group1 = ["func",  "appeal", "problem", "practical","retention", "experience"];
+    const group2 = ["tech", "design", "uniqueness","degree", "scalability"];
 
     for (const [idea, criteria] of Object.entries(record.ideas_scores)) {
       let group1Scores = [];
