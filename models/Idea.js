@@ -11,22 +11,27 @@ const IdeaSelection = sequelize.define("IdeaSelection", {
     type: DataTypes.JSON, // array of idea names
     allowNull: false,
   },
+
   // store idea-wise criteria scores as JSON
   ideas_scores: {
     type: DataTypes.JSON, 
     allowNull: true,
-    // Example structure:
+    // Example:
     // {
-    //   "Idea 1": { "Value": 4, "Functionality": 3, "Problem Relevance": 5, ... },
-    //   "Idea 2": { ... }
+    //   "Idea A": { "func": 4, "tech": 3, "appeal": 5, ... },
+    //   "Idea B": { ... }
     // }
   },
 
-  // store average score per idea as JSON
+  // store average score per idea (two groups) as JSON
   ideas_avg_score: {
     type: DataTypes.JSON,
     allowNull: true,
-    // Example: { "Idea 1": 4.2, "Idea 2": 3.8, ... }
+    // Example:
+    // {
+    //   "Idea A": { group1: 3.8, group2: 4.2 },
+    //   "Idea B": { group1: 4.0, group2: 3.6 }
+    // }
   },
 
   // overall average across all ideas
@@ -34,6 +39,13 @@ const IdeaSelection = sequelize.define("IdeaSelection", {
     type: DataTypes.FLOAT,
     allowNull: true,
   },
+
+  // store the finally selected idea
+  selected_idea: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  }
+
 }, {
   tableName: "idea_selection",
   timestamps: true,
@@ -43,23 +55,40 @@ const IdeaSelection = sequelize.define("IdeaSelection", {
 IdeaSelection.belongsTo(User, { foreignKey: "user_id" });
 User.hasMany(IdeaSelection, { foreignKey: "user_id" });
 
-// Auto-calculate idea averages and overall average before save
+// Auto-calculate averages before save
 IdeaSelection.beforeSave((record) => {
   if (record.ideas_scores) {
     const ideas_avg = {};
     let totalSum = 0;
     let totalCount = 0;
 
+    // Define groups
+    const group1 = ["func", "tech", "appeal", "design", "problem", "practical"];
+    const group2 = ["retention", "experience", "uniqueness", "scalability"];
+
     for (const [idea, criteria] of Object.entries(record.ideas_scores)) {
-      const scores = Object.values(criteria).filter(s => s !== null && s !== undefined);
-      if (scores.length > 0) {
-        const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
-        ideas_avg[idea] = parseFloat(avg.toFixed(2));
-        totalSum += scores.reduce((a, b) => a + b, 0);
-        totalCount += scores.length;
-      } else {
-        ideas_avg[idea] = null;
+      let group1Scores = [];
+      let group2Scores = [];
+
+      for (const [crit, score] of Object.entries(criteria)) {
+        if (score !== null && score !== undefined) {
+          if (group1.includes(crit)) {
+            group1Scores.push(score);
+          } else if (group2.includes(crit)) {
+            group2Scores.push(score);
+          }
+          totalSum += score;
+          totalCount++;
+        }
       }
+
+      const avg1 = group1Scores.length > 0 ? group1Scores.reduce((a, b) => a + b, 0) / group1Scores.length : null;
+      const avg2 = group2Scores.length > 0 ? group2Scores.reduce((a, b) => a + b, 0) / group2Scores.length : null;
+
+      ideas_avg[idea] = {
+        group1: avg1 !== null ? parseFloat(avg1.toFixed(2)) : null,
+        group2: avg2 !== null ? parseFloat(avg2.toFixed(2)) : null,
+      };
     }
 
     record.ideas_avg_score = ideas_avg;

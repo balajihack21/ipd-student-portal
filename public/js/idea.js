@@ -1,37 +1,10 @@
-// {
-//   "team_name": "Team Innovators",
-//   "list_of_ideas": [
-//     "Smart Recycling Bin",
-//     "AI Study Assistant",
-//     "Eco-Friendly Packaging"
-//   ],
-//   "ideas_scores": {
-//     "Smart Recycling Bin": {
-//       "Value": 4,
-//       "Functionality": 5,
-//       "Problem Relevance": 5,
-//       "Innovation": 4
-//     },
-//     "AI Study Assistant": {
-//       "Value": 5,
-//       "Functionality": 4,
-//       "Problem Relevance": 4,
-//       "Innovation": 5
-//     },
-//     "Eco-Friendly Packaging": {
-//       "Value": 3,
-//       "Functionality": 3,
-//       "Problem Relevance": 4,
-//       "Innovation": 3
-//     }
-//   }
-// }
-
-
 // replace with your backend URL
 const submitBtn = document.getElementById("submitBtn");
 const teamInput = document.querySelector('input[placeholder="Enter team name"]');
-const criteria = ["func", "problem", "appeal", "retention", "experience", "practical", "uniqueness", "design", "scalability", "tech"];
+// Get selected idea input
+const selectedIdeaInput = document.querySelector('input[placeholder="Enter selected idea"]');
+
+const criteria = ["func", "problem", "appeal", "retention", "experience", "practical", "uniqueness", "degree","design", "scalability", "tech"];
 
 // Function to update average scores
 function updateAverageScores() {
@@ -65,6 +38,13 @@ submitBtn.addEventListener("click", async () => {
         alert("Please enter a team name!");
         return;
     }
+    // Get selected idea
+const selected_idea = selectedIdeaInput.value.trim();
+if (!selected_idea) {
+    alert("Please enter a selected idea!");
+    return;
+}
+
 
     // Collect ideas
     const ideaInputs = document.querySelectorAll(".idea-input");
@@ -77,16 +57,39 @@ submitBtn.addEventListener("click", async () => {
         return;
     }
 
-    // Prepare ideas_scores
+    // Prepare ideas_scores with actual idea text as keys
     const ideas_scores = {};
+    let validationFailed = false;
+
+    // Reset all highlights first
+    document.querySelectorAll(".idea-input, select").forEach(el => {
+        el.style.border = "";
+    });
+
     list_of_ideas.forEach((idea, index) => {
-        const ideaKey = `Idea ${index + 1}`;
-        ideas_scores[ideaKey] = {};
+        const ideaInput = document.querySelectorAll(".idea-input")[index];
+        if (!idea) {
+            ideaInput.style.border = "2px solid red";
+            validationFailed = true;
+            return;
+        }
+
+        ideas_scores[idea] = {};
         criteria.forEach(crit => {
             const select = document.querySelector(`select[name="idea${index + 1}_${crit}"]`);
-            ideas_scores[ideaKey][crit] = select && select.value ? parseInt(select.value) : null;
+            if (!select || !select.value) {
+                select.style.border = "2px solid red";
+                validationFailed = true;
+            } else {
+                ideas_scores[idea][crit] = parseInt(select.value);
+            }
         });
     });
+
+    if (validationFailed) {
+        alert("Please fill all the fields before submitting!");
+        return;
+    }
 
     // Get token from localStorage
     const token = localStorage.getItem("token");
@@ -97,21 +100,28 @@ submitBtn.addEventListener("click", async () => {
 
     // Send POST request
     try {
-        const res = await fetch(`api/idea`, {
+        const res = await fetch(`/api/idea`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             },
-            body: JSON.stringify({ team_name, list_of_ideas, ideas_scores })
+            body: JSON.stringify({ team_name, list_of_ideas, ideas_scores, selected_idea })
+
         });
 
         const data = await res.json();
         if (res.ok) {
-            alert("Ideas and scores saved successfully!");
+            if (res.status === 201) {
+                alert("Ideas and scores created successfully!");
+            } else if (res.status === 200) {
+                alert("Ideas and scores updated successfully!");
+            } else {
+                alert("Ideas and scores saved successfully!");
+            }
             console.log(data);
         } else {
-            alert("Error: " + data.error);
+            alert("Error: " + (data.error || data.message || "Unknown error"));
         }
     } catch (err) {
         console.error(err);
@@ -119,8 +129,52 @@ submitBtn.addEventListener("click", async () => {
     }
 });
 
+// =============================
+// Load existing data on page load
+// =============================
+async function loadExistingData() {
+    const token = localStorage.getItem("token");
+    if (!token) return; // user not logged in
 
+    try {
+        const res = await fetch(`/api/idea/mine`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
 
+        if (res.ok) {
+            const data = await res.json();
+            if (!data) return; // no previous data
 
+            // Fill team name
+            teamInput.value = data.team_name || "";
 
+            // Fill ideas + scores
+            const ideaInputs = document.querySelectorAll(".idea-input");
+            data.list_of_ideas.forEach((idea, index) => {
+                if (ideaInputs[index]) ideaInputs[index].value = idea;
 
+                // Fill dropdowns
+                const scores = data.ideas_scores[idea];
+                if (scores) {
+                    Object.entries(scores).forEach(([crit, val]) => {
+                        const select = document.querySelector(`select[name="idea${index + 1}_${crit}"]`);
+                        if (select) select.value = val;
+                    });
+                }
+            });
+
+            selectedIdeaInput.value=data.selected_idea
+
+            // Update averages after filling
+            updateAverageScores();
+        }
+    } catch (err) {
+        console.error("Failed to fetch existing data:", err);
+    }
+}
+
+// Call it when page loads
+document.addEventListener("DOMContentLoaded", loadExistingData);

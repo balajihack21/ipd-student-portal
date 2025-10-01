@@ -91,14 +91,10 @@ async function loadUploadHistory() {
 
     const uploadDiv = document.getElementById("uploadHistory");
     uploadDiv.innerHTML = ""; // Clear previous entries
-    console.log(res.data)
 
     res.data.forEach(upload => {
       const item = document.createElement("div");
       const date = new Date(upload.uploaded_at).toLocaleString();
-      const statusColor = upload.status === 'Approved' ? 'text-green-600'
-                         : upload.status === 'Rejected' ? 'text-red-600'
-                         : 'text-yellow-600';
 
       item.innerHTML = `
         <div class="bg-gray-100 p-3 rounded shadow-sm mb-3">
@@ -107,7 +103,7 @@ async function loadUploadHistory() {
               <strong>File ${upload.week_number}</strong><br>
               <span class="text-xs text-gray-500">${date}</span>
             </div>
-            <a href="${upload.file_url}" target="_blank" class="text-blue-500 underline">View</a>
+            <a href="#" class="text-blue-500 underline view-link">View</a>
           </div>
           <div class="mt-2 ml-1 text-sm text-gray-700">
             <div><strong>Status:</strong> <span class="font-medium ${upload.status === 'REVIEWED' ? 'text-green-600' : upload.status === 'SUBMITTED' ? 'text-red-600' : 'text-yellow-600'}">${upload.status || 'Pending'}</span></div>
@@ -117,12 +113,52 @@ async function loadUploadHistory() {
       `;
 
       uploadDiv.appendChild(item);
+
+      const viewLink = item.querySelector(".view-link");
+
+      // If file_url exists, open in new tab
+      if (upload.file_url) {
+        viewLink.href = upload.file_url;
+        viewLink.target = "_blank";
+      } else {
+        // Otherwise, open modal based on week_number
+        viewLink.addEventListener("click", (e) => {
+          e.preventDefault();
+          if (upload.week_number === 4) {
+            // Example: when showing SWOT modal
+document.getElementById("swotModal").classList.remove("hidden");
+const swotSubmitBtn = document.getElementById("swotSubmitBtn");
+if (swotSubmitBtn) swotSubmitBtn.style.display = "none";
+
+            document.getElementById("swotIframe").src = "swot.html"; // replace with dynamic src if needed
+          } else if (upload.week_number === 3) {
+            document.getElementById("ideaModal").classList.remove("hidden");
+            // Example: when showing SWOT modal
+const ideaSubmitBtn = document.getElementById("ideaSubmitBtn");
+if (ideaSubmitBtn) ideaSubmitBtn.style.display = "none";
+
+            document.getElementById("ideaIframe").src = "idea.html"; // replace with dynamic src if needed
+          }
+        });
+      }
+    });
+
+    // Close buttons
+    document.getElementById("closeSwotModal").addEventListener("click", () => {
+      document.getElementById("swotModal").classList.add("hidden");
+      document.getElementById("swotIframe").src = ""; // reset iframe
+    });
+
+    document.getElementById("closeIdeaModal").addEventListener("click", () => {
+      document.getElementById("ideaModal").classList.add("hidden");
+      document.getElementById("ideaIframe").src = ""; // reset iframe
     });
 
   } catch (err) {
     console.error("Error loading upload history", err);
   }
 }
+
 
 
 document.getElementById("logout").addEventListener("click", (e) => {
@@ -690,8 +726,9 @@ document.getElementById("addSwotBtn").addEventListener("click", () => {
 });
 
 // Close SWOT Modal
-document.getElementById("closeSwotModal").addEventListener("click", () => {
+document.getElementById("closeSwotModal").addEventListener("click", async () => {
   document.getElementById("swotModal").classList.add("hidden");
+  await loadUploadHistory();
 });
 
 // Optional: Close modal if user clicks outside the iframe box
@@ -709,8 +746,9 @@ document.getElementById("addIdeaBtn").addEventListener("click", () => {
 });
 
 // Close SWOT Modal
-document.getElementById("closeIdeaModal").addEventListener("click", () => {
+document.getElementById("closeIdeaModal").addEventListener("click", async () => {
   document.getElementById("ideaModal").classList.add("hidden");
+  await loadUploadHistory();
 });
 
 // Optional: Close modal if user clicks outside the iframe box
