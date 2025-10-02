@@ -1,4 +1,5 @@
 async function loadValueProposition() {
+    
     try {
         const token = localStorage.getItem('token');
         const response = await fetch('/api/value-proposition/mine', {
@@ -28,6 +29,22 @@ async function loadValueProposition() {
 }
 
 async function submitValueProposition() {
+    const fields = [
+        'ta1','ta2','ta3','ta4','ta5','ta6','ta7','ta8'
+    ];
+
+    // Check all fields
+    for (let id of fields) {
+        const value = document.getElementById(id).value.trim();
+        if (!value) {
+            alert("All fields are mandatory! Please fill them before submitting.");
+            return;
+        }
+        if (value.length > 200) {
+            alert("Each field must be within 200 characters.");
+            return;
+        }
+    }
     const data = {
         gain_creators: document.getElementById('ta1').value,
         gains: document.getElementById('ta2').value,
