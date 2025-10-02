@@ -300,7 +300,7 @@ router.post('/uploads/:uploadId/review', authenticate, async (req, res) => {
     //student.email
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email: "mailztobalaji@gmail.com" }],
+      to: [{ email: student.email }],
       subject: `Review Submitted by ${mentor.title}${mentor.name} - File ${weekNumber}`,
       htmlContent: `
         <h3>Hello ${student.team_name},</h3>
@@ -503,7 +503,7 @@ const client = Sib.ApiClient.instance;
     //student.email
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email: "mailztobalaji@gmail.com" }],
+      to: [{ email: "mailztobalaji@gmail.com"}],
       subject: `Review Submitted by ${mentor.title}${mentor.name}`,
       htmlContent: `
         <h3>Hello Balaji,</h3>
