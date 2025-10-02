@@ -255,7 +255,7 @@ async function loadTeams() {
     const res = await axios.get('/mentor/my-teams', {
       headers: { Authorization: `Bearer ${token}` }
     });
-    console.log(res.data)
+    console.log(res.data);
 
     const teamList = document.getElementById('teamList');
     teamList.innerHTML = '';
@@ -270,10 +270,19 @@ async function loadTeams() {
         uploadsContent = team.TeamUploads.map(upload => {
           const alreadyReviewed = !!upload.review_comment;
           const stat = upload.status;
+
+          // build link depending on file_url availability
+          let viewLink = "";
+          if (upload.file_url) {
+            viewLink = `<a href="${upload.file_url}" class="text-blue-600 underline" target="_blank">Download</a>`;
+          } else {
+            viewLink = `<a href="#" class="text-blue-600 underline view-link" data-week="${upload.week_number}">View</a>`;
+          }
+
           return `
             <div class="p-3 border rounded bg-gray-50">
               <p class="font-semibold">File - ${upload.week_number}</p>
-              <a href="${upload.file_url}" class="text-blue-600 underline" target="_blank">Download</a>
+              ${viewLink}
               ${alreadyReviewed && stat === "REVIEWED"
                 ? `
                   <textarea class="w-full mt-2 p-2 border rounded bg-gray-100" readonly>${upload.review_comment}</textarea>
@@ -314,12 +323,44 @@ async function loadTeams() {
       `;
 
       teamList.appendChild(teamCard);
+
+      // attach modal logic for "view-link" anchors
+      const viewLinks = teamCard.querySelectorAll(".view-link");
+      viewLinks.forEach(link => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const week = parseInt(link.getAttribute("data-week"), 10);
+
+          if (week === 4) {
+            document.getElementById("swotModal").classList.remove("hidden");
+            const swotSubmitBtn = document.getElementById("swotSubmitBtn");
+            if (swotSubmitBtn) swotSubmitBtn.style.display = "none";
+            document.getElementById("swotIframe").src = "swot.html";
+          } else if (week === 3) {
+            document.getElementById("ideaModal").classList.remove("hidden");
+            const ideaSubmitBtn = document.getElementById("ideaSubmitBtn");
+            if (ideaSubmitBtn) ideaSubmitBtn.style.display = "none";
+            document.getElementById("ideaIframe").src = "idea.html";
+          }
+        });
+      });
     });
+
+    // close buttons for modals
+    document.getElementById("closeSwotModal").addEventListener("click", () => {
+      document.getElementById("swotModal").classList.add("hidden");
+    });
+
+    document.getElementById("closeIdeaModal").addEventListener("click", () => {
+      document.getElementById("ideaModal").classList.add("hidden");
+    });
+
   } catch (err) {
     console.error(err);
     // window.location.href = "/login.html";
   }
 }
+
 
 
 document.getElementById("review1Form").addEventListener("submit", async (e) => {

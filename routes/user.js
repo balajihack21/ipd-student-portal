@@ -350,7 +350,7 @@ router.post("/idea", authenticate, async (req, res) => {
     const mentorId = user.mentor_id;
     const mentor = await Mentor.findByPk(mentorId);
 
-    const { team_name, list_of_ideas, ideas_scores,selected_idea } = req.body;
+    const { team_name, list_of_ideas, ideas_scores, selected_idea } = req.body;
 
     if (!team_name || !list_of_ideas || !ideas_scores) {
       return res.status(400).json({ message: "Team Name, Ideas, and Scores are required" });
@@ -371,7 +371,7 @@ router.post("/idea", authenticate, async (req, res) => {
       await TeamUpload.upsert({
         user_id: userId,
         week_number: 3, // special code for Idea Selection
-        file_url: "#", 
+        file_url: "#",
         status: "SUBMITTED",
       });
 
@@ -413,7 +413,7 @@ router.post("/idea", authenticate, async (req, res) => {
       await TeamUpload.upsert({
         user_id: userId,
         week_number: 3, // special code for Idea Selection
-        file_url: "#", 
+        file_url: "#",
         status: "SUBMITTED",
       });
 
@@ -427,7 +427,7 @@ router.post("/idea", authenticate, async (req, res) => {
         email: process.env.EMAIL_USER,
         name: "IPD-TEAM",
       };
-//mentor.email
+      //mentor.email
       await transEmailApi.sendTransacEmail({
         sender,
         to: [{ email: mentor.email }],
@@ -500,7 +500,7 @@ router.put("/idea/:id", authenticate, async (req, res) => {
 });
 
 // Get all idea selections
-router.get("/", authenticate,async (req, res) => {
+router.get("/", authenticate, async (req, res) => {
   try {
     const data = await IdeaSelection.findAll({ include: User });
     res.json(data);
@@ -515,7 +515,7 @@ router.get("/", authenticate,async (req, res) => {
 router.post("/swot", authenticate, async (req, res) => {
   try {
     const userId = req.user.userId; // from authenticate middleware
-   const user = await User.findByPk(userId);
+    const user = await User.findByPk(userId);
     const mentorId = user.mentor_id;
     const mentor = await Mentor.findByPk(mentorId);
     const {
@@ -547,33 +547,33 @@ router.post("/swot", authenticate, async (req, res) => {
       });
 
       await TeamUpload.upsert({
-      user_id: userId,
-      week_number: 4, // special code for SWOT
-      file_url: "#",  // no file, just mark entry
-      status: "SUBMITTED",
-    });
+        user_id: userId,
+        week_number: 4, // special code for SWOT
+        file_url: "#",  // no file, just mark entry
+        status: "SUBMITTED",
+      });
 
-    const client = Sib.ApiClient.instance;
-    const apiKey = client.authentications["api-key"];
-    apiKey.apiKey = process.env.EMAIL_PASSWORD;
+      const client = Sib.ApiClient.instance;
+      const apiKey = client.authentications["api-key"];
+      apiKey.apiKey = process.env.EMAIL_PASSWORD;
 
-    const transEmailApi = new Sib.TransactionalEmailsApi();
-    const sender = {
-      email: process.env.EMAIL_USER,
-      name: "IPD-TEAM",
-    };
+      const transEmailApi = new Sib.TransactionalEmailsApi();
+      const sender = {
+        email: process.env.EMAIL_USER,
+        name: "IPD-TEAM",
+      };
 
-    await transEmailApi.sendTransacEmail({
-      sender,
-      to: [{ email:mentor.email }],
-      subject: `Team Upload Notification - Swot Analysis`,
-      htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
+      await transEmailApi.sendTransacEmail({
+        sender,
+        to: [{ email: mentor.email }],
+        subject: `Team Upload Notification - Swot Analysis`,
+        htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
         <p>Your mentee has uploaded a file for <strong>Swot Analysis</strong>.</p>
         <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
         <p>Team Name: <strong>${user.team_name}</strong></p>
         <p>Contact No: <strong>${user.mobile}</strong></p>
         <p>Best Regards,<br />IPD Team</p>`,
-    });
+      });
       return res.status(200).json({ message: "SWOT Analysis updated successfully", swot });
     } else {
       // Create new SWOT
@@ -588,32 +588,32 @@ router.post("/swot", authenticate, async (req, res) => {
       });
 
       await TeamUpload.upsert({
-      user_id: userId,
-      week_number: 4, // special code for SWOT
-      file_url: "#",  // no file, just mark entry
-      status: "SUBMITTED",
-    });
+        user_id: userId,
+        week_number: 4, // special code for SWOT
+        file_url: "#",  // no file, just mark entry
+        status: "SUBMITTED",
+      });
 
-    const client = Sib.ApiClient.instance;
-    const apiKey = client.authentications["api-key"];
-    apiKey.apiKey = process.env.EMAIL_PASSWORD;
+      const client = Sib.ApiClient.instance;
+      const apiKey = client.authentications["api-key"];
+      apiKey.apiKey = process.env.EMAIL_PASSWORD;
 
-    const transEmailApi = new Sib.TransactionalEmailsApi();
-    const sender = {
-      email: process.env.EMAIL_USER,
-      name: "IPD-TEAM",
-    };
-    await transEmailApi.sendTransacEmail({
-      sender,
-      to: [{ email: mentor.email}],
-      subject: `Team Upload Notification - Swot Analysis`,
-      htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
+      const transEmailApi = new Sib.TransactionalEmailsApi();
+      const sender = {
+        email: process.env.EMAIL_USER,
+        name: "IPD-TEAM",
+      };
+      await transEmailApi.sendTransacEmail({
+        sender,
+        to: [{ email: mentor.email }],
+        subject: `Team Upload Notification - Swot Analysis`,
+        htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
         <p>Your mentee has uploaded a file.</p>
         <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
         <p>Team Name: <strong>${user.team_name}</strong></p>
         <p>Contact No: <strong>${user.mobile}</strong></p>
         <p>Best Regards,<br />IPD Team</p>`,
-    });
+      });
 
       return res.status(201).json({ message: "SWOT Analysis created successfully", swot });
     }
@@ -634,6 +634,105 @@ router.get("/swot/mine", authenticate, async (req, res) => {
     res.json(swot);
   } catch (err) {
     console.error("Error fetching SWOT:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+import ValueProposition from '../models/Value.js';
+
+
+// Create or update value proposition
+
+
+router.post('/value-proposition', authenticate, async (req, res) => {
+  try {
+    const user_id = req.user.userId;
+    const user = await User.findByPk(user_id);
+    const mentor = user.mentor_id ? await Mentor.findByPk(user.mentor_id) : null;
+    const {
+      gain_creators,
+      gains,
+      products_and_services,
+      customer_jobs,
+      pain_relievers,
+      pains,
+      value_proposition,
+      customer_segment
+    } = req.body;
+
+    // Check if record exists for user
+    let vp = await ValueProposition.findOne({ where: { user_id } });
+
+    if (vp) {
+      await vp.update({
+        gain_creators,
+        gains,
+        products_and_services,
+        customer_jobs,
+        pain_relievers,
+        pains,
+        value_proposition,
+        customer_segment
+      });
+    } else {
+      vp = await ValueProposition.create({
+        user_id,
+        gain_creators,
+        gains,
+        products_and_services,
+        customer_jobs,
+        pain_relievers,
+        pains,
+        value_proposition,
+        customer_segment
+      });
+    }
+
+    // Upsert team upload log
+    await TeamUpload.upsert({
+      user_id,
+      week_number: 5,
+      file_url: "#",
+      status: "SUBMITTED",
+    });
+
+    // Send email notification
+    const client = Sib.ApiClient.instance;
+    const apiKey = client.authentications['api-key'];
+    apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+    const transEmailApi = new Sib.TransactionalEmailsApi();
+    const sender = { email: process.env.EMAIL_USER, name: "IPD-TEAM" };
+    await transEmailApi.sendTransacEmail({
+      sender,
+      to: [{ email: mentor.email }],
+      subject: `Team Upload Notification - Value Proposition Canvas`,
+      htmlContent: `<h3>Hello ${mentor ? `${mentor.title || ""} ${mentor.name || ""}` : "Mentor"},</h3>
+      <p>Your mentee has uploaded a file for <strong>Value Proposition</strong>.</p>
+      <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
+      <p>Team Name: <strong>${user.team_name}</strong></p>
+      <p>Contact No: <strong>${user.mobile}</strong></p>
+      <p>Best Regards,<br />IPD Team</p>`
+    });
+
+    res.status(200).json({ success: true, data: vp });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+});
+
+router.get("/value-proposition/mine", authenticate, async (req, res) => {
+  try {
+    const vp = await ValueProposition.findOne({
+      where: { user_id: req.user.userId }
+    });
+
+    if (!vp) return res.status(404).json(null); // no data
+    res.json(vp);
+  } catch (err) {
+    console.error("Error fetching Value Proposition:", err);
     res.status(500).json({ error: "Server error" });
   }
 });

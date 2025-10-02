@@ -291,6 +291,30 @@
       </div>
     </main>
   </div>
+
+      <!-- SWOT Analysis Modal -->
+    <div id="swotModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg w-full max-w-3xl relative overflow-auto max-h-[90vh]">
+            <button id="closeSwotModal"
+                class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold">&times;</button>
+            <iframe id="swotIframe" src="swot.html" class="w-full h-[80vh] border rounded"
+                style="width:100%; height:80vh; border-radius:6px; border:1px solid #ccc;">
+            </iframe>
+        </div>
+    </div>
+
+
+
+    <!-- Idea Generation Modal -->
+    <div id="ideaModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white p-6 rounded-lg w-full max-w-3xl relative overflow-auto max-h-[90vh]">
+            <button id="closeIdeaModal"
+                class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold">&times;</button>
+            <iframe id="ideaIframe" src="idea.html" class="w-full h-[80vh] border rounded"
+                style="width:100%; height:80vh; border-radius:6px; border:1px solid #ccc;">
+            </iframe>
+        </div>
+    </div>
   <script src="/js/mentor-dashboard.js"></script>
 </body>
 

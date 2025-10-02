@@ -300,7 +300,7 @@ router.post('/uploads/:uploadId/review', authenticate, async (req, res) => {
     //student.email
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email: student.email }],
+      to: [{ email: "mailztobalaji@gmail.com" }],
       subject: `Review Submitted by ${mentor.title}${mentor.name} - File ${weekNumber}`,
       htmlContent: `
         <h3>Hello ${student.team_name},</h3>

@@ -7,14 +7,14 @@ window.onload = async () => {
       },
     });
 
-    const { teamName, mobile, students = [], mentor = {}, progress = 0 ,profilePhoto} = res.data;
+    const { teamName, mobile, students = [], mentor = {}, progress = 0, profilePhoto } = res.data;
     document.getElementById("teamName").textContent = `${teamName}`;
     document.getElementById("contactNo").textContent = ` ${mobile}`;
-    
+
 
     if (profilePhoto) {
-  document.getElementById("profilePhoto").src = profilePhoto;
-}
+      document.getElementById("profilePhoto").src = profilePhoto;
+    }
 
     // Populate students
     const studentCards = document.getElementById("studentCards");
@@ -30,7 +30,7 @@ window.onload = async () => {
     });
 
     // // Mentor
-   
+
     document.getElementById("mentorName").innerHTML = `${mentor.title}${mentor.name}<br> ${mentor.designation} - ${mentor.department}<br> ${mentor.email}`;
 
     await loadUploadHistory();
@@ -42,7 +42,7 @@ window.onload = async () => {
 
   } catch (err) {
     // alert("Error loading dashboard");
-     window.location.href = "/login.html";
+    window.location.href = "/login.html";
     console.error(err);
   }
 };
@@ -126,19 +126,27 @@ async function loadUploadHistory() {
           e.preventDefault();
           if (upload.week_number === 4) {
             // Example: when showing SWOT modal
-document.getElementById("swotModal").classList.remove("hidden");
-const swotSubmitBtn = document.getElementById("swotSubmitBtn");
-if (swotSubmitBtn) swotSubmitBtn.style.display = "none";
+            document.getElementById("swotModal").classList.remove("hidden");
+            const swotSubmitBtn = document.getElementById("swotSubmitBtn");
+            if (swotSubmitBtn) swotSubmitBtn.style.display = "none";
 
             document.getElementById("swotIframe").src = "swot.html"; // replace with dynamic src if needed
-          } else if (upload.week_number === 3) {
+          }  else if (upload.week_number === 3){
             document.getElementById("ideaModal").classList.remove("hidden");
             // Example: when showing SWOT modal
-const ideaSubmitBtn = document.getElementById("ideaSubmitBtn");
-if (ideaSubmitBtn) ideaSubmitBtn.style.display = "none";
+            const ideaSubmitBtn = document.getElementById("ideaSubmitBtn");
+            if (ideaSubmitBtn) ideaSubmitBtn.style.display = "none";
 
             document.getElementById("ideaIframe").src = "idea.html"; // replace with dynamic src if needed
+          }else if (upload.week_number === 5){
+            document.getElementById("valueModal").classList.remove("hidden");
+            // Example: when showing SWOT modal
+            const valueSubmitBtn = document.getElementById("valueSubmitBtn");
+            if (valueSubmitBtn) valueSubmitBtn.style.display = "none";
+
+            document.getElementById("valueIframe").src = "value.html";
           }
+
         });
       }
     });
@@ -327,15 +335,15 @@ async function handleUpload(formId, fileId, progressId, statusId, weekNumber) {
 
       document.getElementById(statusId).textContent = "Uploaded successfully!";
       progressBar.style.backgroundColor = "#16a34a"; // green
-      
-          setTimeout(() => {
-      progressBar.style.width = "0%";
-      progressBar.textContent = "0%";
-      progressBar.style.backgroundColor = "#3b82f6"; // reset to blue
-    }, 2000);
 
-    alert("File Uploaded Successfully")
-    await loadUploadHistory();
+      setTimeout(() => {
+        progressBar.style.width = "0%";
+        progressBar.textContent = "0%";
+        progressBar.style.backgroundColor = "#3b82f6"; // reset to blue
+      }, 2000);
+
+      alert("File Uploaded Successfully")
+      await loadUploadHistory();
     } catch (err) {
       document.getElementById(statusId).textContent = "Upload failed!";
       progressBar.style.backgroundColor = "#dc2626"; // red
@@ -755,6 +763,27 @@ document.getElementById("closeIdeaModal").addEventListener("click", async () => 
 document.getElementById("ideaModal").addEventListener("click", (e) => {
   if (e.target.id === "ideaModal") {
     document.getElementById("ideaModal").classList.add("hidden");
+  }
+});
+
+
+
+
+// Open SWOT Modal
+document.getElementById("addValueBtn").addEventListener("click", () => {
+  document.getElementById("valueModal").classList.remove("hidden");
+});
+
+// Close SWOT Modal
+document.getElementById("closeValueModal").addEventListener("click", async () => {
+  document.getElementById("valueModal").classList.add("hidden");
+  await loadUploadHistory();
+});
+
+// Optional: Close modal if user clicks outside the iframe box
+document.getElementById("valueModal").addEventListener("click", (e) => {
+  if (e.target.id === "valueModal") {
+    document.getElementById("valueModal").classList.add("hidden");
   }
 });
 
