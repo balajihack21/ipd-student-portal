@@ -40,8 +40,8 @@ async function submitValueProposition() {
             alert("All fields are mandatory! Please fill them before submitting.");
             return;
         }
-        if (value.length > 200) {
-            alert("Each field must be within 200 characters.");
+        if (value.length > 400) {
+            alert("Each field must be within 400 characters.");
             return;
         }
     }
