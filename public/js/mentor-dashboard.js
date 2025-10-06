@@ -302,12 +302,40 @@ async function loadTeams() {
           `;
         }).join('');
       } else {
-        uploadsContent = `
-          <div class="p-3 border rounded bg-gray-50 text-gray-600 italic">
-            No uploads yet
-          </div>
-        `;
-      }
+  let fallbackLinks = '';
+
+  // if idea data exists
+  if (team.IdeaSelection) {
+    fallbackLinks += `
+      <a href="#" class="text-blue-600 underline view-link" data-week="3">View Idea Generation</a>
+    `;
+  }
+
+  // if SWOT data exists
+  if (team.SwotAnalysis) {
+    fallbackLinks += `
+      <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="4">View SWOT Analysis</a>
+    `;
+  }
+
+  // if Value Proposition exists (week 5 maybe?)
+  if (team.ValueProposition) {
+    fallbackLinks += `
+      <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="5">View Value Proposition</a>
+    `;
+  }
+
+  if (!fallbackLinks) {
+    fallbackLinks = `<span class="text-gray-600 italic">No data available yet</span>`;
+  }
+
+  uploadsContent = `
+    <div class="p-3 border rounded bg-gray-50">
+      ${fallbackLinks}
+    </div>
+  `;
+}
+
 
       teamCard.innerHTML = `
         <div class="flex justify-between items-center">

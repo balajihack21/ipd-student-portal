@@ -156,12 +156,75 @@ router.post("/teams/:teamId/rubrics/:stage", authenticate, async (req, res) => {
 
 
 // ✅ /my-teams route
+// router.get('/my-teams', authenticate, async (req, res) => {
+//   try {
+//     const mentorId = req.user.mentorId; // from JWT/session
+//     console.log("Mentor:", req.user);
+
+//     // Find all students/teams assigned to this mentor
+//     const teams = await User.findAll({
+//       where: { mentor_id: mentorId },
+//       attributes: ['UserId', 'team_name', 'email', 'mobile'],
+//       include: [
+//         {
+//           model: TeamUpload,
+//           attributes: [
+//             'id',
+//             'file_key',   // we need file_key to generate signed URL
+//             'week_number',
+//             'uploaded_at',
+//             'status',
+//             'review_comment'
+//           ],
+//           order: [['uploaded_at', 'DESC']]
+//         }
+//       ]
+//     });
+
+//     // Replace file_url with signed URL
+//     const signedTeams = await Promise.all(
+//       teams.map(async (team) => {
+//         const uploads = await Promise.all(
+//           team.TeamUploads.map(async (upload) => {
+//             let signedUrl = null;
+//             if (upload.file_key) {
+//               signedUrl = await getSignedFileUrl(upload.file_key); // 7 days max
+//             }
+//             return {
+//               ...upload.toJSON(),
+//               file_url: signedUrl, // replace with signed URL
+//             };
+//           })
+//         );
+
+//         return {
+//           ...team.toJSON(),
+//           TeamUploads: uploads,
+//         };
+//       })
+//     );
+
+//     res.json(signedTeams);
+
+//   } catch (err) {
+//     console.error('Error fetching assigned teams:', err);
+//     res.status(500).json({ error: 'Server error fetching teams' });
+//   }
+// });
+// import { Op } from "sequelize";
+
+
+import IdeaSelection from "../models/Idea.js";
+import SwotAnalysis from "../models/Swot.js";
+import ValueProposition from "../models/Value.js";
+// import { getSignedFileUrl } from "../utils/s3.js"; // adjust if needed
+
 router.get('/my-teams', authenticate, async (req, res) => {
   try {
-    const mentorId = req.user.mentorId; // from JWT/session
+    const mentorId = req.user.mentorId;
     console.log("Mentor:", req.user);
 
-    // Find all students/teams assigned to this mentor
+    // 🔹 Find all students assigned to this mentor
     const teams = await User.findAll({
       where: { mentor_id: mentorId },
       attributes: ['UserId', 'team_name', 'email', 'mobile'],
@@ -170,7 +233,7 @@ router.get('/my-teams', authenticate, async (req, res) => {
           model: TeamUpload,
           attributes: [
             'id',
-            'file_key',   // we need file_key to generate signed URL
+            'file_key',
             'week_number',
             'uploaded_at',
             'status',
@@ -181,36 +244,88 @@ router.get('/my-teams', authenticate, async (req, res) => {
       ]
     });
 
-    // Replace file_url with signed URL
-    const signedTeams = await Promise.all(
+    // 🔹 Build full response (with conditional fallbacks)
+    const finalTeams = await Promise.all(
       teams.map(async (team) => {
+        const teamData = team.toJSON();
+
+        // If upload exists → use signed URL
         const uploads = await Promise.all(
-          team.TeamUploads.map(async (upload) => {
+          teamData.TeamUploads.map(async (upload) => {
             let signedUrl = null;
             if (upload.file_key) {
-              signedUrl = await getSignedFileUrl(upload.file_key); // 7 days max
+              signedUrl = await getSignedFileUrl(upload.file_key);
             }
             return {
-              ...upload.toJSON(),
-              file_url: signedUrl, // replace with signed URL
+              ...upload,
+              file_url: signedUrl,
             };
           })
         );
 
+        // 🔹 Fallback: if no uploads, fetch from other tables
+        let ideaData = null;
+        let swotData = null;
+        let valueData = null;
+
+        if (!uploads || uploads.length === 0) {
+          ideaData = await IdeaSelection.findOne({
+            where: { user_id: teamData.UserId },
+            attributes: [
+              'team_name',
+              'list_of_ideas',
+              'ideas_scores',
+              'ideas_avg_score',
+              'overall_avg_score',
+              'selected_idea',
+            ],
+          });
+
+          swotData = await SwotAnalysis.findOne({
+            where: { user_id: teamData.UserId },
+            attributes: [
+              'selected_idea',
+              'strengths',
+              'weakness',
+              'opportunities',
+              'threats',
+            ],
+          });
+
+          valueData = await ValueProposition.findOne({
+            where: { user_id: teamData.UserId },
+            attributes: [
+              'gain_creators',
+              'gains',
+              'products_and_services',
+              'customer_jobs',
+              'pain_relievers',
+              'pains',
+              'value_proposition',
+              'customer_segment',
+            ],
+          });
+        }
+
         return {
-          ...team.toJSON(),
+          ...teamData,
           TeamUploads: uploads,
+          IdeaSelection: ideaData ? ideaData.toJSON() : null,
+          SwotAnalysis: swotData ? swotData.toJSON() : null,
+          ValueProposition: valueData ? valueData.toJSON() : null,
         };
       })
     );
 
-    res.json(signedTeams);
+    res.json(finalTeams);
 
   } catch (err) {
-    console.error('Error fetching assigned teams:', err);
+    console.error('❌ Error fetching assigned teams:', err);
     res.status(500).json({ error: 'Server error fetching teams' });
   }
 });
+
+
 
 
 // router.get("/teams", authenticate, async (req, res) => {

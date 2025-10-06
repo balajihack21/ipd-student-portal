@@ -600,27 +600,56 @@ document.getElementById("photoInput").addEventListener("change", async function 
 async function checkDeadlines() {
   try {
     const token = localStorage.getItem("token");
-    const res = await axios.get("api/deadlines", {
+    const res = await axios.get("/api/deadlines", {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    const { problem_deadline, swot_deadline, value_deadline, isLocked } = res.data;
+    const {
+      problem_deadline,
+      swot_deadline,
+      value_deadline,
+      isLocked
+    } = res.data;
+
     const now = new Date();
 
-    // Condition 1: deadlines
-    const deadlinePassed =
-      (problem_deadline && new Date(problem_deadline) < now) ||
-      (swot_deadline && new Date(swot_deadline) < now) ||
-      (value_deadline && new Date(value_deadline) < now);
+    // Get sections
+    const uploadSection = document.getElementById("uploadSection"); // Problem Statement section
+    const ideaSection = document.getElementById("addIdeaBtn")?.closest("div");
+    const swotSection = document.getElementById("addSwotBtn")?.closest("div");
+    const valueSection = document.getElementById("addValueBtn")?.closest("div");
 
-    // Condition 2: team locked
-    if (deadlinePassed || isLocked) {
-      document.getElementById("uploadSection").style.display = "none";
+    // Hide all initially
+    if (uploadSection) uploadSection.style.display = "none";
+    if (ideaSection) ideaSection.style.display = "none";
+    if (swotSection) swotSection.style.display = "none";
+    if (valueSection) valueSection.style.display = "none";
+
+    // Helper: check if deadline is still valid
+    const isBeforeDeadline = (deadline) => deadline && new Date(deadline) > now;
+
+    // ✅ PROBLEM STATEMENT SECTION
+    // Visible only if before deadline AND not locked
+    if (!isLocked && isBeforeDeadline(problem_deadline)) {
+      if (uploadSection) uploadSection.style.display = "block";
     }
+
+    // ✅ IDEA & SWOT SECTION (only depend on swot_deadline)
+    if (isBeforeDeadline(swot_deadline)) {
+      if (ideaSection) ideaSection.style.display = "block";
+      if (swotSection) swotSection.style.display = "block";
+    }
+
+    // ✅ VALUE PROPOSITION SECTION (only depend on value_deadline)
+    if (isBeforeDeadline(value_deadline)) {
+      if (valueSection) valueSection.style.display = "block";
+    }
+
   } catch (err) {
     console.error("Error checking deadlines:", err);
   }
 }
+
 
 
 // // Modal controls
