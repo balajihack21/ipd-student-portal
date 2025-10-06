@@ -41,9 +41,9 @@ const fields = ["teamName","idea","strengths","weakness","opportunities","threat
 fields.forEach(id => {
     const el = document.getElementById(id);
     el.addEventListener("input", function() {
-        if (this.innerText.length > 200) {
-            this.innerText = this.innerText.substring(0,200);
-            alert("Maximum 200 characters allowed.");
+        if (this.innerText.length > 1000) {
+            this.innerText = this.innerText.substring(0,1000);
+            alert("Maximum 1000 characters allowed.");
         }
     });
 });
