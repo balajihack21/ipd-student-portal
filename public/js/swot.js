@@ -16,6 +16,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log(data);
 
             if (data) {
+                const submitBtn = document.getElementById("submitBtn");
+    if (submitBtn) submitBtn.style.display = "none";
                 // Fill fields with existing data
                 document.getElementById("teamName").innerText = data.team_name || "";
                 document.getElementById("idea").innerText = data.selected_idea || "";

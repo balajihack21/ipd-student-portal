@@ -151,6 +151,9 @@ async function loadExistingData() {
             // Fill team name
             teamInput.value = data.team_name || "";
 
+            const submitBtn = document.getElementById("submitBtn");
+    if (submitBtn) submitBtn.style.display = "none";
+
             // Fill ideas + scores
             const ideaInputs = document.querySelectorAll(".idea-input");
             data.list_of_ideas.forEach((idea, index) => {

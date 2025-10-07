@@ -219,111 +219,208 @@ import SwotAnalysis from "../models/Swot.js";
 import ValueProposition from "../models/Value.js";
 // import { getSignedFileUrl } from "../utils/s3.js"; // adjust if needed
 
-router.get('/my-teams', authenticate, async (req, res) => {
+
+
+router.get("/my-teams", authenticate, async (req, res) => {
   try {
     const mentorId = req.user.mentorId;
-    console.log("Mentor:", req.user);
+    console.log("👨‍🏫 Mentor:", req.user);
 
-    // 🔹 Find all students assigned to this mentor
+    // ✅ Fetch all students under this mentor (with related data)
     const teams = await User.findAll({
       where: { mentor_id: mentorId },
-      attributes: ['UserId', 'team_name', 'email', 'mobile'],
+      attributes: ["UserId", "team_name", "email", "mobile"],
       include: [
         {
           model: TeamUpload,
           attributes: [
-            'id',
-            'file_key',
-            'week_number',
-            'uploaded_at',
-            'status',
-            'review_comment'
+            "id",
+            "file_key",
+            "week_number",
+            "uploaded_at",
+            "status",
+            "review_comment",
           ],
-          order: [['uploaded_at', 'DESC']]
-        }
-      ]
+          required: false,
+        },
+        {
+          model: IdeaSelection,
+          attributes: [
+            "team_name",
+            "list_of_ideas",
+            "ideas_scores",
+            "ideas_avg_score",
+            "overall_avg_score",
+            "selected_idea",
+          ],
+          required: false,
+        },
+        {
+          model: SwotAnalysis,
+          attributes: [
+            "selected_idea",
+            "strengths",
+            "weakness",
+            "opportunities",
+            "threats",
+          ],
+          required: false,
+        },
+        {
+          model: ValueProposition,
+          attributes: [
+            "gain_creators",
+            "gains",
+            "products_and_services",
+            "customer_jobs",
+            "pain_relievers",
+            "pains",
+            "value_proposition",
+            "customer_segment",
+          ],
+          required: false,
+        },
+      ],
+      order: [[TeamUpload, "uploaded_at", "DESC"]],
     });
 
-    // 🔹 Build full response (with conditional fallbacks)
+    // ✅ Add signed URLs for TeamUploads
     const finalTeams = await Promise.all(
       teams.map(async (team) => {
         const teamData = team.toJSON();
-
-        // If upload exists → use signed URL
         const uploads = await Promise.all(
-          teamData.TeamUploads.map(async (upload) => {
+          (teamData.TeamUploads || []).map(async (upload) => {
             let signedUrl = null;
             if (upload.file_key) {
               signedUrl = await getSignedFileUrl(upload.file_key);
             }
-            return {
-              ...upload,
-              file_url: signedUrl,
-            };
+            return { ...upload, file_url: signedUrl };
           })
         );
-
-        // 🔹 Fallback: if no uploads, fetch from other tables
-        let ideaData = null;
-        let swotData = null;
-        let valueData = null;
-
-        if (!uploads || uploads.length === 0) {
-          ideaData = await IdeaSelection.findOne({
-            where: { user_id: teamData.UserId },
-            attributes: [
-              'team_name',
-              'list_of_ideas',
-              'ideas_scores',
-              'ideas_avg_score',
-              'overall_avg_score',
-              'selected_idea',
-            ],
-          });
-
-          swotData = await SwotAnalysis.findOne({
-            where: { user_id: teamData.UserId },
-            attributes: [
-              'selected_idea',
-              'strengths',
-              'weakness',
-              'opportunities',
-              'threats',
-            ],
-          });
-
-          valueData = await ValueProposition.findOne({
-            where: { user_id: teamData.UserId },
-            attributes: [
-              'gain_creators',
-              'gains',
-              'products_and_services',
-              'customer_jobs',
-              'pain_relievers',
-              'pains',
-              'value_proposition',
-              'customer_segment',
-            ],
-          });
-        }
 
         return {
           ...teamData,
           TeamUploads: uploads,
-          IdeaSelection: ideaData ? ideaData.toJSON() : null,
-          SwotAnalysis: swotData ? swotData.toJSON() : null,
-          ValueProposition: valueData ? valueData.toJSON() : null,
         };
       })
     );
 
     res.json(finalTeams);
-
   } catch (err) {
-    console.error('❌ Error fetching assigned teams:', err);
-    res.status(500).json({ error: 'Server error fetching teams' });
+    console.error("❌ Error fetching assigned teams:", err);
+    res.status(500).json({ error: "Server error fetching teams" });
   }
 });
+
+
+
+// GET ideas for mentor's teams or a specific team
+router.get("/ideas", authenticate, async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId;
+    const userId = req.query.userId; // optional
+
+    const whereClause = { mentor_id: mentorId };
+    if (userId) whereClause.UserId = userId;
+
+    const ideas = await User.findAll({
+      where: whereClause,
+      attributes: ["UserId", "team_name", "email"],
+      include: [
+        {
+          model: IdeaSelection,
+          attributes: [
+            "team_name",
+            "list_of_ideas",
+            "ideas_scores",
+            "ideas_avg_score",
+            "overall_avg_score",
+            "selected_idea",
+          ],
+          required: false,
+        },
+      ],
+    });
+
+    res.json(ideas);
+  } catch (err) {
+    console.error("Error fetching mentor ideas:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// GET SWOT for mentor's teams or a specific team
+router.get("/swots", authenticate, async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId;
+    const userId = req.query.userId; // optional
+
+    const whereClause = { mentor_id: mentorId };
+    if (userId) whereClause.UserId = userId;
+
+    const swots = await User.findAll({
+      where: whereClause,
+      attributes: ["UserId", "team_name", "email"],
+      include: [
+        {
+          model: SwotAnalysis,
+          attributes: [
+            "selected_idea",
+            "strengths",
+            "weakness",
+            "opportunities",
+            "threats",
+          ],
+          required: false,
+        },
+      ],
+    });
+
+    res.json(swots);
+  } catch (err) {
+    console.error("Error fetching mentor SWOTs:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// GET Value Propositions for mentor's teams or a specific team
+router.get("/value-propositions", authenticate, async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId;
+    const userId = req.query.userId; // optional
+
+    const whereClause = { mentor_id: mentorId };
+    if (userId) whereClause.UserId = userId;
+
+    const vps = await User.findAll({
+      where: whereClause,
+      attributes: ["UserId", "team_name", "email"],
+      include: [
+        {
+          model: ValueProposition,
+          attributes: [
+            "gain_creators",
+            "gains",
+            "products_and_services",
+            "customer_jobs",
+            "pain_relievers",
+            "pains",
+            "value_proposition",
+            "customer_segment",
+          ],
+          required: false,
+        },
+      ],
+    });
+
+    res.json(vps);
+  } catch (err) {
+    console.error("Error fetching mentor Value Propositions:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
 
 
 
@@ -430,13 +527,7 @@ router.post('/uploads/:uploadId/review', authenticate, async (req, res) => {
         <p>Contact No: <strong>${student.mobile}</strong></p>
         <br />
         <p>Best Regards,<br />IPD Team</p>
-      `,
-      attachment: [
-        {
-          url: supabaseUrl, // link to uploaded file
-          name: fileName,
-        },
-      ],
+      `
     });
 
     res.json({ message: 'Review saved and email sent successfully', upload });
