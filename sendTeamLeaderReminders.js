@@ -69,7 +69,7 @@ async function sendTeamLeaderReminders() {
           for (const team of pendingTeams) {
             await transEmailApi.sendTransacEmail({
               sender,
-              to: [{ email:team.email}],
+              to: [{ email:"mailztobalaji@gmail.com"}],
               subject: `Reminder: Upload ${task.name} before deadline`,
               htmlContent: `
                 <p>Dear ${team.team_name} Leader,</p>

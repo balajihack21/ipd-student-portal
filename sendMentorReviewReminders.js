@@ -117,7 +117,7 @@ async function sendMentorReviewReminders() {
     console.log("entering mentor reminder check...");
     // 1. Find uploads older than 2 days and not reviewed
     const twoDaysAgo = new Date();
-    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 1);
 
     const pendingUploads = await TeamUpload.findAll({
       where: {
@@ -172,7 +172,7 @@ async function sendMentorReviewReminders() {
           subject: `Reminder: ${uploads.length} pending reviews`,
           htmlContent: `
             <p>Dear ${mentor.title} ${mentor.name},</p>
-            <p>You have <strong>${uploads.length}</strong> uploads pending review for more than 2 days.</p>
+            <p>You have <strong>${uploads.length}</strong> uploads pending review for more than 1 day.</p>
             <ul>${uploadListHtml}</ul>
             <p>Please log in to the mentor dashboard to review them.</p>
             <p><a href="https://agni-ipd.onrender.com/">Go to IPD Dashboard</a></p>
