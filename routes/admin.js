@@ -4,12 +4,119 @@ import User from '../models/User.js';
 import Mentor from '../models/Mentor.js';
 import Student from '../models/Student.js';
 import TeamUpload from '../models/TeamUpload.js';
+import IdeaSelection from '../models/Idea.js'
+import SwotAnalysis from '../models/Swot.js'
+import ValueProposition from '../models/Value.js'
 import dotenv from 'dotenv';
 import Sib from 'sib-api-v3-sdk';
 import {getSignedFileUrl}  from "../backblaze.js";
 
 
 const router = express.Router();
+
+// =============== ADMIN: Get All Ideas or Specific User ==================
+router.get("/ideas", async (req, res) => {
+  try {
+    const userId = req.query.userId; // optional filter
+
+    const whereClause = {};
+    if (userId) whereClause.UserId = userId;
+
+    const ideas = await User.findAll({
+      where: whereClause,
+      attributes: ["UserId", "team_name", "email", "mentor_id"],
+      include: [
+        {
+          model: IdeaSelection,
+          attributes: [
+            "team_name",
+            "list_of_ideas",
+            "ideas_scores",
+            "ideas_avg_score",
+            "overall_avg_score",
+            "selected_idea",
+          ],
+          required: false,
+        },
+      ],
+    });
+
+    res.json(ideas);
+  } catch (err) {
+    console.error("❌ Admin: Error fetching ideas:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// =============== ADMIN: Get All SWOTs or Specific User ==================
+router.get("/swots", async (req, res) => {
+  try {
+    const userId = req.query.userId; // optional filter
+
+    const whereClause = {};
+    if (userId) whereClause.UserId = userId;
+
+    const swots = await User.findAll({
+      where: whereClause,
+      attributes: ["UserId", "team_name", "email", "mentor_id"],
+      include: [
+        {
+          model: SwotAnalysis,
+          attributes: [
+            "selected_idea",
+            "strengths",
+            "weakness",
+            "opportunities",
+            "threats",
+          ],
+          required: false,
+        },
+      ],
+    });
+
+    res.json(swots);
+  } catch (err) {
+    console.error("❌ Admin: Error fetching SWOTs:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// =============== ADMIN: Get All Value Propositions or Specific User ==================
+router.get("/value-propositions", async (req, res) => {
+  try {
+    const userId = req.query.userId; // optional filter
+
+    const whereClause = {};
+    if (userId) whereClause.UserId = userId;
+
+    const vps = await User.findAll({
+      where: whereClause,
+      attributes: ["UserId", "team_name", "email", "mentor_id"],
+      include: [
+        {
+          model: ValueProposition,
+          attributes: [
+            "gain_creators",
+            "gains",
+            "products_and_services",
+            "customer_jobs",
+            "pain_relievers",
+            "pains",
+            "value_proposition",
+            "customer_segment",
+          ],
+          required: false,
+        },
+      ],
+    });
+
+    res.json(vps);
+  } catch (err) {
+    console.error("❌ Admin: Error fetching Value Propositions:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 
 // GET all teams with mentor
 router.get("/teams", async (req, res) => {

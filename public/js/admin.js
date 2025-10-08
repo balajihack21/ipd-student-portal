@@ -156,12 +156,12 @@ function applyHistoryFilters(resetPage = true) {
     const matchesMentor = mentorVal === "" || (team.mentor?.name || "").toLowerCase().includes(mentorVal);
     const matchesLeaderDept = leaderDeptVal === "" || (team.Students.find(s => s.is_leader)?.dept || "").toLowerCase().includes(leaderDeptVal);
     const matchesStatus =
-  statusVal === "" ||
-  team.TeamUploads.some(
-    u =>
-      (u.status || "").toLowerCase() === statusVal &&
-      (!u.review_comment || u.review_comment.trim() === "")
-  );
+      statusVal === "" ||
+      team.TeamUploads.some(
+        u =>
+          (u.status || "").toLowerCase() === statusVal &&
+          (!u.review_comment || u.review_comment.trim() === "")
+      );
 
 
     return matchesUploadStatus && matchesId && matchesName && matchesMentor && matchesLeaderDept && matchesStatus;
@@ -190,9 +190,10 @@ function renderHistoryTableFiltered(filteredTeams) {
           <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
         </div>
         <div>
-          ${team.isLocked
-            ? `<button class="unlock-btn bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700" data-team-id="${team.UserId}">Unlock</button>`
-            : `<button class="lock-btn bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700" data-team-id="${team.UserId}">Lock</button>`
+          ${
+            team.isLocked
+              ? `<button class="unlock-btn bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700" data-team-id="${team.UserId}">Unlock</button>`
+              : `<button class="lock-btn bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700" data-team-id="${team.UserId}">Lock</button>`
           }
         </div>
       </div>
@@ -212,63 +213,113 @@ function renderHistoryTableFiltered(filteredTeams) {
       <div>
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
         <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
-          ${team.Students.map(s =>
-            `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
-          ).join('')}
+          ${
+            team.Students.map(s =>
+              `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
+            ).join('')
+          }
         </ul>
       </div>
 
       <div>
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
         <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
-          ${team.TeamUploads.map(u => {
-            const daysPending = Math.floor(
-              (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
-            );
-            const isPendingTooLong = u.status !== 'REVIEWED' && daysPending > 2;
+          ${
+            team.TeamUploads.length > 0
+              ? team.TeamUploads.map(u => {
+                  const daysPending = Math.floor(
+                    (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
+                  );
+                  const isPendingTooLong = u.status !== 'REVIEWED' && daysPending > 2;
 
-            return `
-              <li>
-                <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File -${u.week_number}</a>
-                <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
-                ${isPendingTooLong
-                  ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
-                  : ''}
-                <div class="ml-4 mt-1 text-gray-600">
-                  <div>
-                    <strong>Status:</strong>
-                    <span class="font-medium ${u.status === 'REVIEWED'
-                      ? 'text-green-600'
-                      : u.status === 'SUBMITTED'
-                        ? 'text-red-600'
-                        : 'text-yellow-600'}">
-                      ${u.status || 'Pending'}
-                    </span>
-                  </div>
-                  <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
-                </div>
-                <div class="ml-4 mt-2">
-                  <textarea 
-                    id="admin-comment-${u.id}" 
-                    rows="2" 
-                    class="w-full p-2 border rounded text-sm"
-                    placeholder="Write admin comment..."
-                  >${localStorage.getItem("adminComment-" + u.id) || ""}</textarea>
+                  // ✅ New view/download logic
+                  let viewLink = "";
+                  if (u.file_url) {
+                    viewLink = `<a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File-${u.week_number}</a>`;
+                  } else {
+                    let dataType = "";
+                    if (u.week_number == 3) dataType = "idea";
+                    else if (u.week_number == 4) dataType = "swot";
+                    else if (u.week_number == 5) dataType = "value";
 
-                  <button 
-                    class="mt-1 bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 admin-comment-btn"
-                    data-upload-id="${u.id}"
-                  >
-                    Send Comment
-                  </button>
+                    viewLink = `<a href="#" class="text-blue-600 underline view-link" data-week="${u.week_number}" data-type="${dataType}" data-id="${team.UserId}">File-${u.week_number}</a>`;
+                  }
 
-                  ${localStorage.getItem("adminComment-" + u.id)
-                    ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
-                    : ""}
-                </div>
-              </li>
-            `;
-          }).join('')}
+                  return `
+                    <li>
+                      ${viewLink}
+                      <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
+                      ${
+                        isPendingTooLong
+                          ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
+                          : ''
+                      }
+                      <div class="ml-4 mt-1 text-gray-600">
+                        <div>
+                          <strong>Status:</strong>
+                          <span class="font-medium ${
+                            u.status === 'REVIEWED'
+                              ? 'text-green-600'
+                              : u.status === 'SUBMITTED'
+                                ? 'text-red-600'
+                                : 'text-yellow-600'
+                          }">
+                            ${u.status || 'Pending'}
+                          </span>
+                        </div>
+                        <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
+                      </div>
+
+                      <div class="ml-4 mt-2">
+                        <textarea 
+                          id="admin-comment-${u.id}" 
+                          rows="2" 
+                          class="w-full p-2 border rounded text-sm"
+                          placeholder="Write admin comment..."
+                        >${localStorage.getItem("adminComment-" + u.id) || ""}</textarea>
+
+                        <button 
+                          class="mt-1 bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 admin-comment-btn"
+                          data-upload-id="${u.id}"
+                        >
+                          Send Comment
+                        </button>
+
+                        ${
+                          localStorage.getItem("adminComment-" + u.id)
+                            ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
+                            : ""
+                        }
+                      </div>
+                    </li>
+                  `;
+                }).join('')
+              : (() => {
+                  let fallbackLinks = '';
+
+                  if (team.IdeaSelection) {
+                    fallbackLinks += `
+                      <a href="#" class="text-blue-600 underline view-link" data-week="3" data-type="idea" data-id="${team.UserId}">View Idea Generation</a>
+                    `;
+                  }
+                  if (team.SwotAnalysis) {
+                    fallbackLinks += `
+                      <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="4" data-type="swot" data-id="${team.UserId}">View SWOT Analysis</a>
+                    `;
+                  }
+                  if (team.ValueProposition) {
+                    fallbackLinks += `
+                      <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="5" data-type="value" data-id="${team.UserId}">View Value Proposition</a>
+                    `;
+                  }
+
+                  if (!fallbackLinks) {
+                    fallbackLinks = `<span class="text-gray-600 italic">No data available yet</span>`;
+                  }
+
+                  return `<div class="ml-4">${fallbackLinks}</div>`;
+                })()
+          }
         </ul>
       </div>
     </div>
@@ -277,7 +328,7 @@ function renderHistoryTableFiltered(filteredTeams) {
   document.getElementById("historyContent").innerHTML = html;
   renderHistoryPaginationControlsFiltered(filteredTeams.length);
 
-  // Attach lock/unlock listeners
+  // 🔒 Lock / Unlock handlers
   document.querySelectorAll(".lock-btn").forEach(btn => {
     btn.addEventListener("click", async (e) => {
       const teamId = e.target.dataset.teamId;
@@ -291,9 +342,29 @@ function renderHistoryTableFiltered(filteredTeams) {
       await toggleLock(teamId, false);
     });
   });
+
+  // 👁️ View link handlers (mentor modal logic)
+  document.querySelectorAll(".view-link").forEach(link => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const dataType = link.getAttribute("data-type");
+      const teamId = link.getAttribute("data-id");
+
+      if (dataType === "swot") {
+        document.getElementById("swotModal").classList.remove("hidden");
+        document.getElementById("swotIframe").src = `swot-admin.html?id=${teamId}&type=swot`;
+      } else if (dataType === "idea") {
+        document.getElementById("ideaModal").classList.remove("hidden");
+        document.getElementById("ideaIframe").src = `idea-admin.html?id=${teamId}&type=idea`;
+      } else if (dataType === "value") {
+        document.getElementById("valueModal").classList.remove("hidden");
+        document.getElementById("valueIframe").src = `value-admin.html?id=${teamId}&type=value`;
+      }
+    });
+  });
 }
 
-// Lock/unlock API call
+// 🔐 Lock/unlock API
 async function toggleLock(teamId, lock) {
   try {
     const token = localStorage.getItem("token");
@@ -301,12 +372,23 @@ async function toggleLock(teamId, lock) {
       headers: { Authorization: `Bearer ${token}` },
     });
     alert(`Team ${teamId} ${lock ? "locked" : "unlocked"} successfully`);
-    
   } catch (err) {
     console.error("Error updating lock state:", err);
     alert("Failed to update lock state");
   }
 }
+
+// 🧩 Modal close buttons
+document.getElementById("closeSwotModal").addEventListener("click", () => {
+  document.getElementById("swotModal").classList.add("hidden");
+});
+document.getElementById("closeIdeaModal").addEventListener("click", () => {
+  document.getElementById("ideaModal").classList.add("hidden");
+});
+document.getElementById("closeValueModal").addEventListener("click", () => {
+  document.getElementById("valueModal").classList.add("hidden");
+});
+
 
 
 
@@ -385,36 +467,34 @@ function historyNextPageFiltered(totalItems) {
 }
 
 
-function renderHistoryTable() {
+function renderHistoryTable(filteredTeams = historyData) {
   const start = (historyCurrentPage - 1) * historyRowsPerPage;
   const end = start + historyRowsPerPage;
-  const paginatedTeams = historyData.slice(start, end);
+  const paginatedTeams = filteredTeams.slice(start, end);
 
   let html = paginatedTeams.map(team => `
-    <div class="bg-white shadow rounded p-6 space-y-4 mb-6 relative">
-      <!-- Lock/Unlock Buttons -->
-      <div class="absolute top-4 right-4 flex gap-2">
-        <button 
-          class="lock-btn bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700"
-          data-team-id="${team.UserId}"
-        >
-          Lock
-        </button>
-        <button 
-          class="unlock-btn bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700"
-          data-team-id="${team.UserId}"
-        >
-          Unlock
-        </button>
+    <div class="bg-white shadow rounded p-6 space-y-4 mb-6">
+      <!-- Header: Team info + Lock/Unlock -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-2xl font-semibold text-blue-700">${team.UserId}</h2>
+          <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
+        </div>
+        <div>
+          ${
+            team.isLocked
+              ? `<button class="unlock-btn bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700" data-team-id="${team.UserId}">Unlock</button>`
+              : `<button class="lock-btn bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700" data-team-id="${team.UserId}">Lock</button>`
+          }
+        </div>
       </div>
 
-      <h2 class="text-2xl font-semibold text-blue-700">${team.UserId}</h2>
-      <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 items-center">
+      <!-- Mentor + Team Info -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
         <p><strong>Email:</strong> ${team.email}</p>
         <p><strong>Mentor:</strong> ${team.mentor?.name || 'None'} (${team.mentor?.department || 'N/A'})</p>
         <p><strong>Mentor Email:</strong> ${team.mentor?.email || 'None'}</p>
+        
         <img 
           src="${team?.profilePhoto || '/images/christmas-celebration-concept.jpg'}" 
           alt="Profile photo of ${team.team_name || 'Team Member'}"
@@ -422,91 +502,164 @@ function renderHistoryTable() {
         >
       </div>
 
+      <!-- Team Members -->
       <div>
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
         <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
-          ${team.Students.map(s =>
-            `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
-          ).join('')}
+          ${
+            team.Students.map(s =>
+              `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
+            ).join('')
+          }
         </ul>
       </div>
 
+      <!-- Uploads -->
       <div>
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
         <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
-          ${team.TeamUploads.map(u => {
-            const daysPending = Math.floor(
-              (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
-            );
-            const isPendingTooLong =
-              u.status !== 'REVIEWED' && daysPending > 2;
+          ${
+            team.TeamUploads.length > 0
+              ? team.TeamUploads.map(u => {
+                  const daysPending = Math.floor(
+                    (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
+                  );
+                  const isPendingTooLong = u.status !== 'REVIEWED' && daysPending > 2;
 
-            return `
-              <li>
-                <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File -${u.week_number}</a>
-                <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
-                ${isPendingTooLong
-                  ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
-                  : ''}
-                <div class="ml-4 mt-1 text-gray-600">
-                  <div>
-                    <strong>Status:</strong>
-                    <span class="font-medium ${u.status === 'REVIEWED'
-                      ? 'text-green-600'
-                      : u.status === 'SUBMITTED'
-                        ? 'text-red-600'
-                        : 'text-yellow-600'}">
-                      ${u.status || 'Pending'}
-                    </span>
-                  </div>
-                  <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
-                </div>
-                <div class="ml-4 mt-2">
-                  <textarea 
-                    id="admin-comment-${u.id}" 
-                    rows="2" 
-                    class="w-full p-2 border rounded text-sm"
-                    placeholder="Write admin comment..."
-                  >${localStorage.getItem("adminComment-" + u.id) || ""}</textarea>
+                  // ✅ Smart View/Download logic
+                  let viewLink = "";
+                  if (u.file_url) {
+                    viewLink = `<a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File-${u.week_number}</a>`;
+                  } else {
+                    let dataType = "";
+                    if (u.week_number == 3) dataType = "idea";
+                    else if (u.week_number == 4) dataType = "swot";
+                    else if (u.week_number == 5) dataType = "value";
 
-                  <button 
-                    class="mt-1 bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 admin-comment-btn"
-                    data-upload-id="${u.id}"
-                  >
-                    Send Comment
-                  </button>
+                    viewLink = `<a href="#" class="text-blue-600 underline view-link" data-week="${u.week_number}" data-type="${dataType}" data-id="${team.UserId}">File-${u.week_number}</a>`;
+                  }
 
-                  ${localStorage.getItem("adminComment-" + u.id)
-                    ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
-                    : ""}
-                </div>
-              </li>
-            `;
-          }).join('')}
+                  return `
+                    <li>
+                      ${viewLink}
+                      <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
+                      ${
+                        isPendingTooLong
+                          ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
+                          : ''
+                      }
+                      <div class="ml-4 mt-1 text-gray-600">
+                        <div>
+                          <strong>Status:</strong>
+                          <span class="font-medium ${
+                            u.status === 'REVIEWED'
+                              ? 'text-green-600'
+                              : u.status === 'SUBMITTED'
+                                ? 'text-red-600'
+                                : 'text-yellow-600'
+                          }">
+                            ${u.status || 'Pending'}
+                          </span>
+                        </div>
+                        <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
+                      </div>
+
+                      <div class="ml-4 mt-2">
+                        <textarea 
+                          id="admin-comment-${u.id}" 
+                          rows="2" 
+                          class="w-full p-2 border rounded text-sm"
+                          placeholder="Write admin comment..."
+                        >${localStorage.getItem("adminComment-" + u.id) || ""}</textarea>
+
+                        <button 
+                          class="mt-1 bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 admin-comment-btn"
+                          data-upload-id="${u.id}"
+                        >
+                          Send Comment
+                        </button>
+
+                        ${
+                          localStorage.getItem("adminComment-" + u.id)
+                            ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
+                            : ""
+                        }
+                      </div>
+                    </li>
+                  `;
+                }).join('')
+              : (() => {
+                  // 🧩 Fallback: show “View” links even when TeamUploads is empty
+                  let fallbackLinks = '';
+
+                  if (team.IdeaSelection) {
+                    fallbackLinks += `
+                      <a href="#" class="text-blue-600 underline view-link" data-week="3" data-type="idea" data-id="${team.UserId}">View Idea Generation</a>
+                    `;
+                  }
+                  if (team.SwotAnalysis) {
+                    fallbackLinks += `
+                      <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="4" data-type="swot" data-id="${team.UserId}">View SWOT Analysis</a>
+                    `;
+                  }
+                  if (team.ValueProposition) {
+                    fallbackLinks += `
+                      <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="5" data-type="value" data-id="${team.UserId}">View Value Proposition</a>
+                    `;
+                  }
+
+                  if (!fallbackLinks) {
+                    fallbackLinks = `<span class="text-gray-600 italic">No data available yet</span>`;
+                  }
+
+                  return `<div class="ml-4">${fallbackLinks}</div>`;
+                })()
+          }
         </ul>
       </div>
     </div>
   `).join('');
 
+  // 🧭 Render result
   document.getElementById("historyContent").innerHTML = html;
+  renderHistoryPaginationControlsFiltered(filteredTeams.length);
 
-  // Attach lock/unlock listeners
-  document.querySelectorAll(".lock-btn").forEach(btn => {
+  // 🔒 Lock / Unlock
+  document.querySelectorAll(".lock-btn").forEach(btn =>
     btn.addEventListener("click", async (e) => {
       const teamId = e.target.dataset.teamId;
       await toggleLock(teamId, true);
-    });
-  });
+    })
+  );
 
-  document.querySelectorAll(".unlock-btn").forEach(btn => {
+  document.querySelectorAll(".unlock-btn").forEach(btn =>
     btn.addEventListener("click", async (e) => {
       const teamId = e.target.dataset.teamId;
       await toggleLock(teamId, false);
-    });
-  });
+    })
+  );
 
-  renderHistoryPaginationControls();
+  // 👁️ View Links
+  document.querySelectorAll(".view-link").forEach(link =>
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const dataType = link.getAttribute("data-type");
+      const teamId = link.getAttribute("data-id");
+
+      if (dataType === "swot") {
+        document.getElementById("swotModal").classList.remove("hidden");
+        document.getElementById("swotIframe").src = `swot-admin.html?id=${teamId}&type=swot`;
+      } else if (dataType === "idea") {
+        document.getElementById("ideaModal").classList.remove("hidden");
+        document.getElementById("ideaIframe").src = `idea-admin.html?id=${teamId}&type=idea`;
+      } else if (dataType === "value") {
+        document.getElementById("valueModal").classList.remove("hidden");
+        document.getElementById("valueIframe").src = `value-admin.html?id=${teamId}&type=value`;
+      }
+    })
+  );
 }
+
 
 // Lock/unlock API call
 async function toggleLock(teamId, lock) {
@@ -915,7 +1068,7 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
 
   const headers = ["SNo",
     "Team ID", "Team Name", "Name", "Register No", "Mobile", "Email", "Dept", "Section", "Role",
-    "Mentor Name","Mentor Email", "Status"
+    "Mentor Name", "Mentor Email", "Status"
   ];
 
   for (let w = 1; w <= maxWeek; w++) {
