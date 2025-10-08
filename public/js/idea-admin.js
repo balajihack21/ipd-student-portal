@@ -5,8 +5,6 @@ window.addEventListener("DOMContentLoaded", async () => {
     const userId = params.get("id");
     const type = params.get("type");
 
-    console.log("🔍 Params:", { userId, type });
-
     if (!userId || type.toLowerCase() !== "idea") {
       console.warn("⚠️ Missing or invalid parameters in URL.");
       return;
@@ -21,38 +19,35 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     // --- Fetch Idea Selection data from backend ---
     const res = await fetch(`/admin/ideas?userId=${encodeURIComponent(userId)}`, {
-      method: "GET"
+      method: "GET",
     });
 
-    console.log("📡 Response status:", res.status);
     if (!res.ok) {
       console.error("❌ Failed to fetch idea data. Status:", res.status);
       return;
     }
 
     const data = await res.json();
-    console.log("✅ Fetched idea data:", data);
-
     if (!Array.isArray(data) || data.length === 0 || !data[0].IdeaSelections) {
       console.warn("⚠️ No idea selection data found for this team.");
       return;
     }
 
-    const ideaData = data[0].IdeaSelections;
+    const ideaData = data[0].IdeaSelections[0]; // get first selection entry
 
     // --- Fill team name & selected idea ---
     const teamInput = document.querySelector('input[placeholder="Enter team name"]');
     const selectedIdeaInput = document.querySelector('input[placeholder="Enter selected idea"]');
-    if (teamInput) teamInput.value = ideaData[0].team_name || "";
-    if (selectedIdeaInput) selectedIdeaInput.value = ideaData[0].selected_idea || "";
+    if (teamInput) teamInput.value = ideaData.team_name || "";
+    if (selectedIdeaInput) selectedIdeaInput.value = ideaData.selected_idea || "";
 
-    // --- Fill ideas ---
+    // --- Fill list of ideas ---
     const ideaInputs = document.querySelectorAll(".idea-input");
-    ideaData[0].list_of_ideas.forEach((idea, index) => {
+    ideaData.list_of_ideas.forEach((idea, index) => {
       if (ideaInputs[index]) ideaInputs[index].value = idea;
 
-      // Fill scores if available
-      const scores = ideaData[0].ideas_scores?.[idea];
+      // Fill idea scores if available
+      const scores = ideaData.ideas_scores?.[idea];
       if (scores) {
         Object.entries(scores).forEach(([crit, val]) => {
           const select = document.querySelector(`select[name="idea${index + 1}_${crit}"]`);
@@ -61,24 +56,37 @@ window.addEventListener("DOMContentLoaded", async () => {
       }
     });
 
-    // --- Update averages ---
-    const criteria = ["func", "problem", "appeal", "retention", "experience", "practical", "uniqueness", "degree", "design", "scalability", "tech"];
-    ideaData[0].list_of_ideas.forEach((_, index) => {
-      let sum = 0;
-      let count = 0;
-      criteria.forEach((crit) => {
-        const select = document.querySelector(`select[name="idea${index + 1}_${crit}"]`);
-        if (select && select.value) {
-          sum += parseInt(select.value);
-          count++;
-        }
-      });
-      const avgInput = document.querySelector(`input[name="idea${index + 1}_avg"]`);
-      if (avgInput) avgInput.value = count > 0 ? (sum / count).toFixed(2) : "";
-    });
+    // --- Fill Group Average Scores ---
+const avgRows = Array.from(document.querySelectorAll("tr.c6"))
+  .filter(tr => /Average\s*Score/i.test(tr.textContent));
 
-    // --- Disable all inputs and selects ---
-    document.querySelectorAll("input, select, textarea, button").forEach(el => {
+  console.log(avgRows)
+
+if (avgRows.length >= 2) {
+  const group1Inputs = avgRows[0].querySelectorAll("input.c0[type='number']");
+  const group2Inputs = avgRows[1].querySelectorAll("input.c0[type='number']");
+
+  console.log("✅ Found Avg Rows:", { group1Inputs, group2Inputs });
+
+  if (ideaData.ideas_avg_score) {
+    const ideas = ideaData.list_of_ideas;
+
+    ideas.forEach((idea, index) => {
+      const avgObj = ideaData.ideas_avg_score[idea];
+      if (avgObj) {
+        if (group1Inputs[index]) group1Inputs[index].value = avgObj.group1 ?? "";
+        if (group2Inputs[index]) group2Inputs[index].value = avgObj.group2 ?? "";
+      }
+    });
+  } else {
+    console.warn("⚠️ No ideas_avg_score field found in API data.");
+  }
+} else {
+  console.warn("⚠️ Average Score rows not found in HTML.");
+}
+
+    // --- Disable all inputs (view-only) ---
+    document.querySelectorAll("input, select, textarea, button").forEach((el) => {
       el.disabled = true;
       el.style.background = "#f5f5f5";
       el.style.pointerEvents = "none";
