@@ -13,8 +13,8 @@ async function loadValueProposition() {
             const data = await response.json();
             if (data) {
                 // Prefill textareas
-                const submitBtn = document.getElementById("submitBtn");
-    if (submitBtn) submitBtn.style.display = "none";
+    //             const submitBtn = document.getElementById("submitBtn");
+    // if (submitBtn) submitBtn.style.display = "none";
                 document.getElementById('ta1').value = data.gain_creators || "";
                 document.getElementById('ta2').value = data.gains || "";
                 document.getElementById('ta3').value = data.products_and_services || "";
