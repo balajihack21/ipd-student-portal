@@ -635,7 +635,7 @@ async function checkDeadlines() {
     }
 
     // ✅ IDEA & SWOT SECTION (only depend on swot_deadline)
-    if (isBeforeDeadline(swot_deadline)) {
+    if (!isLocked && isBeforeDeadline(swot_deadline)) {
       if (ideaSection) ideaSection.style.display = "block";
       if (swotSection) swotSection.style.display = "block";
     }
