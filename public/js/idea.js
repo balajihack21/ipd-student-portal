@@ -152,7 +152,7 @@ async function loadExistingData() {
             teamInput.value = data.team_name || "";
 
             const submitBtn = document.getElementById("submitBtn");
-    if (submitBtn) submitBtn.style.display = "none";
+            if (submitBtn) submitBtn.style.display = "none";
 
             // Fill ideas + scores
             const ideaInputs = document.querySelectorAll(".idea-input");
@@ -160,7 +160,7 @@ async function loadExistingData() {
                 if (ideaInputs[index]) ideaInputs[index].value = idea;
 
                 // Fill dropdowns
-                const scores = data.ideas_scores[idea];
+                const scores = data.ideas_scores?.[idea];
                 if (scores) {
                     Object.entries(scores).forEach(([crit, val]) => {
                         const select = document.querySelector(`select[name="idea${index + 1}_${crit}"]`);
@@ -169,15 +169,45 @@ async function loadExistingData() {
                 }
             });
 
-            selectedIdeaInput.value=data.selected_idea
+            selectedIdeaInput.value = data.selected_idea || "";
 
-            // Update averages after filling
+            // --- Display Group Average Scores as read-only ---
+            const avgRows = Array.from(document.querySelectorAll("tr.c6"))
+                .filter(tr => /Average\s*Score/i.test(tr.textContent));
+
+            if (avgRows.length >= 2 && data.ideas_avg_score) {
+                const group1Inputs = avgRows[0].querySelectorAll("input.c0[type='number']");
+                const group2Inputs = avgRows[1].querySelectorAll("input.c0[type='number']");
+
+                data.list_of_ideas.forEach((idea, index) => {
+                    const avgObj = data.ideas_avg_score[idea];
+                    if (avgObj) {
+                        if (group1Inputs[index]) {
+                            group1Inputs[index].value = avgObj.group1 ?? "";
+                            group1Inputs[index].readOnly = true;
+                            group1Inputs[index].style.background = "#f5f5f5";
+                        }
+                        if (group2Inputs[index]) {
+                            group2Inputs[index].value = avgObj.group2 ?? "";
+                            group2Inputs[index].readOnly = true;
+                            group2Inputs[index].style.background = "#f5f5f5";
+                        }
+                    }
+                });
+            } else {
+                console.warn("⚠️ Average Score rows or data not found");
+            }
+
+            // Update averages after filling dropdowns
             updateAverageScores();
+
         }
     } catch (err) {
         console.error("Failed to fetch existing data:", err);
     }
 }
+
+
 
 // Call it when page loads
 document.addEventListener("DOMContentLoaded", loadExistingData);
