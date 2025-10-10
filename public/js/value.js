@@ -13,16 +13,16 @@ async function loadValueProposition() {
             const data = await response.json();
             if (data) {
                 // Prefill textareas
-                const submitBtn = document.getElementById("submitBtn");
-    if (submitBtn) submitBtn.style.display = "none";
+    //             const submitBtn = document.getElementById("submitBtn");
+    // if (submitBtn) submitBtn.style.display = "none";
                 document.getElementById('ta1').value = data.gain_creators || "";
                 document.getElementById('ta2').value = data.gains || "";
                 document.getElementById('ta3').value = data.products_and_services || "";
                 document.getElementById('ta4').value = data.customer_jobs || "";
                 document.getElementById('ta5').value = data.pain_relievers || "";
                 document.getElementById('ta6').value = data.pains || "";
-                document.getElementById('ta7').value = data.value_proposition || "";
-                document.getElementById('ta8').value = data.customer_segment || "";
+                // document.getElementById('ta7').value = data.value_proposition || "";
+                // document.getElementById('ta8').value = data.customer_segment || "";
             }
         }
     } catch (err) {
@@ -32,7 +32,7 @@ async function loadValueProposition() {
 
 async function submitValueProposition() {
     const fields = [
-        'ta1','ta2','ta3','ta4','ta5','ta6','ta7','ta8'
+        'ta1','ta2','ta3','ta4','ta5','ta6'
     ];
 
     // Check all fields
@@ -54,8 +54,8 @@ async function submitValueProposition() {
         customer_jobs: document.getElementById('ta4').value,
         pain_relievers: document.getElementById('ta5').value,
         pains: document.getElementById('ta6').value,
-        value_proposition: document.getElementById('ta7').value,
-        customer_segment: document.getElementById('ta8').value
+        // value_proposition: document.getElementById('ta7').value,
+        // customer_segment: document.getElementById('ta8').value
     };
 
     try {
