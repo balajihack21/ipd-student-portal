@@ -221,6 +221,13 @@ function renderHistoryTableFiltered(filteredTeams) {
         </ul>
       </div>
 
+      <!-- Problem Statement & Selected Idea -->
+<div>
+  <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Problem Statement & Selected Idea</h3>
+  <p><strong>Problem Statement:</strong> ${team.ProblemStatement?.problem_description || 'Not submitted yet'}</p>
+  <p><strong>Selected Idea:</strong> ${team.ProblemStatement?.selected_idea || 'Not selected yet'}</p>
+</div>
+
       <div>
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
         <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
@@ -513,6 +520,13 @@ function renderHistoryTable(filteredTeams = historyData) {
           }
         </ul>
       </div>
+
+      <!-- Problem Statement & Selected Idea -->
+<div>
+  <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Problem Statement & Selected Idea</h3>
+  <p><strong>Problem Statement:</strong> ${team.ProblemStatement?.problem_description || 'Not submitted yet'}</p>
+  <p><strong>Selected Idea:</strong> ${team.ProblemStatement?.selected_idea || 'Not selected yet'}</p>
+</div>
 
       <!-- Uploads -->
       <div>

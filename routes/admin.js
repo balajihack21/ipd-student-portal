@@ -6,6 +6,7 @@ import Student from '../models/Student.js';
 import TeamUpload from '../models/TeamUpload.js';
 import IdeaSelection from '../models/Idea.js'
 import SwotAnalysis from '../models/Swot.js'
+import ProblemStatement from '../models/Problem.js'
 import ValueProposition from '../models/Value.js'
 import dotenv from 'dotenv';
 import Sib from 'sib-api-v3-sdk';
@@ -208,6 +209,10 @@ router.get('/team-history', async (req, res) => {
         {
           model: TeamUpload,
           attributes: ['id','week_number', 'file_key', 'uploaded_at', 'createdAt', 'status', 'review_comment']
+        },
+        {
+          model: ProblemStatement,
+          attributes: ['id', 'problem_description', 'selected_idea', 'updatedAt']
         }
       ],
       order: [
