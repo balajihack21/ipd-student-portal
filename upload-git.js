@@ -114,10 +114,10 @@
 
 import sequelize from './models/index.js';
 // import IdeaSelection from "./models/Idea.js";
-import ValueProposition from './models/Value.js';
+import ProblemStatement from './models/Problem.js';
 
 (async () => {
-  await ValueProposition.sync({ alter: true }); // drops 'date' column from table
-  console.log("✅ ValueProposition table updated (date removed)");
+  await ProblemStatement.sync({ alter: true }); // drops 'date' column from table
+  console.log("✅ ProblemStatement table updated (date removed)");
 })();
 

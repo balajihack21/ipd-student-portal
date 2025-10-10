@@ -13,6 +13,7 @@ import Mentor from '../models/Mentor.js';
 import Admin from '../models/Admin.js'
 import Student from '../models/Student.js'
 import TeamUpload from '../models/TeamUpload.js';
+import ProblemStatement from '../models/Problem.js'
 import authenticate from '../middleware/authenticate.js';
 import { supabase } from "../config/cloudinary.js";
 import multer from 'multer';
@@ -722,6 +723,66 @@ router.post('/value-proposition', authenticate, async (req, res) => {
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 });
+router.post('/problem-statement', authenticate, async (req, res) => {
+  try {
+    const { problem_description, selected_idea } = req.body;
+    const userId = req.user.userId;
+
+    const existing = await ProblemStatement.findOne({ where: { user_id: userId } });
+    if (existing) {
+      return res.status(400).json({ message: 'Problem statement already submitted. Use PUT to update.' });
+    }
+
+    const problem = await ProblemStatement.create({
+      problem_description,
+      selected_idea,
+      user_id: userId
+    });
+
+    res.status(201).json({ message: 'Problem statement saved successfully.', id: problem.id });
+  } catch (error) {
+    console.error('Error saving problem statement:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
+// Get My Problem Statement
+router.get('/problem-statement/mine', authenticate, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const problem = await ProblemStatement.findOne({ where: { user_id: userId } });
+    res.json(problem || {});
+  } catch (error) {
+    console.error('Error fetching problem statement:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
+// Update Problem Statement
+router.put('/problem-statement/:id', authenticate, async (req, res) => {
+  try {
+    const { problem_description, selected_idea } = req.body;
+    const userId = req.user.userId;
+    const problemId = req.params.id;
+
+    const problem = await ProblemStatement.findOne({ where: { id: problemId, user_id: userId } });
+    if (!problem) {
+      return res.status(404).json({ message: 'Problem statement not found.' });
+    }
+
+    problem.problem_description = problem_description;
+    problem.selected_idea = selected_idea;
+    await problem.save();
+
+    res.json({ message: 'Problem statement updated successfully.', id: problem.id });
+  } catch (error) {
+    console.error('Error updating problem statement:', error);
+    res.status(500).json({ message: 'Internal server error.' });
+  }
+});
+
+
+
 
 router.get("/value-proposition/mine", authenticate, async (req, res) => {
   try {

@@ -817,6 +817,134 @@ document.getElementById("valueModal").addEventListener("click", (e) => {
 });
 
 
+// ====== Problem Statement Modal Logic ======
+const problemModal = document.getElementById('problemModal');
+const addProblemBtn = document.getElementById('addProblemBtn');
+const closeProblemModal = document.getElementById('closeProblemModal');
+const cancelProblemBtn = document.getElementById('cancelProblemBtn');
+const problemForm = document.getElementById('problemStatementForm');
+const problemMsg = document.getElementById('problemMessage');
+const problemDescriptionInput = document.getElementById('problemDescription');
+const selectedIdeaInput = document.getElementById('selectedIdea');
+const problemDisplay = document.getElementById('problemDisplay');
+
+let existingProblemId = null; // Track if a problem statement already exists
+
+addProblemBtn.addEventListener('click', () => {
+  problemModal.classList.remove('hidden');
+});
+
+closeProblemModal.addEventListener('click', () => {
+  problemModal.classList.add('hidden');
+});
+
+cancelProblemBtn.addEventListener('click', () => {
+  problemModal.classList.add('hidden');
+});
+
+// ====== Load Problem Statement on Page Load ======
+async function loadProblemStatement() {
+  const token = localStorage.getItem('token');
+
+  try {
+    const response = await axios.get('/api/problem-statement/mine', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    if (response.data && response.data.problem_description) {
+      const { id, problem_description, selected_idea, updatedAt } = response.data;
+      existingProblemId = id; // store the ID for update
+
+      // Update display
+      problemDisplay.innerHTML = `
+        <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+          <h4 class="font-semibold text-gray-800 mb-2">Problem Statement</h4>
+          <p class="text-gray-700 mb-4 whitespace-pre-line">${problem_description}</p>
+
+          <h4 class="font-semibold text-gray-800 mb-2">Selected Idea</h4>
+          <p class="text-gray-700 whitespace-pre-line">${selected_idea}</p>
+
+          <p class="text-sm text-gray-500 mt-3 text-right">Last updated: ${new Date(updatedAt).toLocaleString()}</p>
+        </div>
+      `;
+
+      // Prefill form
+      problemDescriptionInput.value = problem_description;
+      selectedIdeaInput.value = selected_idea;
+    } else {
+      problemDisplay.innerHTML = `<p class="text-gray-500 text-sm italic">No problem statement added yet.</p>`;
+      existingProblemId = null;
+    }
+  } catch (error) {
+    console.error('Error loading problem statement:', error);
+    problemDisplay.innerHTML = `<p class="text-red-600 text-sm">⚠️ Failed to load problem statement.</p>`;
+  }
+}
+
+// ====== Submit or Update Problem Statement ======
+problemForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const problem_description = problemDescriptionInput.value.trim();
+  const selected_idea = selectedIdeaInput.value.trim();
+
+  if (!problem_description || !selected_idea) {
+    problemMsg.textContent = '⚠️ Please fill in all fields.';
+    problemMsg.classList.add('text-red-600');
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem('token');
+
+    let response;
+    if (existingProblemId) {
+      // Update existing
+      response = await axios.put(`/api/problem-statement/${existingProblemId}`, {
+        problem_description,
+        selected_idea
+      }, { headers: { Authorization: `Bearer ${token}` } });
+    } else {
+      // Create new
+      response = await axios.post('/api/problem-statement', {
+        problem_description,
+        selected_idea
+      }, { headers: { Authorization: `Bearer ${token}` } });
+    }
+
+    if (response.status === 200 || response.status === 201) {
+      problemMsg.textContent = '✅ Problem Statement saved successfully!';
+      problemMsg.classList.remove('text-red-600');
+      problemMsg.classList.add('text-green-600');
+
+      existingProblemId = response.data.id || existingProblemId; // update ID if newly created
+
+      // Update display immediately
+      problemDisplay.innerHTML = `
+        <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+          <h4 class="font-semibold text-gray-800 mb-2">Problem Statement</h4>
+          <p class="text-gray-700 mb-4 whitespace-pre-line">${problem_description}</p>
+
+          <h4 class="font-semibold text-gray-800 mb-2">Selected Idea</h4>
+          <p class="text-gray-700 whitespace-pre-line">${selected_idea}</p>
+
+          <p class="text-sm text-gray-500 mt-3 text-right">Last updated: ${new Date().toLocaleString()}</p>
+        </div>
+      `;
+
+      setTimeout(() => {
+        problemModal.classList.add('hidden');
+      }, 1500);
+    }
+  } catch (error) {
+    console.error('Error saving problem statement:', error);
+    problemMsg.textContent = '❌ Failed to save. Please try again.';
+    problemMsg.classList.add('text-red-600');
+  }
+});
+
+// Load problem statement on page load
+window.addEventListener('load', loadProblemStatement);
 
 
 
