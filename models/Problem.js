@@ -32,7 +32,8 @@ const ProblemStatement = sequelize.define('ProblemStatement', {
 });
 
 // Associations
-ProblemStatement.belongsTo(User, { foreignKey: 'user_id' });
+ProblemStatement.belongsTo(User, { foreignKey: 'user_id' }); 
 User.hasMany(ProblemStatement, { foreignKey: 'user_id' });
+
 
 export default ProblemStatement;

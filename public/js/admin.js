@@ -224,8 +224,8 @@ function renderHistoryTableFiltered(filteredTeams) {
       <!-- Problem Statement & Selected Idea -->
 <div>
   <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Problem Statement & Selected Idea</h3>
-  <p><strong>Problem Statement:</strong> ${team.ProblemStatement?.problem_description || 'Not submitted yet'}</p>
-  <p><strong>Selected Idea:</strong> ${team.ProblemStatement?.selected_idea || 'Not selected yet'}</p>
+  <p><strong>Problem Statement:</strong> ${team.ProblemStatements[0]?.problem_description || 'Not submitted yet'}</p>
+  <p><strong>Selected Idea:</strong> ${team.ProblemStatements[0]?.selected_idea || 'Not selected yet'}</p>
 </div>
 
       <div>
@@ -478,6 +478,7 @@ function renderHistoryTable(filteredTeams = historyData) {
   const start = (historyCurrentPage - 1) * historyRowsPerPage;
   const end = start + historyRowsPerPage;
   const paginatedTeams = filteredTeams.slice(start, end);
+  console.log(paginatedTeams)
 
   let html = paginatedTeams.map(team => `
     <div class="bg-white shadow rounded p-6 space-y-4 mb-6">
@@ -524,8 +525,8 @@ function renderHistoryTable(filteredTeams = historyData) {
       <!-- Problem Statement & Selected Idea -->
 <div>
   <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Problem Statement & Selected Idea</h3>
-  <p><strong>Problem Statement:</strong> ${team.ProblemStatement?.problem_description || 'Not submitted yet'}</p>
-  <p><strong>Selected Idea:</strong> ${team.ProblemStatement?.selected_idea || 'Not selected yet'}</p>
+  <p><strong>Problem Statement:</strong> ${team.ProblemStatements[0]?.problem_description || 'Not submitted yet'}</p>
+  <p><strong>Selected Idea:</strong> ${team.ProblemStatements[0]?.selected_idea || 'Not selected yet'}</p>
 </div>
 
       <!-- Uploads -->
