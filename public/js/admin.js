@@ -1081,9 +1081,23 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
     ).flat()
   );
 
-  const headers = ["SNo",
-    "Team ID", "Team Name", "Name", "Register No", "Mobile", "Email", "Dept", "Section", "Role",
-    "Mentor Name", "Mentor Email", "Status"
+  // ✅ Added Problem Statement + Selected Idea columns
+  const headers = [
+    "SNo",
+    "Team ID",
+    "Team Name",
+    "Name",
+    "Register No",
+    "Mobile",
+    "Email",
+    "Dept",
+    "Section",
+    "Role",
+    "Mentor Name",
+    "Mentor Email",
+    "Status",
+    "Problem Statement",
+    "Selected Idea"
   ];
 
   for (let w = 1; w <= maxWeek; w++) {
@@ -1095,7 +1109,6 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
 
   filteredHistory.forEach(team => {
     const studentsSorted = [...(team.Students || [])].sort((a, b) => b.is_leader - a.is_leader);
-
 
     studentsSorted.forEach((student, i) => {
       const rowBase = [
@@ -1111,14 +1124,15 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
         student.is_leader ? "TeamLeader" : `Team Member ${i}`,
         i === 0 ? (team.mentor?.name || "Unassigned") : "",
         i === 0 ? (team.mentor?.email || "Unassigned") : "",
-        i === 0 ? (team.TeamUploads?.length ? "Uploaded" : "No Uploads") : ""
+        i === 0 ? (team.TeamUploads?.length ? "Uploaded" : "No Uploads") : "",
+        // ✅ New fields — ProblemStatement + Selected Idea
+        i === 0 ? (team.ProblemStatements[0]?.problem_description || "Not Submitted") : "",
+        i === 0 ? (team.ProblemStatements[0]?.selected_idea || "Not Submitted") : ""
       ];
 
       if (i === 0) {
         for (let w = 1; w <= maxWeek; w++) {
-          // Find if this team has an upload for week `w`
           const upload = team.TeamUploads?.find(u => Number(u.week_number) === w);
-
           if (upload) {
             rowBase.push(upload.status || "Uploaded");
             rowBase.push(upload.file_url || "");
@@ -1129,7 +1143,7 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
         }
       } else {
         for (let w = 1; w <= maxWeek; w++) {
-          rowBase.push("", ""); // members get empty week columns
+          rowBase.push("", ""); // Empty for members
         }
       }
 
@@ -1137,13 +1151,13 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
     });
   });
 
-
-  // Create XLSX
+  // Create and export Excel
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(rows);
   XLSX.utils.book_append_sheet(wb, ws, "History");
   XLSX.writeFile(wb, "history_export.xlsx");
 });
+
 
 
 
