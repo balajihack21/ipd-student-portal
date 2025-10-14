@@ -744,6 +744,381 @@ res.json({
 /**
  * Get Mentor Upload
  */
+// router.post("/upload-excel", authenticate, upload.single("file"), async (req, res) => {
+//   try {
+//     const mentorId = req.user.mentorId;
+
+//     // ✅ Only coordinators can upload Excel
+//     const mentor = await Mentor.findByPk(mentorId);
+//     if (!mentor || !mentor.is_coordinator) {
+//       return res.status(403).json({ error: "Only coordinators can upload Excel" });
+//     }
+
+//     const file = req.file;
+//     if (!file) return res.status(400).json({ error: "File is required" });
+
+//     const fileName = file.originalname;
+//     const mimeType = file.mimetype;
+
+//     // ✅ Upload to Backblaze
+//     const { key: fileKey, signedUrl } = await uploadToBackblaze(file.buffer, fileName, mimeType);
+
+//     mentor.file_key = fileKey;
+//     mentor.file_url = signedUrl;
+//     await mentor.save();
+
+//     // ✅ Read Excel
+//     const workbook = xlsx.read(file.buffer, { type: "buffer" });
+//     const sheetName = workbook.SheetNames[0];
+//     const sheet = workbook.Sheets[sheetName];
+//     const sheetJson = xlsx.utils.sheet_to_json(sheet, { defval: null, header: 1 });
+
+//     // 1️⃣ Find header row
+//     const headerIndex = sheetJson.findIndex(r =>
+//       r.some(c => typeof c === "string" && c.toLowerCase().includes("team id"))
+//     );
+
+//     if (headerIndex === -1) {
+//       throw new Error("❌ Could not find header row in Excel");
+//     }
+
+//     // 2️⃣ Normalize headers
+//     const headerRow = sheetJson[headerIndex].map(h =>
+//       h ? h.toString().replace(/\s+/g, " ").trim() : ""
+//     );
+//     const normalizedHeaders = headerRow.map(h => h.toLowerCase().trim());
+
+//     // 3️⃣ Identify review type
+//     const isReview1 =
+//       normalizedHeaders.includes("problem identification(4)") ||
+//       normalizedHeaders.includes("problem statement canvas (4)");
+
+//     const isReview2 =
+//       normalizedHeaders.includes("idea selection canvas(4)") ||
+//       normalizedHeaders.includes("swot analysis(4)");
+
+//     console.log("Detected review type:", isReview1 ? "Review 1" : isReview2 ? "Review 2" : "Unknown");
+
+//     // 4️⃣ Extract data rows
+//     const dataRows = sheetJson.slice(headerIndex + 1);
+//     const rows = dataRows.map(r => {
+//       const obj = {};
+//       headerRow.forEach((key, i) => {
+//         obj[key] = r[i] ?? null;
+//       });
+//       return obj;
+//     });
+
+//     let lastTeamId = null;
+//     let lastTeamName = null;
+
+//     for (const row of rows) {
+//       let teamId = row["Team ID"]?.toString().trim();
+//       let teamName = row["Team Name"]?.toString().trim();
+//       const registerNo = row["Register No"]?.toString().trim();
+//       const studentName = row["Student Name"]?.toString().trim();
+
+//       if (!teamId && lastTeamId) teamId = lastTeamId;
+//       if (!teamName && lastTeamName) teamName = lastTeamName;
+//       if (!teamId || !registerNo || !studentName) continue;
+
+//       lastTeamId = teamId;
+//       lastTeamName = teamName;
+
+//       // Find the team
+//       const user = await User.findOne({ where: { UserId: teamId } });
+//       if (!user) {
+//         console.warn(`⚠️ No user found for Team ID: ${teamId}`);
+//         continue;
+//       }
+
+//       // Find the student
+//       const student = await Student.findOne({
+//         where: { register_no: registerNo, user_id: user.UserId },
+//       });
+//       if (!student) {
+//         console.warn(`⚠️ No student found with RegNo: ${registerNo}, TeamID: ${teamId}`);
+//         continue;
+//       }
+
+//       // 🧩 REVIEW 1 UPDATE
+//       if (isReview1 && !isReview2) {
+//         await student.update({
+//           ...(row["Problem Identification(4)"] && { rubric1: row["Problem Identification(4)"] }),
+//           ...(row["Problem Statement Canvas (4)"] && { rubric2: row["Problem Statement Canvas (4)"] }),
+//           ...(row["Idea Generation & Affinity diagram (4)"] && { rubric3: row["Idea Generation & Affinity diagram (4)"] }),
+//           ...(row["Team Presentation & Clarity(4)"] && { rubric4: row["Team Presentation & Clarity(4)"] }),
+//           ...(row["Mentor Interaction & Progress Tracking (4)"] && { rubric5: row["Mentor Interaction & Progress Tracking (4)"] }),
+//           ...(row["Total Marks (20)"] && { review1_score: row["Total Marks (20)"] }),
+//         });
+//         console.log(`✅ [Review 1] Updated student ${studentName} (${registerNo})`);
+//       }
+
+//       // 🧩 REVIEW 2 UPDATE
+//       else if (isReview2 && !isReview1) {
+//         await student.update({
+//           ...(row["Idea Selection Canvas(4)"] && { rubric6: row["Idea Selection Canvas(4)"] }),
+//           ...(row["SWOT Analysis(4)"] && { rubric7: row["SWOT Analysis(4)"] }),
+//           ...(row["Value Proposition Canvas(4)"] && { rubric8: row["Value Proposition Canvas(4)"] }),
+//           ...(row["Progress Tracking(4)"] && { rubric9: row["Progress Tracking(4)"] }),
+//           ...(row["Presentation & Communication (4)"] && { rubric10: row["Presentation & Communication (4)"] }),
+//           ...(row["Total Marks(20)"] && { review2_score: row["Total Marks(20)"] }),
+//         });
+//         console.log(`✅ [Review 2] Updated student ${studentName} (${registerNo})`);
+//       }
+
+//       // ❌ Unknown review type
+//       else {
+//         console.warn("⚠️ Unknown review type — skipping row");
+//       }
+//     }
+
+//     // ✅ Send confirmation email
+//     const client = Sib.ApiClient.instance;
+//     const apiKey = client.authentications["api-key"];
+//     apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+//     const transEmailApi = new Sib.TransactionalEmailsApi();
+//     const sender = { email: process.env.EMAIL_USER, name: "IPD-TEAM" };
+
+//     await transEmailApi.sendTransacEmail({
+//       sender,
+//       to: [{ email: "mailztobalaji@gmail.com" }],
+//       subject: `Review Sheet Uploaded by ${mentor.title || ""} ${mentor.name}`,
+//       htmlContent: `
+//         <h3>Hello Balaji,</h3>
+//         <p>The file <b>${fileName}</b> has been processed successfully.</p>
+//         <p>Detected Review Type: <b>${isReview1 ? "Review 1" : isReview2 ? "Review 2" : "Unknown"}</b></p>
+//         <p>Best Regards,<br />IPD Team</p>
+//       `,
+//       attachment: [{ url: signedUrl, name: fileName }],
+//     });
+
+//     res.json({
+//       message: "Excel uploaded and students/rubrics processed successfully",
+//       review_type: isReview1 ? "Review 1" : isReview2 ? "Review 2" : "Unknown",
+//       file_key: fileKey,
+//       file_url: signedUrl,
+//       processed_rows: rows.length,
+//     });
+
+//   } catch (err) {
+//     console.error("Upload error:", err);
+//     res.status(500).json({ error: "Failed to upload Excel", details: err.message });
+//   }
+// });
+
+
+
+
+
+// --- REVIEW 1 ---
+router.post("/upload-review1", authenticate, upload.single("file"), async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId;
+    const mentor = await Mentor.findByPk(mentorId);
+
+    if (!mentor || !mentor.is_coordinator) {
+      return res.status(403).json({ error: "Only coordinators can upload Review 1 Excel" });
+    }
+
+    const file = req.file;
+    if (!file) return res.status(400).json({ error: "File is required" });
+
+    const fileName = file.originalname;
+    const mimeType = file.mimetype;
+
+    // ✅ Upload file to Backblaze
+    const { key: fileKey, signedUrl } = await uploadToBackblaze(file.buffer, fileName, mimeType);
+    mentor.review1_file_key = fileKey;
+    mentor.review1_file_url = signedUrl;
+    await mentor.save();
+
+    // 🔹 Send email immediately after upload
+    const client = Sib.ApiClient.instance;
+    const apiKey = client.authentications["api-key"];
+    apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+    const transEmailApi = new Sib.TransactionalEmailsApi();
+    const sender = { email: process.env.EMAIL_USER, name: "IPD-TEAM" };
+
+    await transEmailApi.sendTransacEmail({
+      sender,
+      to: [{ email: "mailztobalaji@gmail.com" }],
+      subject: `Review 1 File Uploaded by ${mentor.title || ""} ${mentor.name}`,
+      htmlContent: `
+        <h3>Hello Balaji,</h3>
+        <p>The Review 1 file <b>${fileName}</b> has been uploaded successfully.</p>
+        <p>Best Regards,<br />IPD Team</p>
+      `,
+      attachment: [{ url: signedUrl, name: fileName }],
+    });
+
+    // ✅ Read Excel & update students
+    const workbook = xlsx.read(file.buffer, { type: "buffer" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const sheetJson = xlsx.utils.sheet_to_json(sheet, { defval: null, header: 1 });
+
+    const headerIndex = sheetJson.findIndex(r =>
+      r.some(c => typeof c === "string" && c.toLowerCase().includes("team id"))
+    );
+    if (headerIndex === -1) throw new Error("Header row not found");
+
+    const headerRow = sheetJson[headerIndex].map(h => h?.toString().trim() || "");
+    const dataRows = sheetJson.slice(headerIndex + 1);
+
+    let lastTeamId = null;
+
+    for (const r of dataRows) {
+      const row = {};
+      headerRow.forEach((h, i) => (row[h] = r[i] ?? null));
+
+      let teamId = row["Team ID"]?.toString().trim() || lastTeamId;
+      const registerNo = row["Register No"]?.toString().trim();
+      const studentName = row["Student Name"]?.toString().trim();
+
+      if (!teamId || !registerNo) continue;
+      lastTeamId = teamId;
+
+      const user = await User.findOne({ where: { UserId: teamId } });
+      if (!user) continue;
+
+      const student = await Student.findOne({
+        where: { register_no: registerNo, user_id: user.UserId },
+      });
+      if (!student) continue;
+
+      await student.update({
+        ...(row["Problem Identification(4)"] && { rubric1: row["Problem Identification(4)"] }),
+        ...(row["Problem Statement Canvas (4)"] && { rubric2: row["Problem Statement Canvas (4)"] }),
+        ...(row["Idea Generation & Affinity diagram (4)"] && { rubric3: row["Idea Generation & Affinity diagram (4)"] }),
+        ...(row["Team Presentation & Clarity(4)"] && { rubric4: row["Team Presentation & Clarity(4)"] }),
+        ...(row["Mentor Interaction & Progress Tracking (4)"] && { rubric5: row["Mentor Interaction & Progress Tracking (4)"] }),
+        ...(row["Total Marks (20)"] && { review1_score: row["Total Marks (20)"] }),
+      });
+
+      console.log(`✅ [Review 1] Updated student ${studentName} (${registerNo})`);
+    }
+
+    res.json({
+      message: "Review 1 Excel processed successfully",
+      review_type: "Review 1",
+      file_key: fileKey,
+      file_url: signedUrl,
+    });
+
+  } catch (err) {
+    console.error("Upload error:", err);
+    res.status(500).json({ error: "Failed to upload Review 1 Excel", details: err.message });
+  }
+});
+
+// --- REVIEW 2 ---
+router.post("/upload-review2", authenticate, upload.single("file"), async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId;
+    const mentor = await Mentor.findByPk(mentorId);
+
+    if (!mentor || !mentor.is_coordinator) {
+      return res.status(403).json({ error: "Only coordinators can upload Review 2 Excel" });
+    }
+
+    const file = req.file;
+    if (!file) return res.status(400).json({ error: "File is required" });
+
+    const fileName = file.originalname;
+    const mimeType = file.mimetype;
+
+    // ✅ Upload file to Backblaze
+    const { key: fileKey, signedUrl } = await uploadToBackblaze(file.buffer, fileName, mimeType);
+    mentor.review2_file_key = fileKey;
+    mentor.review2_file_url = signedUrl;
+    await mentor.save();
+
+    // 🔹 Send email immediately after upload
+    const client = Sib.ApiClient.instance;
+    const apiKey = client.authentications["api-key"];
+    apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+    const transEmailApi = new Sib.TransactionalEmailsApi();
+    const sender = { email: process.env.EMAIL_USER, name: "IPD-TEAM" };
+
+    await transEmailApi.sendTransacEmail({
+      sender,
+      to: [{ email: "mailztobalaji@gmail.com" }],
+      subject: `Review 2 File Uploaded by ${mentor.title || ""} ${mentor.name}`,
+      htmlContent: `
+        <h3>Hello Balaji,</h3>
+        <p>The Review 2 file <b>${fileName}</b> has been uploaded successfully.</p>
+        <p>Best Regards,<br />IPD Team</p>
+      `,
+      attachment: [{ url: signedUrl, name: fileName }],
+    });
+
+    // ✅ Normalize headers & update students
+    const workbook = xlsx.read(file.buffer, { type: "buffer" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
+    const sheetJson = xlsx.utils.sheet_to_json(sheet, { defval: null, header: 1 });
+
+    const headerIndex = sheetJson.findIndex(r =>
+      r.some(c => typeof c === "string" && c.toLowerCase().includes("team id"))
+    );
+    if (headerIndex === -1) throw new Error("Header row not found");
+
+    const headerRow = sheetJson[headerIndex].map(h =>
+      h?.toString().replace(/\s+/g, " ").replace(/["'\r\n]+/g, "").trim()
+    );
+
+    const dataRows = sheetJson.slice(headerIndex + 1);
+    let lastTeamId = null;
+
+    for (const r of dataRows) {
+      const row = {};
+      headerRow.forEach((h, i) => (row[h] = r[i] ?? null));
+
+      let teamId = row["Team ID"]?.toString().trim() || lastTeamId;
+      const registerNo = row["Register No"]?.toString().trim();
+      const studentName = row["Student Name"]?.toString().trim();
+
+      if (!teamId || !registerNo) continue;
+      lastTeamId = teamId;
+
+      const user = await User.findOne({ where: { UserId: teamId } });
+      if (!user) continue;
+
+      const student = await Student.findOne({
+        where: { register_no: registerNo, user_id: user.UserId },
+      });
+      if (!student) continue;
+
+      await student.update({
+        rubric6: row["Idea Selection Canvas(4)"] ?? null,
+        rubric7: row["SWOT Analysis(4)"] ?? row["SWOT Analysis (4)"] ?? null,
+        rubric8: row["Value Proposition Canvas(4)"] ?? null,
+        rubric9: row["Progress Tracking(4)"] ?? null,
+        rubric10: row["Presentation & Communication (4)"] ?? null,
+        review2_score: row["Total Marks(20)"] ?? row["Total Marks (20)"] ?? null,
+      });
+
+      console.log(`✅ [Review 2] Updated student ${studentName} (${registerNo})`);
+    }
+
+    res.json({
+      message: "Review 2 Excel processed successfully",
+      review_type: "Review 2",
+      file_key: fileKey,
+      file_url: signedUrl,
+    });
+
+  } catch (err) {
+    console.error("Upload error:", err);
+    res.status(500).json({ error: "Failed to upload Review 2 Excel", details: err.message });
+  }
+});
+
+
 router.get("/my-upload", authenticate, async (req, res) => {
   try {
     const mentorId = req.user.mentorId;
@@ -766,6 +1141,9 @@ router.get("/my-upload", authenticate, async (req, res) => {
     res.status(500).json({ error: "Failed to fetch mentor upload" });
   }
 });
+
+
+
 
 
 export default router;

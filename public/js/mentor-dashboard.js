@@ -623,7 +623,8 @@ document.getElementById("review1Form").addEventListener("submit", async (e) => {
   try {
     const token = localStorage.getItem("token");
 
-    await axios.post("/mentor/upload-excel", formData, {
+    // 🔹 Changed API link to review2
+    await axios.post("/mentor/upload-review2", formData, {
       headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
       onUploadProgress: (progressEvent) => {
         const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -639,6 +640,7 @@ document.getElementById("review1Form").addEventListener("submit", async (e) => {
     alert("Upload failed!");
   }
 });
+
 
 async function loadMentorUpload() {
   try {

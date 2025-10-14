@@ -52,6 +52,30 @@ const Student = sequelize.define('Student', {
  review1_score: {
     type: DataTypes.INTEGER,
     allowNull: true
+  },
+  rubric6: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  rubric7: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  rubric8: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  rubric9: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+  rubric10: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
+ review2_score: {
+    type: DataTypes.INTEGER,
+    allowNull: true
   }
 }, {
   tableName: 'students'
