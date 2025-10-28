@@ -669,8 +669,98 @@ async function loadMentorUpload() {
   }
 }
 
+async function loadWorkbookScores() {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.get('/mentor/workbook-scores', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const tableBody = document.getElementById('workbookScoreTableBody');
+    tableBody.innerHTML = '';
+
+    res.data.forEach(team => {
+      const leader = team.Students[0];
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="border p-2">${team.team_name}</td>
+        <td class="border p-2">${leader.dept}</td>
+        <td class="border p-2">${leader.section}</td>
+        <td class="border p-2">${leader.workbook_score ?? '-'}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+
+  } catch (err) {
+    console.error('Error loading workbook scores:', err);
+  }
+}
+
+
+async function loadWorkbookTeams() {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.get('/mentor/teams', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const teamSelect = document.getElementById('workbookTeamSelect');
+    teamSelect.innerHTML = '<option value="">-- Select a team --</option>';
+
+    res.data.forEach(team => {
+      // Get leader (since include only leader details)
+      const leader = team.Students && team.Students[0];
+      const dept = leader ? leader.dept : 'N/A';
+      const section = leader ? leader.section : 'N/A';
+
+      const option = document.createElement('option');
+      option.value = team.UserId; // use UserId to update all students in team
+      option.textContent = `${team.team_name} - ${dept}-${section}`;
+      teamSelect.appendChild(option);
+    });
+
+  } catch (err) {
+    console.error('Error loading teams for workbook evaluation:', err);
+  }
+}
+
+
+// Submit workbook score
+async function submitWorkbookScore() {
+  try {
+    const teamId = document.getElementById("workbookTeamSelect").value;
+    const score = document.getElementById("workbookScoreInput").value;
+
+    if (!teamId || !score) {
+      alert("Please select a team and enter a score.");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    const res = await axios.post(
+      "/mentor/workbook-score",
+      { teamId, score },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    alert(res.data.message);
+    document.getElementById("workbookScoreInput").value = "";
+
+    // 🔄 Reload table after successful submission
+    await loadWorkbookScores();
+
+  } catch (err) {
+    console.error("Error submitting workbook score:", err);
+    alert(err.response?.data?.error || "Failed to submit workbook score");
+  }
+}
+
+document.getElementById("submitWorkbookScore").addEventListener("click", submitWorkbookScore);
+
 
 
 loadTeams();
 loadMentorDetails();
+loadWorkbookTeams(); // load teams into workbook evaluation dropdown
+loadWorkbookScores()
 // loadRubricsTeams();

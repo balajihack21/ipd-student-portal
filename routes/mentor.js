@@ -43,26 +43,21 @@ router.get("/teams/dropdown", authenticate, async (req, res) => {
 
 router.get('/teams', authenticate, async (req, res) => {
   try {
-    const mentorId = req.user.mentorId; // comes from JWT
-    const { reviewType } = req.query;
+    const mentorId = req.user.mentorId; // From JWT
 
-    let whereClause = {};
-    if (reviewType === "review1") {
-      whereClause.review1_score = null; // not submitted yet
-    } else if (reviewType === "review2") {
-      whereClause.review2_score = null;
-    }
-
-
-    // Find mentor details (to get department)
+    // Fetch mentor details
     const mentor = await Mentor.findByPk(mentorId);
     if (!mentor) {
       return res.status(404).json({ error: 'Mentor not found' });
     }
 
-    // Fetch all teams whose leader belongs to same department as mentor
+    // Check if the logged-in user is a coordinator
+    if (!mentor.is_coordinator) {
+      return res.status(403).json({ error: 'Access denied. Only coordinators can view all teams.' });
+    }
+
+    // Fetch all teams belonging to the same department as the coordinator
     const teams = await User.findAll({
-      where: whereClause,
       attributes: ['UserId', 'team_name', 'email', 'mobile'],
       include: [
         {
@@ -70,8 +65,9 @@ router.get('/teams', authenticate, async (req, res) => {
           attributes: ['student_name', 'dept', 'section', 'register_no', 'mobile'],
           where: {
             is_leader: true,
-            dept: mentor.department, // ✅ filter by leader’s dept
-          }
+            dept: mentor.department // Filter by coordinator’s department
+          },
+          required: true
         }
       ]
     });
@@ -82,6 +78,8 @@ router.get('/teams', authenticate, async (req, res) => {
     res.status(500).json({ error: 'Server error fetching teams' });
   }
 });
+
+
 
 
 router.post("/teams/:teamId/rubrics/:stage", authenticate, async (req, res) => {
@@ -737,6 +735,85 @@ res.json({
     res.status(500).json({ error: "Failed to upload Excel", details: err.message });
   }
 });
+
+// GET: Fetch all workbook scores for coordinator's department
+router.get("/workbook-scores", authenticate, async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId;
+    const mentor = await Mentor.findByPk(mentorId);
+
+    if (!mentor || !mentor.is_coordinator) {
+      return res.status(403).json({ error: "Only coordinators can view workbook scores" });
+    }
+
+    const teams = await User.findAll({
+      attributes: ["UserId", "team_name"],
+      include: [
+        {
+          model: Student,
+          attributes: ["workbook_score", "dept", "section"],
+          where: {
+            is_leader: true,
+            dept: mentor.department
+          },
+          required: true
+        }
+      ]
+    });
+
+    res.json(teams);
+  } catch (err) {
+    console.error("Error fetching workbook scores:", err);
+    res.status(500).json({ error: "Server error fetching workbook scores" });
+  }
+});
+
+
+router.post("/workbook-score", authenticate, async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId;
+    const { teamId, score } = req.body;
+
+    // Validate coordinator
+    const mentor = await Mentor.findByPk(mentorId);
+    if (!mentor || !mentor.is_coordinator) {
+      return res.status(403).json({ error: "Only coordinators can assign workbook scores" });
+    }
+
+    // Validate input
+    if (!teamId || score == null) {
+      return res.status(400).json({ error: "teamId and score are required" });
+    }
+
+    const numericScore = Number(score);
+    if (isNaN(numericScore) || numericScore < 0 || numericScore > 40) {
+      return res.status(400).json({ error: "Score must be between 0 and 40" });
+    }
+
+    // Check if team exists
+    const team = await User.findByPk(teamId);
+    if (!team) {
+      return res.status(404).json({ error: "Team not found" });
+    }
+
+    // Update all students in that team
+    const [updatedCount] = await Student.update(
+      { workbook_score: numericScore },
+      { where: { user_id: teamId } }
+    );
+
+    res.json({
+      message: `Workbook score ${numericScore} assigned successfully to ${updatedCount} students of team ${team.team_name}`,
+      teamId,
+      workbook_score: numericScore
+    });
+
+  } catch (err) {
+    console.error("Error updating workbook score:", err);
+    res.status(500).json({ error: "Server error while updating workbook score" });
+  }
+});
+
 
 
 

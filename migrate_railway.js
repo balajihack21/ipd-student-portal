@@ -63,11 +63,25 @@ async function migrate() {
       const placeholders = cols.map(() => "?").join(", ");
 
       for (const row of rows) {
-        await target.query(
-          `INSERT INTO \`${table}\` (${cols.map((c) => `\`${c}\``).join(", ")}) VALUES (${placeholders})`,
-          Object.values(row)
-        );
-      }
+  const cleanValues = Object.values(row).map((val) => {
+    // Skip nulls
+    if (val === null || val === undefined) return null;
+
+    // If value is a Date object, convert to MySQL DATETIME string
+    if (val instanceof Date) return val.toISOString().slice(0, 19).replace('T', ' ');
+
+    // Only stringify non-Date objects and arrays
+    if (typeof val === "object") return JSON.stringify(val);
+
+    return val; // keep as-is for normal strings, numbers, etc.
+  });
+
+  await target.query(
+    `INSERT INTO \`${table}\` (${cols.map((c) => `\`${c}\``).join(", ")}) VALUES (${placeholders})`,
+    cleanValues
+  );
+}
+
     }
 
     console.log(`✅ Migrated ${rows.length} rows`);

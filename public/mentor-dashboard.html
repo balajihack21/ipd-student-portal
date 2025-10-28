@@ -237,6 +237,53 @@
             </div>
           </div>
         </div>
+
+<!-- Workbook Evaluation -->
+<!-- <div id="workbookSection" class="bg-white p-6 rounded-xl shadow-md mt-6">
+  <h2 class="text-2xl font-bold mb-4 text-blue-600">Workbook Evaluation</h2>
+
+  <label for="workbookTeamSelect" class="block mb-2 font-semibold">Select Team:</label>
+  <select id="workbookTeamSelect" class="border rounded px-3 py-2 w-full mb-4">
+    <option value="">-- Select a team --</option>
+  </select>
+
+  <label for="workbookScore" class="block mb-2 font-semibold">Enter Score (0–40):</label>
+  <input type="number" id="workbookScore" min="0" max="40" class="border rounded px-3 py-2 w-full mb-4">
+
+  <button id="submitWorkbookScore" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+    Submit Score
+  </button>
+</div> -->
+
+
+
+<div id="workbookSection" class="bg-white p-6 rounded-xl shadow-md mt-6">
+  <h2 class="text-2xl font-bold mb-4 text-blue-600">Workbook Evaluation</h2>
+
+  <label for="workbookTeamSelect" class="block mb-2 font-semibold">Select Team:</label>
+  <select id="workbookTeamSelect" class="border rounded px-3 py-2 w-full mb-4"></select>
+
+  <label for="workbookScoreInput" class="block mb-2 font-semibold">Enter Score (0–40):</label>
+  <input type="number" id="workbookScoreInput" min="0" max="40" class="border rounded px-3 py-2 w-full mb-4">
+
+  <button id="submitWorkbookScore" class="bg-blue-500 text-white px-4 py-2 rounded">Submit Score</button>
+
+  <hr class="my-6">
+
+  <h3 class="text-xl font-semibold mb-3">📊 Submitted Workbook Scores</h3>
+  <table id="workbookScoreTable" class="w-full border-collapse border border-gray-300">
+    <thead>
+      <tr class="bg-gray-100 text-left">
+        <th class="border p-2">Team Name</th>
+        <th class="border p-2">Department</th>
+        <th class="border p-2">Section</th>
+        <th class="border p-2">Score</th>
+      </tr>
+    </thead>
+    <tbody id="workbookScoreTableBody"></tbody>
+  </table>
+</div>
+
         <div id="mentorUploadHistory" class="mt-4"></div>
 
         <div id="review1Section">
