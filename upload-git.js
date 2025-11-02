@@ -112,12 +112,49 @@
 
 
 
-import sequelize from './models/index.js';
-// import IdeaSelection from "./models/Idea.js";
-import Student from './models/Student.js';
+// import sequelize from './models/index.js';
+// // import IdeaSelection from "./models/Idea.js";
+// import Student from './models/Student.js';
+
+// (async () => {
+//   await Student.sync({ alter: true }); // drops 'date' column from table
+//   console.log("✅ Student table updated (date removed)");
+// })();
+
+
+import sequelize from "./models/index.js";
+import Student from "./models/Student.js";
+import { Op, literal } from "sequelize";  // ✅ FIX: Import Op and literal properly
 
 (async () => {
-  await Student.sync({ alter: true }); // drops 'date' column from table
-  console.log("✅ Student table updated (date removed)");
+  try {
+    console.log("🚀 Starting score update...");
+
+    // ✅ Multiply review1_score and review2_score by 1.5 safely
+  const [rowsUpdated] = await Student.update(
+  {
+    review1_score: literal("ROUND(review1_score * 1.5)"),
+    review2_score: literal("ROUND(review2_score * 1.5)"),
+  },
+  {
+    where: {
+      [Op.or]: [
+        { review1_score: { [Op.ne]: null } },
+        { review2_score: { [Op.ne]: null } },
+      ],
+    },
+  }
+);
+
+
+
+    console.log(`✅ Review scores updated successfully (×1.5). Rows affected: ${rowsUpdated}`);
+
+    await sequelize.close();
+  } catch (err) {
+    console.error("❌ Error updating scores:", err);
+    await sequelize.close();
+  }
 })();
+
 

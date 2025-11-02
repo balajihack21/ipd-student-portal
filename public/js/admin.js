@@ -25,8 +25,275 @@ tabs.forEach(tab => {
     if (tab.dataset.tab === "timelineTab") {
       loadAllTimelineDates(); // 👈 new function to fetch timeline dates
     }
+
+    if (tab.dataset.tab === "reviewTab") {
+  fetchReviewScores();
+}
+
   });
 });
+
+// ======================= REVIEW SCORES TAB =======================
+
+let reviewData = [];
+let reviewFiltered = [];
+let reviewCurrentPage = 1;
+let reviewRowsPerPage = 10;
+
+async function fetchReviewScores() {
+  try {
+    const res = await axios.get("/admin/all-review-scores");
+    reviewData = Array.isArray(res.data) ? res.data : [];
+    reviewFiltered = [...reviewData];
+
+    // Assign "Role" properly (Team Leader / Student 1, 2, 3, ...)
+    const groupedByTeam = {};
+    reviewData.forEach((r) => {
+      if (!groupedByTeam[r.teamId]) groupedByTeam[r.teamId] = [];
+      groupedByTeam[r.teamId].push(r);
+    });
+
+    Object.keys(groupedByTeam).forEach((teamId) => {
+      const teamMembers = groupedByTeam[teamId];
+      let studentCounter = 1;
+      teamMembers.forEach((m) => {
+        if (m.role === "Leader" || m.is_leader) {
+          m.role = "Team Leader";
+        } else {
+          m.role = `Student ${studentCounter++}`;
+        }
+      });
+    });
+
+    // Handle rows per page change
+    const select = document.getElementById("reviewRowsPerPageSelect");
+    if (select) {
+      reviewRowsPerPage = Number(select.value);
+      select.onchange = (e) => {
+        reviewRowsPerPage = Number(e.target.value);
+        reviewCurrentPage = 1;
+        renderReviewTable();
+      };
+    }
+
+    attachReviewFilters();
+    renderReviewTable();
+  } catch (err) {
+    console.error("Error fetching review scores:", err);
+    document.getElementById("reviewTable").innerHTML =
+      `<p class="text-red-600 p-4">Failed to load review scores.</p>`;
+  }
+}
+
+function renderReviewTable() {
+  const container = document.getElementById("reviewTable");
+  if (!container) return;
+
+  const start = (reviewCurrentPage - 1) * reviewRowsPerPage;
+  const paginated = reviewFiltered.slice(start, start + reviewRowsPerPage);
+
+  if (!paginated.length) {
+    container.innerHTML = `<p class="text-gray-500 text-center p-4">No records found.</p>`;
+    renderReviewPagination();
+    return;
+  }
+
+  const rows = paginated
+    .map((r) => {
+      const r1 = r.review1score ?? 0;
+      const r2 = r.review2score ?? 0;
+      const wb = r.workbook_score ?? 0;
+
+      const reviewTotal = r1 + r2;
+      const total = r.total_score ?? r1 + r2 + wb;
+
+      return `
+        <tr class="border-b hover:bg-gray-50">
+          <td class="p-2">${r.teamId || ""}</td>
+          <td class="p-2 font-semibold">${r.team_name || ""}</td>
+          <td class="p-2">${r.name || ""}</td>
+          <td class="p-2">${r.section || ""}</td>
+          <td class="p-2">${r.register_no || ""}</td>
+          <td class="p-2">${r.dept || ""}</td>
+          <td class="p-2 font-medium text-blue-700">${r.role || ""}</td>
+          <td class="p-2 text-center">${r1}/30</td>
+          <td class="p-2 text-center">${r2}/30</td>
+          <td class="p-2 text-center font-semibold">${reviewTotal}/60</td>
+          <td class="p-2 text-center">${wb}/40</td>
+          <td class="p-2 font-bold text-green-700 text-center">${total}/100</td>
+        </tr>`;
+    })
+    .join("");
+
+  container.innerHTML = `
+    <table class="min-w-full text-sm border-collapse border border-gray-200">
+      <thead class="bg-gray-100 text-gray-700">
+        <tr>
+          <th class="p-2">Team ID</th>
+          <th class="p-2">Team Name</th>
+          <th class="p-2">Student Name</th>
+          <th class="p-2">Section</th>
+          <th class="p-2">Register No</th>
+          <th class="p-2">Dept</th>
+          <th class="p-2">Role</th>
+          <th class="p-2">Review 1 (30)</th>
+          <th class="p-2">Review 2 (30)</th>
+          <th class="p-2">Review Total (60)</th>
+          <th class="p-2">Workbook (40)</th>
+          <th class="p-2">Total(100)</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+
+  renderReviewPagination();
+}
+
+function renderReviewPagination() {
+  const controls = document.getElementById("reviewPaginationControls");
+  if (!controls) return;
+  controls.innerHTML = "";
+
+  const totalPages = Math.ceil(reviewFiltered.length / reviewRowsPerPage) || 1;
+
+  const makeBtn = (label, page, disabled = false, active = false) => {
+    const btn = document.createElement("button");
+    btn.textContent = label;
+    btn.className = `px-3 py-1 rounded border ${
+      active ? "bg-blue-600 text-white" : "bg-white"
+    } ${disabled ? "opacity-50" : "hover:bg-blue-100"}`;
+    btn.disabled = disabled;
+    if (!disabled)
+      btn.onclick = () => {
+        reviewCurrentPage = page;
+        renderReviewTable();
+      };
+    return btn;
+  };
+
+  controls.appendChild(
+    makeBtn("Prev", reviewCurrentPage - 1, reviewCurrentPage === 1)
+  );
+  for (let i = 1; i <= totalPages; i++) {
+    if (i <= 3 || i > totalPages - 3 || Math.abs(i - reviewCurrentPage) <= 1) {
+      controls.appendChild(makeBtn(i, i, false, i === reviewCurrentPage));
+    } else if (i === 4 || i === totalPages - 3) {
+      const span = document.createElement("span");
+      span.textContent = "...";
+      span.className = "px-2 text-gray-500";
+      controls.appendChild(span);
+    }
+  }
+  controls.appendChild(
+    makeBtn("Next", reviewCurrentPage + 1, reviewCurrentPage === totalPages)
+  );
+}
+
+function attachReviewFilters() {
+  const general = document.getElementById("reviewGeneralSearch");
+  const id = document.getElementById("reviewFilterTeamId");
+  const team = document.getElementById("reviewFilterTeamName");
+  const studentName = document.getElementById("reviewFilterStudentName");
+  const dept = document.getElementById("reviewFilterDept");
+  const section = document.getElementById("reviewFilterSection");
+
+  [general, id, team, studentName, dept, section].forEach(
+    (el) => el && el.addEventListener("input", applyReviewFilters)
+  );
+
+  const exportBtn = document.getElementById("exportReviewExcel");
+  if (exportBtn) exportBtn.onclick = exportReviewExcel;
+}
+
+function applyReviewFilters() {
+  const generalVal =
+    (document.getElementById("reviewGeneralSearch")?.value || "").toLowerCase();
+  const idVal =
+    (document.getElementById("reviewFilterTeamId")?.value || "").toLowerCase();
+  const teamVal =
+    (document.getElementById("reviewFilterTeamName")?.value || "").toLowerCase();
+  const studentVal =
+    (document.getElementById("reviewFilterStudentName")?.value || "").toLowerCase();
+  const deptVal =
+    (document.getElementById("reviewFilterDept")?.value || "").toLowerCase();
+  const secVal =
+    (document.getElementById("reviewFilterSection")?.value || "").toLowerCase();
+
+  reviewFiltered = reviewData.filter((r) => {
+    return (
+      (!generalVal ||
+        JSON.stringify(r).toLowerCase().includes(generalVal)) &&
+      (!idVal || (r.teamId || "").toLowerCase().includes(idVal)) &&
+      (!teamVal || (r.team_name || "").toLowerCase().includes(teamVal)) &&
+      (!studentVal || (r.name || "").toLowerCase().includes(studentVal)) &&
+      (!deptVal || (r.dept || "").toLowerCase().includes(deptVal)) &&
+      (!secVal || (r.section || "").toLowerCase().includes(secVal))
+    );
+  });
+
+  // ✅ When filtering by dept or section, sort by register_no ascending
+  if (deptVal || secVal) {
+    reviewFiltered.sort((a, b) => (a.register_no || 0) - (b.register_no || 0));
+  }
+
+  reviewCurrentPage = 1;
+  renderReviewTable();
+}
+
+function exportReviewExcel() {
+  if (!reviewFiltered.length) return alert("No data to export.");
+
+  const rows = [
+    [
+      "S.No",
+      "Team ID",
+      "Team Name",
+      "Student Name",
+      "Section",
+      "Register No",
+      "Dept",
+      "Role",
+      "Review 1 (30)",
+      "Review 2 (30)",
+      "Review Total (60)",
+      "Workbook (40)",
+      "Total (100)",
+    ],
+  ];
+
+  reviewFiltered.forEach((r, i) => {
+    const r1 = r.review1score ?? 0;
+    const r2 = r.review2score ?? 0;
+    const wb = r.workbook_score ?? 0;
+    const reviewTotal = r1 + r2;
+    const total = r.total_score ?? r1 + r2 + wb;
+
+    rows.push([
+      i + 1,
+      r.teamId,
+      r.team_name,
+      r.name,
+      r.section,
+      r.register_no,
+      r.dept,
+      r.role,
+      `${r1}/30`,
+      `${r2}/30`,
+      `${reviewTotal}/60`,
+      `${wb}/40`,
+      `${total}/100`,
+    ]);
+  });
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Review Scores");
+  XLSX.writeFile(wb, "review_scores.xlsx");
+}
+
+
+
 
 
 let allMentors = [];

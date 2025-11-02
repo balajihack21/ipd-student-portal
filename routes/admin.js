@@ -436,4 +436,74 @@ router.post("/teams/:teamId/unlock", async (req, res) => {
   }
 });
 
+// =============== ADMIN: Get All Review Scores with Team & Student Details ==================
+router.get("/all-review-scores", async (req, res) => {
+  try {
+    const teams = await User.findAll({
+      attributes: ["UserId", "team_name", "email", "mentor_id"],
+      include: [
+        {
+          model: Mentor,
+          as: "mentor",
+          attributes: ["name", "email", "department"],
+        },
+        {
+          model: Student,
+          attributes: [
+            "student_name",
+            "section",
+            "register_no",
+            "mobile",
+            "dept",
+            "is_leader",
+            "review1_score",
+            "review2_score",
+            "workbook_score",
+          ],
+        },
+      ],
+      order: [["UserId", "ASC"]],
+    });
+
+    // ✅ Transform data for frontend
+    const allScores = [];
+
+    teams.forEach((team) => {
+      const mentorName = team.mentor ? team.mentor.name : "Unassigned";
+      const mentorDept = team.mentor ? team.mentor.department : "N/A";
+
+      team.Students.forEach((student) => {
+        const total =
+          (student.review1_score || 0) +
+          (student.review2_score || 0) +
+          (student.workbook_score || 0);
+
+        allScores.push({
+          teamId: team.UserId,
+          team_name: team.team_name,
+          name: student.student_name,
+          section: student.section,
+          register_no: student.register_no,
+          mobile: student.mobile,
+          email: team.email, // team leader’s or team email
+          dept: student.dept,
+          role: student.is_leader ? "Leader" : "Member",
+          mentor_name: mentorName,
+          mentor_dept: mentorDept,
+          review1score: student.review1_score,
+          review2score: student.review2_score,
+          workbook_score: student.workbook_score,
+          total_score: total,
+        });
+      });
+    });
+
+    res.json(allScores);
+  } catch (err) {
+    console.error("❌ Error fetching review scores:", err);
+    res.status(500).json({ error: "Failed to fetch review scores" });
+  }
+});
+
+
 export default router;
