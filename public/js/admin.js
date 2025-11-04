@@ -116,11 +116,11 @@ function renderReviewTable() {
           <td class="p-2">${r.register_no || ""}</td>
           <td class="p-2">${r.dept || ""}</td>
           <td class="p-2 font-medium text-blue-700">${r.role || ""}</td>
-          <td class="p-2 text-center">${r1}/30</td>
-          <td class="p-2 text-center">${r2}/30</td>
-          <td class="p-2 text-center font-semibold">${reviewTotal}/60</td>
-          <td class="p-2 text-center">${wb}/40</td>
-          <td class="p-2 font-bold text-green-700 text-center">${total}/100</td>
+          <td class="p-2 text-center">${r1}</td>
+          <td class="p-2 text-center">${r2}</td>
+          <td class="p-2 text-center font-semibold">${reviewTotal}</td>
+          <td class="p-2 text-center">${wb}</td>
+          <td class="p-2 font-bold text-green-700 text-center">${total}</td>
         </tr>`;
     })
     .join("");
@@ -278,11 +278,11 @@ function exportReviewExcel() {
       r.register_no,
       r.dept,
       r.role,
-      `${r1}/30`,
-      `${r2}/30`,
-      `${reviewTotal}/60`,
-      `${wb}/40`,
-      `${total}/100`,
+      `${r1}`,
+      `${r2}`,
+      `${reviewTotal}`,
+      `${wb}`,
+      `${total}`,
     ]);
   });
 
