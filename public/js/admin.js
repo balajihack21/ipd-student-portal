@@ -1081,13 +1081,20 @@ function renderReassignMentorTable() {
           <select id="reassign-${team.UserId}" class="border rounded px-2 py-1 text-sm">
             <option value="">Select Mentor</option>
             ${allMentors.map(m => `
-              <option value="${m.MentorId}" ${team.mentor?.MentorId === m.MentorId ? "selected" : ""}>
+              <option value="${m.mentorId}" ${team.mentor?.mentorId === m.mentorId ? "selected" : ""}>
                 ${m.name} (${m.department})
               </option>
             `).join("")}
           </select>
-          <button onclick="reassignMentor('${team.UserId}')" class="ml-2 px-2 py-1 bg-blue-600 text-white rounded text-sm">Reassign</button>
-        </td>
+
+<button
+  class="reassign-btn ml-2 px-2 py-1 bg-blue-600 text-white rounded text-sm"
+  data-team-id="${team.UserId}"
+  data-select-id="reassign-${team.UserId}">
+  Reassign
+</button>
+
+</td>
       </tr>
     `;
   }).join('');
@@ -1588,10 +1595,49 @@ window.deleteTeam = async (id) => {
   }
 };
 
-window.reassignMentor = async function (teamId) {
-  const select = document.getElementById(`reassign-${teamId}`);
-  const mentorId = select.value;
-  if (!mentorId) return alert("Please select a mentor.");
+
+// window.reassignMentor = async function (teamId) {
+//   const select = document.getElementById(`reassign-${teamId}`);
+//   const mentorId = select.value;
+//   if (!mentorId) return alert("Please select a mentor.");
+// window.reassignMentor = async function (teamId) {
+//   const select = document.getElementById(`reassign-${teamId}`);
+//   const mentorId = select.value;
+//   if (!mentorId) return alert("Please select a mentor.");
+
+//   try {
+//     await axios.put('/admin/assign-mentor', {
+//       team_id: teamId,
+//       mentor_id: mentorId
+//     });
+//     alert("Mentor reassigned successfully.");
+//     fetchTeams();
+//   } catch (err) {
+//     console.error(err);
+//     alert("Failed to reassign mentor.");
+//   }
+// };
+
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("reassign-btn")) {
+    const selectId = e.target.dataset.selectId;
+    const teamId = e.target.dataset.teamId;
+
+    const select = document.getElementById(selectId);
+    const mentorId = select?.value;
+
+    console.log(teamId, mentorId);
+    reassignMentor(teamId, mentorId);
+  }
+});
+
+
+async function reassignMentor(teamId, mentorId) {
+  console.log(teamId,mentorId)
+  if (!mentorId) {
+    alert("Please select a mentor.");
+    return;
+  }
 
   try {
     await axios.put('/admin/assign-mentor', {

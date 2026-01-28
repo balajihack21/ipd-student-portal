@@ -158,7 +158,7 @@ router.get('/mentors', async (req, res) => {
 router.put('/assign-mentor', async (req, res) => {
   const { team_id, mentor_id } = req.body;
   try {
-    await User.update({ MentorId: mentor_id }, { where: { UserId: team_id } });
+    await User.update({ mentor_id: mentor_id }, { where: { UserId: team_id } });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
