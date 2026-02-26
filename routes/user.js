@@ -873,7 +873,7 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
 
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email: "balajiaru06@gmail.com" }],
+      to: [{ email: mentor.email}],
       subject: `Team Upload Notification - ${submissionTitle}`,
       htmlContent: `
     <h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
@@ -1135,7 +1135,7 @@ router.post("/user-requirements", authenticate, async (req, res) => {
 
       await transEmailApi.sendTransacEmail({
         sender,
-        to: [{ email: "balajiaru06@gmail.com" }],
+        to: [{ email: mentor.email }],
         subject: `Team Upload Notification - User Requirement Canvas`,
         htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
           <p>Your mentee has submitted <strong>User Requirement Canvas</strong>.</p>
