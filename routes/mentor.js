@@ -5,6 +5,10 @@ import User from '../models/User.js';
 import Mentor from '../models/Mentor.js'
 import Student from '../models/Student.js'
 import TeamUpload from '../models/TeamUpload.js';
+import UserRequirementCanvas from "../models/UserRequirementCanvas.js";
+import ProductDimensions from "../models/ProductDimensions.js";
+import PerformanceRequirement from "../models/PerformanceRequirement.js";
+import BillOfMaterial from "../models/BillOfMaterial.js";
 import dotenv from 'dotenv';
 import Sib from 'sib-api-v3-sdk';
 import { getSignedFileUrl } from "../backblaze.js";
@@ -278,6 +282,10 @@ router.get("/my-teams", authenticate, async (req, res) => {
           ],
           required: false,
         },
+        UserRequirementCanvas,
+        ProductDimensions,
+        PerformanceRequirement,
+        BillOfMaterial
       ],
       order: [[TeamUpload, "uploaded_at", "DESC"]],
     });
@@ -603,99 +611,99 @@ router.post("/upload-excel", authenticate, upload.single("file"), async (req, re
     mentor.file_url = signedUrl; // temporary signed URL
     await mentor.save();
 
-// Inside your upload route
-const workbook = xlsx.read(file.buffer, { type: "buffer" });
-const sheetName = workbook.SheetNames[0];
-const sheet = workbook.Sheets[sheetName];
+    // Inside your upload route
+    const workbook = xlsx.read(file.buffer, { type: "buffer" });
+    const sheetName = workbook.SheetNames[0];
+    const sheet = workbook.Sheets[sheetName];
 
-const sheetJson = xlsx.utils.sheet_to_json(sheet, {
-  defval: null,
-  header: 1, // raw array of rows
-});
+    const sheetJson = xlsx.utils.sheet_to_json(sheet, {
+      defval: null,
+      header: 1, // raw array of rows
+    });
 
-// 1️⃣ Find header row dynamically
-const headerIndex = sheetJson.findIndex(r =>
-  r.some(c => typeof c === "string" && c.toLowerCase().includes("team id"))
-);
+    // 1️⃣ Find header row dynamically
+    const headerIndex = sheetJson.findIndex(r =>
+      r.some(c => typeof c === "string" && c.toLowerCase().includes("team id"))
+    );
 
-if (headerIndex === -1) {
-  throw new Error("❌ Could not find header row in Excel");
-}
+    if (headerIndex === -1) {
+      throw new Error("❌ Could not find header row in Excel");
+    }
 
-// 2️⃣ Normalize headers
-const headerRow = sheetJson[headerIndex].map(h =>
-  h ? h.toString().replace(/\s+/g, " ").trim() : ""
-);
+    // 2️⃣ Normalize headers
+    const headerRow = sheetJson[headerIndex].map(h =>
+      h ? h.toString().replace(/\s+/g, " ").trim() : ""
+    );
 
-// 3️⃣ Extract all student rows (till end of sheet)
-const dataRows = sheetJson.slice(headerIndex + 1);
+    // 3️⃣ Extract all student rows (till end of sheet)
+    const dataRows = sheetJson.slice(headerIndex + 1);
 
-const rows = dataRows.map(r => {
-  const obj = {};
-  headerRow.forEach((key, i) => {
-    obj[key] = r[i] ?? null;
-  });
-  return obj;
-});
+    const rows = dataRows.map(r => {
+      const obj = {};
+      headerRow.forEach((key, i) => {
+        obj[key] = r[i] ?? null;
+      });
+      return obj;
+    });
 
-// Debug
-console.log("✅ Normalized headers:", headerRow);
-console.log("✅ First student row:", rows[0]);
-let lastTeamId = null; // keep track of last seen team ID
-let lastTeamName = null;
+    // Debug
+    console.log("✅ Normalized headers:", headerRow);
+    console.log("✅ First student row:", rows[0]);
+    let lastTeamId = null; // keep track of last seen team ID
+    let lastTeamName = null;
 
-for (const row of rows) {
-  let teamId = row["Team ID"]?.toString().trim();
-  let teamName = row["Team Name"]?.toString().trim();
-  const registerNo = row["Register No"]?.toString().trim();
-  const studentName = row["Student Name"]?.toString().trim();
+    for (const row of rows) {
+      let teamId = row["Team ID"]?.toString().trim();
+      let teamName = row["Team Name"]?.toString().trim();
+      const registerNo = row["Register No"]?.toString().trim();
+      const studentName = row["Student Name"]?.toString().trim();
 
-  // If empty → use last seen
-  if (!teamId && lastTeamId) {
-    teamId = lastTeamId;
-  }
-  if (!teamName && lastTeamName) {
-    teamName = lastTeamName;
-  }
+      // If empty → use last seen
+      if (!teamId && lastTeamId) {
+        teamId = lastTeamId;
+      }
+      if (!teamName && lastTeamName) {
+        teamName = lastTeamName;
+      }
 
-  // Skip if still missing
-  if (!teamId || !registerNo || !studentName) continue;
+      // Skip if still missing
+      if (!teamId || !registerNo || !studentName) continue;
 
-  // Remember for next iteration
-  lastTeamId = teamId;
-  lastTeamName = teamName;
+      // Remember for next iteration
+      lastTeamId = teamId;
+      lastTeamName = teamName;
 
-  // Find team/user
-  const user = await User.findOne({ where: { UserId: teamId } });
-  if (!user) {
-    console.warn(`⚠️ No user found for Team ID: ${teamId}`);
-    continue;
-  }
+      // Find team/user
+      const user = await User.findOne({ where: { UserId: teamId } });
+      if (!user) {
+        console.warn(`⚠️ No user found for Team ID: ${teamId}`);
+        continue;
+      }
 
-  // Find student
-  const student = await Student.findOne({
-    where: { register_no: registerNo, user_id: user.UserId },
-  });
+      // Find student
+      const student = await Student.findOne({
+        where: { register_no: registerNo, user_id: user.UserId },
+      });
 
-  if (!student) {
-    console.warn(`⚠️ No student found with RegNo: ${registerNo}, TeamID: ${teamId}`);
-    continue;
-  }
+      if (!student) {
+        console.warn(`⚠️ No student found with RegNo: ${registerNo}, TeamID: ${teamId}`);
+        continue;
+      }
 
-  // Update rubrics
-  await student.update({
-    rubric1: row["Problem Identification(4)"] || null,
-    rubric2: row["Problem Statement Canvas (4)"] || null,
-    rubric3: row["Idea Generation & Affinity diagram (4)"] || null,
-    rubric4: row["Team Presentation & Clarity(4)"] || null,
-    rubric5: row["Mentor Interaction & Progress Tracking (4)"] || null,
-    review1_score: row["Total Marks (20)"] || null,
-  });
+      // Update rubrics
+      await student.update({
+        rubric1: row["Problem Identification(4)"] || null,
+        rubric2: row["Problem Statement Canvas (4)"] || null,
+        rubric3: row["Idea Generation & Affinity diagram (4)"] || null,
+        rubric4: row["Team Presentation & Clarity(4)"] || null,
+        rubric5: row["Mentor Interaction & Progress Tracking (4)"] || null,
+        review1_score: row["Total Marks (20)"] || null,
+      });
 
-  console.log(`✅ Updated student ${studentName} (${registerNo}) in Team ${teamId}`);
-}
+      console.log(`✅ Updated student ${studentName} (${registerNo}) in Team ${teamId}`);
+    }
 
-const client = Sib.ApiClient.instance;
+    const client = Sib.ApiClient.instance;
     const apiKey = client.authentications["api-key"];
     apiKey.apiKey = process.env.EMAIL_PASSWORD;
 
@@ -707,7 +715,7 @@ const client = Sib.ApiClient.instance;
     //student.email
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email: "mailztobalaji@gmail.com"}],
+      to: [{ email: "mailztobalaji@gmail.com" }],
       subject: `Review Submitted by ${mentor.title}${mentor.name}`,
       htmlContent: `
         <h3>Hello Balaji,</h3>
@@ -721,13 +729,13 @@ const client = Sib.ApiClient.instance;
       ],
     });
 
-// 5️⃣ Response
-res.json({
-  message: "Excel uploaded and students/rubrics processed successfully",
-  file_key: fileKey,
-  file_url: signedUrl,
-  processed_rows: rows.length,
-});
+    // 5️⃣ Response
+    res.json({
+      message: "Excel uploaded and students/rubrics processed successfully",
+      file_key: fileKey,
+      file_url: signedUrl,
+      processed_rows: rows.length,
+    });
 
 
   } catch (err) {

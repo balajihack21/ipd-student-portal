@@ -409,7 +409,24 @@ async function submitRubrics(teamId, stage) {
 //   }
 // }
 
-
+const weekTitles = {
+  1: "Problem Statement Canvas",
+  2: "Affinity Diagram",
+  3: "Idea Generation Canvas",
+  4: "SWOT Analysis",
+  5: "Value Proposition",
+  6: "User Requirements",
+  7: "Product Dimensions",
+  8: "Performance Requirement",
+  9: "Bill Of Materials",
+  10: "2D Modelling",
+  11: "3D Modelling",
+  12: "DB Schema",
+  13: "HLD",
+  14: "Tech Stack Architecture",
+  15: "User Flow Diagram",
+  16:"Mock Up / Wireframe"
+};
 async function loadTeams() {
   try {
     const token = localStorage.getItem('token');
@@ -424,6 +441,7 @@ async function loadTeams() {
     res.data.forEach(team => {
       const teamCard = document.createElement('div');
       teamCard.className = 'border rounded-lg p-4 shadow-sm';
+
 
       // Check if uploads exist
       let uploadsContent = '';
@@ -448,7 +466,9 @@ async function loadTeams() {
 
           return `
             <div class="p-3 border rounded bg-gray-50">
-              <p class="font-semibold">File - ${upload.week_number}</p>
+             <p class="font-semibold">
+  ${weekTitles[upload.week_number] || `Week ${upload.week_number}`}
+</p>
               ${viewLink}
               ${alreadyReviewed && stat === "REVIEWED"
               ? `
@@ -544,7 +564,7 @@ async function loadTeams() {
             // const ideaSubmitBtn = document.getElementById("ideaSubmitBtn");
             // if (ideaSubmitBtn) ideaSubmitBtn.style.display = "none";
             document.getElementById("ideaIframe").src = `idea-mentor.html?id=${team.UserId}&type=idea`;
-          }else if (week === 5) {
+          } else if (week === 5) {
             document.getElementById("ideaModal").classList.remove("hidden");
             // const ideaSubmitBtn = document.getElementById("ideaSubmitBtn");
             // if (ideaSubmitBtn) ideaSubmitBtn.style.display = "none";

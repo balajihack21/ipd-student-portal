@@ -95,22 +95,52 @@ async function loadUploadHistory() {
     res.data.forEach(upload => {
       const item = document.createElement("div");
       const date = new Date(upload.uploaded_at).toLocaleString();
+      // Map week number to title
+      const weekTitles = {
+        1: "Problem Statement Canvas",
+        2: "Affinity Diagram",
+        3: "Idea Generation Canvas",
+        4: "SWOT Analysis",
+        5: "Value Proposition",
+        6: "User Requirements",
+        7: "Product Dimensions",
+        8: "Performance Requirement",
+        9: "Bill Of Materials",
+        10: "2D Modelling",
+        11: "3D Modelling",
+        12: "DB Schema",
+        13: "HLD",
+        14: "Tech Stack Architecture",
+        15: "User Flow Diagram",
+        16:"Mock Up / Wireframe"
+      };
+
+      const title = weekTitles[upload.week_number] || `File ${upload.week_number}`;
 
       item.innerHTML = `
-        <div class="bg-gray-100 p-3 rounded shadow-sm mb-3">
-          <div class="flex justify-between items-center">
-            <div>
-              <strong>File ${upload.week_number}</strong><br>
-              <span class="text-xs text-gray-500">${date}</span>
-            </div>
-            <a href="#" class="text-blue-500 underline view-link">View</a>
-          </div>
-          <div class="mt-2 ml-1 text-sm text-gray-700">
-            <div><strong>Status:</strong> <span class="font-medium ${upload.status === 'REVIEWED' ? 'text-green-600' : upload.status === 'SUBMITTED' ? 'text-red-600' : 'text-yellow-600'}">${upload.status || 'Pending'}</span></div>
-            <div><strong>Comment:</strong> ${upload.review_comment || 'No comment yet'}</div>
-          </div>
-        </div>
-      `;
+  <div class="bg-gray-100 p-3 rounded shadow-sm mb-3">
+    <div class="flex justify-between items-center">
+      <div>
+        <strong>${title}</strong><br>
+        <span class="text-xs text-gray-500">${date}</span>
+      </div>
+      <a href="#" class="text-blue-500 underline view-link">View</a>
+    </div>
+    <div class="mt-2 ml-1 text-sm text-gray-700">
+      <div><strong>Status:</strong> 
+        <span class="font-medium ${upload.status === 'REVIEWED'
+          ? 'text-green-600'
+          : upload.status === 'SUBMITTED'
+            ? 'text-red-600'
+            : 'text-yellow-600'
+        }">
+          ${upload.status || 'Pending'}
+        </span>
+      </div>
+      <div><strong>Comment:</strong> ${upload.review_comment || 'No comment yet'}</div>
+    </div>
+  </div>
+`;
 
       uploadDiv.appendChild(item);
 
@@ -131,20 +161,64 @@ async function loadUploadHistory() {
             if (swotSubmitBtn) swotSubmitBtn.style.display = "none";
 
             document.getElementById("swotIframe").src = "swot.html"; // replace with dynamic src if needed
-          }  else if (upload.week_number === 3){
+          } else if (upload.week_number === 3) {
             document.getElementById("ideaModal").classList.remove("hidden");
             // Example: when showing SWOT modal
             const ideaSubmitBtn = document.getElementById("ideaSubmitBtn");
             if (ideaSubmitBtn) ideaSubmitBtn.style.display = "none";
 
             document.getElementById("ideaIframe").src = "idea.html"; // replace with dynamic src if needed
-          }else if (upload.week_number === 5){
+          } else if (upload.week_number === 5) {
             document.getElementById("valueModal").classList.remove("hidden");
             // Example: when showing SWOT modal
             const valueSubmitBtn = document.getElementById("valueSubmitBtn");
             if (valueSubmitBtn) valueSubmitBtn.style.display = "none";
 
             document.getElementById("valueIframe").src = "value.html";
+          }
+          else if (upload.week_number === 6) {
+            document.getElementById("userReqModal").classList.remove("hidden");
+
+            const submitBtn = document.getElementById("userReqSubmitBtn");
+            if (submitBtn) submitBtn.style.display = "none";
+
+            loadUserRequirementCanvasIntoModal();
+          }
+
+          else if (upload.week_number === 7) {
+
+            openModal(
+              "Product Dimensions",
+              ["Parameter", "Dimension"],
+              "dimensions"
+            );
+
+            disablePopupEditing(); // make read-only
+            loadPopupData("dimensions");
+          }
+
+          else if (upload.week_number === 8) {
+
+            openModal(
+              "Performance Requirements",
+              ["Parameter", "Expected Performance", "Justification"],
+              "performance"
+            );
+
+            disablePopupEditing();
+            loadPopupData("performance");
+          }
+
+          else if (upload.week_number === 9) {
+
+            openModal(
+              "Bill Of Materials",
+              ["Component", "Material", "Quantity"],
+              "bom"
+            );
+
+            disablePopupEditing();
+            loadPopupData("bom");
           }
 
         });
@@ -168,6 +242,118 @@ async function loadUploadHistory() {
 }
 
 
+async function loadUserRequirementCanvasIntoModal() {
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.get("/api/user-requirements/mine", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const data = res.data;
+
+    if (!data) return;
+
+    userReqRows.innerHTML = "";
+
+    for (let i = 0; i < 10; i++) {
+
+      const requirement = data.user_requirements?.[i] || "";
+      const feature = data.product_features?.[i] || "";
+
+      const row = document.createElement("div");
+      row.className = "grid grid-cols-2 gap-4";
+
+      row.innerHTML = `
+        <input type="text"
+          value="${requirement}"
+          class="border p-2 rounded bg-gray-100"
+          readonly />
+
+        <input type="text"
+          value="${feature}"
+          class="border p-2 rounded bg-gray-100"
+          readonly />
+      `;
+
+      userReqRows.appendChild(row);
+    }
+
+    document.getElementById("mustHave").value = data.must_have || "";
+    document.getElementById("shouldHave").value = data.should_have || "";
+    document.getElementById("couldHave").value = data.could_have || "";
+    document.getElementById("wontHave").value = data.wont_have || "";
+
+    document.getElementById("mustHave").readOnly = true;
+    document.getElementById("shouldHave").readOnly = true;
+    document.getElementById("couldHave").readOnly = true;
+    document.getElementById("wontHave").readOnly = true;
+
+  } catch (err) {
+    console.error("Error loading into modal:", err);
+  }
+}
+
+async function loadPopupData(type) {
+  try {
+    const token = localStorage.getItem("token");
+
+    const endpointMap = {
+      dimensions: "/api/product-dimensions/mine",
+      performance: "/api/performance-requirements/mine",
+      bom: "/api/bill-of-materials/mine"
+    };
+
+    const res = await axios.get(endpointMap[type], {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    let rows = [];
+
+    // Normalize backend response structure
+    if (type === "dimensions") {
+      rows = res.data.dimensions || [];
+    }
+
+    if (type === "performance") {
+      rows = res.data.performance_data || [];
+    }
+
+    if (type === "bom") {
+      rows = res.data.bom_data || [];
+    }
+
+    const inputs = document.querySelectorAll(".table-input");
+
+    let index = 0;
+    console.log(rows)
+
+    rows.forEach(row => {
+      Object.values(row).forEach(value => {
+        if (inputs[index]) {
+          inputs[index].value = value ?? "";
+          index++;
+        }
+      });
+    });
+
+  } catch (err) {
+    console.error("Error loading popup data:", err);
+  }
+}
+
+function disablePopupEditing() {
+  const inputs = document.querySelectorAll(".table-input");
+
+  inputs.forEach(input => {
+    input.readOnly = true;
+    input.classList.add("bg-gray-100");
+  });
+
+  const saveBtn = document.getElementById("savePopupBtn");
+  if (saveBtn) saveBtn.style.display = "none";
+}
 
 document.getElementById("logout").addEventListener("click", (e) => {
   e.preventDefault()
@@ -355,6 +541,19 @@ async function handleUpload(formId, fileId, progressId, statusId, weekNumber) {
 // Attach upload handlers (Week 1 for Problem, Week 2 for Affinity)
 handleUpload("problemForm", "problemFile", "problemProgress", "problemStatus", 1);
 handleUpload("affinityForm", "affinityFile", "affinityProgress", "affinityStatus", 2);
+handleUpload("modelling2dForm", "modelling2dFile", "modelling2dProgress", "modelling2dStatus", 10);
+
+handleUpload("modelling3dForm", "modelling3dFile", "modelling3dProgress", "modelling3dStatus", 11);
+
+handleUpload("dbSchemaForm", "dbSchemaFile", "dbSchemaProgress", "dbSchemaStatus", 12);
+
+handleUpload("hldForm", "hldFile", "hldProgress", "hldStatus", 13);
+
+handleUpload("techStackForm", "techStackFile", "techStackProgress", "techStackStatus", 14);
+
+handleUpload("userFlowForm", "userFlowFile", "userFlowProgress", "userFlowStatus", 15);
+
+handleUpload("mockupForm", "mockupFile", "mockupProgress", "mockupStatus", 16);
 
 
 
@@ -943,10 +1142,439 @@ problemForm.addEventListener('submit', async (e) => {
   }
 });
 
+let currentModalType = null; // track which modal is open
+
+function openModal(title, headers, type) {
+
+  currentModalType = type; // 👈 store type
+
+  document.getElementById("modalTitle").innerText = title;
+
+  let tableHTML = `<table class="w-full border border-collapse">`;
+  tableHTML += "<thead><tr>";
+
+  headers.forEach(h => {
+    tableHTML += `<th class="border p-2 bg-gray-100">${h}</th>`;
+  });
+
+  tableHTML += "</tr></thead><tbody>";
+
+  for (let i = 0; i < 10; i++) {
+    tableHTML += "<tr>";
+    headers.forEach(() => {
+      tableHTML += `<td class="border p-1">
+                <input type="text" class="w-full border p-1 rounded table-input" />
+            </td>`;
+    });
+    tableHTML += "</tr>";
+  }
+
+  tableHTML += "</tbody></table>";
+
+  document.getElementById("modalTableContainer").innerHTML = tableHTML;
+
+  document.getElementById("popupModal").classList.remove("hidden");
+}
+
+function closeModal() {
+  document.getElementById("popupModal").classList.add("hidden");
+}
+
+const addDimensionsBtn = document.getElementById("addDimensionsBtn");
+
+if (addDimensionsBtn) {
+  addDimensionsBtn.addEventListener("click", function () {
+    openModal(
+      "Product Dimensions",
+      ["Parameter", "Dimension"],
+      "dimensions"
+    );
+  });
+}
+
+const addPerformanceBtn = document.getElementById("addPerformanceBtn");
+if (addPerformanceBtn) {
+  addPerformanceBtn.addEventListener("click", function () {
+    openModal("Performance Requirements",
+      ["Parameter", "Expected Performance", "Justification"],
+      "performance");
+  });
+}
+
+const addBomBtn = document.getElementById("addBomBtn");
+if (addBomBtn) {
+  addBomBtn.addEventListener("click", function () {
+    openModal("Bill Of Materials",
+      ["Component", "Material", "Quantity"],
+      "bom");
+  });
+}
+
+const savePopupBtn = document.getElementById("savePopupBtn");
+
+if (savePopupBtn) {
+  savePopupBtn.addEventListener("click", async function () {
+
+    const token = localStorage.getItem("token");
+    const rows = document.querySelectorAll("#modalTableContainer tbody tr");
+
+    let formattedData = [];
+
+    rows.forEach(row => {
+      const inputs = row.querySelectorAll("input");
+      const values = Array.from(inputs).map(i => i.value.trim());
+
+      if (values.some(v => v !== "")) {
+        formattedData.push(values);
+      }
+    });
+
+    try {
+
+      if (currentModalType === "dimensions") {
+
+        const dimensions = formattedData.map(r => ({
+          parameter: r[0],
+          dimension: r[1]
+        }));
+
+        await axios.post("/api/product-dimensions", {
+          dimensions
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        await loadDimensions();
+      }
+
+      else if (currentModalType === "performance") {
+
+        const performance_data = formattedData.map(r => ({
+          parameter: r[0],
+          expectedPerformance: r[1],
+          justification: r[2]
+        }));
+
+        await axios.post("/api/performance-requirements", {
+          performance_data
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        await loadPerformance();
+      }
+
+      else if (currentModalType === "bom") {
+
+        const bom_data = formattedData.map(r => ({
+          component: r[0],
+          material: r[1],
+          quantity: r[2]
+        }));
+
+        await axios.post("/api/bill-of-materials", {
+          bom_data
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        await loadBOM();
+      }
+
+      alert("Saved Successfully ");
+      closeModal();
+
+    } catch (err) {
+      console.error("Error saving:", err);
+      alert("Failed to save ");
+    }
+  });
+
+}
+
+
+async function loadDimensions() {
+
+  const token = localStorage.getItem("token");
+  const res = await axios.get("/api/product-dimensions/mine", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const display = document.getElementById("dimensionsDisplay");
+
+  if (!res.data || !res.data.dimensions) {
+    display.innerHTML = `<p class="text-gray-500 italic">No data added yet.</p>`;
+    return;
+  }
+
+  display.innerHTML = `
+        <div class="border rounded p-4 bg-gray-50">
+            <h3 class="font-semibold mb-2">Product Dimensions</h3>
+            <ul class="list-disc ml-5">
+                ${res.data.dimensions.map(d =>
+    `<li><strong>${d.parameter}:</strong> ${d.dimension}</li>`
+  ).join("")}
+            </ul>
+        </div>
+    `;
+}
+
+async function loadPerformance() {
+
+  const token = localStorage.getItem("token");
+  const res = await axios.get("/api/performance-requirements/mine", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const display = document.getElementById("performanceDisplay");
+
+  if (!res.data || !res.data.performance_data) {
+    display.innerHTML = `<p class="text-gray-500 italic">No data added yet.</p>`;
+    return;
+  }
+
+  display.innerHTML = `
+        <div class="border rounded p-4 bg-gray-50">
+            <h3 class="font-semibold mb-2">Performance Requirements</h3>
+            <ul class="list-disc ml-5">
+                ${res.data.performance_data.map(p =>
+    `<li>
+            <strong>${p.parameter}</strong> → ${p.expectedPerformance}
+            <br><small>${p.justification}</small>
+        </li>`
+  ).join("")}
+            </ul>
+        </div>
+    `;
+}
+
+async function loadBOM() {
+
+  const token = localStorage.getItem("token");
+  const res = await axios.get("/api/bill-of-materials/mine", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const display = document.getElementById("bomDisplay");
+
+  if (!res.data || !res.data.bom_data) {
+    display.innerHTML = `<p class="text-gray-500 italic">No data added yet.</p>`;
+    return;
+  }
+
+  display.innerHTML = `
+        <div class="border rounded p-4 bg-gray-50">
+            <h3 class="font-semibold mb-2">Bill Of Materials</h3>
+            <ul class="list-disc ml-5">
+                ${res.data.bom_data.map(b =>
+    `<li>
+            <strong>${b.component}</strong> -
+            ${b.material} -
+            Qty: ${b.quantity}
+        </li>`
+  ).join("")}
+            </ul>
+        </div>
+    `;
+}
+
+// ===============================
+// Project Category & User Requirements Logic
+// ===============================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  // ===== SAVE USER REQUIREMENT CANVAS =====
+
+  const cancelBtn = document.getElementById("cancelPopupBtn");
+
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", closeModal);
+  }
+  const userReqForm = document.getElementById("userReqForm");
+
+  if (userReqForm) {
+    userReqForm.addEventListener("submit", async function (e) {
+
+      e.preventDefault(); // 🚨 This fully stops page refresh
+
+      const token = localStorage.getItem("token");
+
+      const requirementInputs = userReqRows.querySelectorAll("input:nth-child(1)");
+      const featureInputs = userReqRows.querySelectorAll("input:nth-child(2)");
+
+      const user_requirements = [];
+      const product_features = [];
+
+      requirementInputs.forEach(input => {
+        if (input.value.trim()) {
+          user_requirements.push(input.value.trim());
+        }
+      });
+
+      featureInputs.forEach(input => {
+        if (input.value.trim()) {
+          product_features.push(input.value.trim());
+        }
+      });
+
+      const must_have = document.getElementById("mustHave")?.value || "";
+      const should_have = document.getElementById("shouldHave")?.value || "";
+      const could_have = document.getElementById("couldHave")?.value || "";
+      const wont_have = document.getElementById("wontHave")?.value || "";
+
+      try {
+        await axios.post("/api/user-requirements", {
+          user_requirements,
+          product_features,
+          must_have,
+          should_have,
+          could_have,
+          wont_have
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        alert("User Requirement Canvas Saved Successfully ✅");
+
+        userReqModal.classList.add("hidden");
+
+        await loadUserRequirementCanvas();
+        await loadUploadHistory();
+
+      } catch (err) {
+        console.error("Error saving canvas:", err);
+        alert("Failed to save. Try again.");
+      }
+    });
+  }
+  const projectTypeSelect = document.getElementById("projectType");
+  const categoryUploadSection = document.getElementById("categoryUploadSection");
+  const hardwareSection = document.getElementById("hardwareSection");
+  const softwareSection = document.getElementById("softwareSection");
+
+  projectTypeSelect.addEventListener("change", function () {
+
+    const value = this.value;
+
+    // Reset
+    categoryUploadSection.classList.add("hidden");
+    hardwareSection.classList.add("hidden");
+    softwareSection.classList.add("hidden");
+
+    if (value === "hardware") {
+      categoryUploadSection.classList.remove("hidden");
+      hardwareSection.classList.remove("hidden");
+    }
+
+    else if (value === "software") {
+      categoryUploadSection.classList.remove("hidden");
+      softwareSection.classList.remove("hidden");
+    }
+
+    else if (value === "hybrid") {
+      categoryUploadSection.classList.remove("hidden");
+      hardwareSection.classList.remove("hidden");
+      softwareSection.classList.remove("hidden");
+    }
+  });
+
+  // Open Modal
+  addUserReqBtn.addEventListener("click", function () {
+    userReqModal.classList.remove("hidden");
+
+    // Generate 10 rows dynamically
+    userReqRows.innerHTML = "";
+
+    for (let i = 1; i <= 10; i++) {
+      const row = document.createElement("div");
+      row.className = "grid grid-cols-2 gap-4";
+
+      row.innerHTML = `
+  <input type="text"
+    placeholder="User Requirement ${i}"
+    class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+  <input type="text"
+    placeholder="Product Feature ${i}"
+    class="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+`;
+
+      userReqRows.appendChild(row);
+    }
+  });
+
+  // Close Modal
+  closeUserReqModal.addEventListener("click", function () {
+    userReqModal.classList.add("hidden");
+  });
+
+  cancelUserReqBtn.addEventListener("click", function () {
+    userReqModal.classList.add("hidden");
+  });
+
+  // Close when clicking outside modal
+  userReqModal.addEventListener("click", function (e) {
+    if (e.target.id === "userReqModal") {
+      userReqModal.classList.add("hidden");
+    }
+  });
+
+});
+
+async function loadUserRequirementCanvas() {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.get("/api/user-requirements/mine", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const data = res.data;
+    const displayDiv = document.getElementById("userReqDisplay");
+
+    if (!data) {
+      displayDiv.innerHTML = `<p class="text-gray-500 italic">No data submitted yet.</p>`;
+      return;
+    }
+
+    displayDiv.innerHTML = `
+      <div class="bg-gray-50 border rounded-lg p-4 space-y-4">
+        <h3 class="font-semibold text-lg">User Requirements</h3>
+        <ul class="list-disc ml-5">
+          ${data.user_requirements?.map(r => `<li>${r}</li>`).join("") || ""}
+        </ul>
+
+        <h3 class="font-semibold text-lg mt-4">Product Features</h3>
+        <ul class="list-disc ml-5">
+          ${data.product_features?.map(f => `<li>${f}</li>`).join("") || ""}
+        </ul>
+
+        <h3 class="font-semibold text-lg mt-4">MOSCOW Method</h3>
+        <p><strong>Must Have:</strong> ${data.must_have || "-"}</p>
+        <p><strong>Should Have:</strong> ${data.should_have || "-"}</p>
+        <p><strong>Could Have:</strong> ${data.could_have || "-"}</p>
+        <p><strong>Won’t Have:</strong> ${data.wont_have || "-"}</p>
+
+        <p class="text-sm text-gray-500 text-right mt-2">
+          Last Updated: ${new Date(data.updatedAt).toLocaleString()}
+        </p>
+      </div>
+    `;
+  } catch (err) {
+    console.error("Error loading User Requirement Canvas:", err);
+  }
+}
+
+
 // Load problem statement on page load
 window.addEventListener('load', loadProblemStatement);
 
+window.addEventListener('load', loadUserRequirementCanvas);
 
+window.addEventListener("load", loadDimensions);
+window.addEventListener("load", loadPerformance);
+window.addEventListener("load", loadBOM);
 
 
 

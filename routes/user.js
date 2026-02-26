@@ -13,6 +13,10 @@ import Mentor from '../models/Mentor.js';
 import Admin from '../models/Admin.js'
 import Student from '../models/Student.js'
 import TeamUpload from '../models/TeamUpload.js';
+import UserRequirementCanvas from "../models/UserRequirementCanvas.js";
+import ProductDimensions from "../models/ProductDimensions.js";
+import PerformanceRequirement from '../models/PerformanceRequirement.js';
+import BillOfMaterial from '../models/BillOfMaterial.js';
 import ProblemStatement from '../models/Problem.js'
 import authenticate from '../middleware/authenticate.js';
 import { supabase } from "../config/cloudinary.js";
@@ -842,28 +846,59 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
     }
 
     // 📧 Email notification
+    // 📧 Email notification
+
+    const weekTitles = {
+      10: "2D Modelling",
+      11: "3D Modelling",
+      12: "DB Schema",
+      13: "HLD",
+      14: "Tech Stack Architecture",
+      15: "User Flow Diagram",
+      16: "Mock Up"
+    }; 
+
+    const submissionTitle = weekTitles[weekNumber] || `File ${weekNumber}`;
+
     const client = Sib.ApiClient.instance;
     const apiKey = client.authentications["api-key"];
     apiKey.apiKey = process.env.EMAIL_PASSWORD;
 
     const transEmailApi = new Sib.TransactionalEmailsApi();
+
     const sender = {
       email: process.env.EMAIL_USER,
       name: "IPD-TEAM",
     };
-    //mentor.email
+
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email: mentor.email }],
-      subject: `Team Upload Notification - File ${weekNumber}`,
-      htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
-        <p>Your mentee has uploaded a file for <strong>File ${weekNumber}</strong>.</p>
-        <p>You can view or download the file using the attachment or from the dashboard.</p>
-        <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
-        <p><a href="${signedUrl}" target="_blank">${fileName}</a></p>
-        <p>Team Name: <strong>${user.team_name}</strong></p>
-        <p>Contact No: <strong>${user.mobile}</strong></p>
-        <p>Best Regards,<br />IPD Team</p>`,
+      to: [{ email: "balajiaru06@gmail.com" }],
+      subject: `Team Upload Notification - ${submissionTitle}`,
+      htmlContent: `
+    <h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
+
+    <p>Your mentee has uploaded a file for 
+      <strong>${submissionTitle}</strong>.
+    </p>
+
+    <p>You can view or download the file using the attachment or from the dashboard.</p>
+
+    <p>
+      <a href="https://agni-ipd.onrender.com/" target="_blank">
+        IPD Dashboard Link
+      </a>
+    </p>
+
+    <p>
+      <a href="${signedUrl}" target="_blank">${fileName}</a>
+    </p>
+
+    <p>Team Name: <strong>${user.team_name}</strong></p>
+    <p>Contact No: <strong>${user.mobile}</strong></p>
+
+    <p>Best Regards,<br />IPD Team</p>
+  `,
       attachment: [
         {
           url: signedUrl,
@@ -1030,6 +1065,357 @@ router.get("/deadlines", authenticate, async (req, res) => {
   }
 });
 
+// ==============================
+// USER REQUIREMENTS CANVAS
+// ==============================
+
+router.post("/user-requirements", authenticate, async (req, res) => {
+  try {
+    const user_id = req.user.userId;
+
+    const user = await User.findByPk(user_id);
+    const mentor = user.mentor_id
+      ? await Mentor.findByPk(user.mentor_id)
+      : null;
+
+    const {
+      user_requirements,
+      product_features,
+      must_have,
+      should_have,
+      could_have,
+      wont_have
+    } = req.body;
+
+    // Check existing record
+    let canvas = await UserRequirementCanvas.findOne({
+      where: { user_id }
+    });
+
+    if (canvas) {
+      await canvas.update({
+        user_requirements,
+        product_features,
+        must_have,
+        should_have,
+        could_have,
+        wont_have
+      });
+    } else {
+      canvas = await UserRequirementCanvas.create({
+        user_id,
+        user_requirements,
+        product_features,
+        must_have,
+        should_have,
+        could_have,
+        wont_have
+      });
+    }
+
+    // Log submission (Week 6 - you can change number if needed)
+    await TeamUpload.upsert({
+      user_id,
+      week_number: 6,
+      file_url: "#",
+      status: "SUBMITTED",
+    });
+
+    // Send email to mentor
+    if (mentor) {
+      const client = Sib.ApiClient.instance;
+      const apiKey = client.authentications["api-key"];
+      apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+      const transEmailApi = new Sib.TransactionalEmailsApi();
+      const sender = {
+        email: process.env.EMAIL_USER,
+        name: "IPD-TEAM",
+      };
+
+      await transEmailApi.sendTransacEmail({
+        sender,
+        to: [{ email: "balajiaru06@gmail.com" }],
+        subject: `Team Upload Notification - User Requirement Canvas`,
+        htmlContent: `<h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
+          <p>Your mentee has submitted <strong>User Requirement Canvas</strong>.</p>
+          <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
+          <p>Team Name: <strong>${user.team_name}</strong></p>
+          <p>Contact No: <strong>${user.mobile}</strong></p>
+          <p>Best Regards,<br />IPD Team</p>`
+      });
+    }
+
+    res.status(200).json({ success: true, data: canvas });
+
+  } catch (err) {
+    console.error("Error saving User Requirement Canvas:", err);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
+
+
+router.get("/user-requirements/mine", authenticate, async (req, res) => {
+  try {
+    const canvas = await UserRequirementCanvas.findOne({
+      where: { user_id: req.user.userId }
+    });
+
+    if (!canvas) return res.json(null);
+
+    res.json(canvas);
+
+  } catch (err) {
+    console.error("Error fetching User Requirement Canvas:", err);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
+// ---------------- PRODUCT DIMENSIONS ----------------
+
+router.post("/product-dimensions", authenticate, async (req, res) => {
+  try {
+    const user_id = req.user.userId;
+
+    const { dimensions } = req.body;
+    // Expected format:
+    // dimensions: [{ parameter: "", dimension: "" }, ...]
+
+    let record = await ProductDimensions.findOne({
+      where: { user_id }
+    });
+
+    if (record) {
+      await record.update({ dimensions });
+    } else {
+      record = await ProductDimensions.create({
+        user_id,
+        dimensions
+      });
+    }
+
+    await TeamUpload.upsert({
+      user_id,
+      week_number: 7,
+      file_url: "#",
+      status: "SUBMITTED",
+    });
+
+    if (mentor) {
+      const client = Sib.ApiClient.instance;
+      const apiKey = client.authentications["api-key"];
+      apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+      const transEmailApi = new Sib.TransactionalEmailsApi();
+      const sender = {
+        email: process.env.EMAIL_USER,
+        name: "IPD-TEAM",
+      };
+
+      await transEmailApi.sendTransacEmail({
+        sender,
+        to: [{ email: mentor.email }],
+        subject: `Team Upload Notification - Product Dimensions`,
+        htmlContent: `
+      <h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
+      <p>Your mentee has submitted <strong>Product Dimensions</strong>.</p>
+      <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
+      <p>Team Name: <strong>${user.team_name}</strong></p>
+      <p>Contact No: <strong>${user.mobile}</strong></p>
+      <p>Best Regards,<br />IPD Team</p>
+    `
+      });
+    }
+
+    res.status(200).json({ success: true, data: record });
+
+  } catch (err) {
+    console.error("Error saving Product Dimensions:", err);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
+
+
+router.get("/product-dimensions/mine", authenticate, async (req, res) => {
+  try {
+    const record = await ProductDimensions.findOne({
+      where: { user_id: req.user.userId }
+    });
+
+    if (!record) return res.json(null);
+
+    res.json(record);
+
+  } catch (err) {
+    console.error("Error fetching Product Dimensions:", err);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
+// ---------------- PERFORMANCE REQUIREMENTS ----------------
+
+router.post("/performance-requirements", authenticate, async (req, res) => {
+  try {
+    const user_id = req.user.userId;
+
+    const { performance_data } = req.body;
+    // Expected:
+    // [{ parameter, expectedPerformance, justification }]
+
+    let record = await PerformanceRequirement.findOne({
+      where: { user_id }
+    });
+
+    if (record) {
+      await record.update({ performance_data });
+    } else {
+      record = await PerformanceRequirement.create({
+        user_id,
+        performance_data
+      });
+    }
+
+    await TeamUpload.upsert({
+      user_id,
+      week_number: 8,
+      file_url: "#",
+      status: "SUBMITTED",
+    });
+
+
+    if (mentor) {
+      const client = Sib.ApiClient.instance;
+      const apiKey = client.authentications["api-key"];
+      apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+      const transEmailApi = new Sib.TransactionalEmailsApi();
+      const sender = {
+        email: process.env.EMAIL_USER,
+        name: "IPD-TEAM",
+      };
+
+      await transEmailApi.sendTransacEmail({
+        sender,
+        to: [{ email: mentor.email }],
+        subject: `Team Upload Notification - Product Dimensions`,
+        htmlContent: `
+      <h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
+      <p>Your mentee has submitted <strong>Product Dimensions</strong>.</p>
+      <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
+      <p>Team Name: <strong>${user.team_name}</strong></p>
+      <p>Contact No: <strong>${user.mobile}</strong></p>
+      <p>Best Regards,<br />IPD Team</p>
+    `
+      });
+    }
+
+    res.status(200).json({ success: true, data: record });
+
+  } catch (err) {
+    console.error("Error saving Performance Requirements:", err);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
+
+
+router.get("/performance-requirements/mine", authenticate, async (req, res) => {
+  try {
+    const record = await PerformanceRequirement.findOne({
+      where: { user_id: req.user.userId }
+    });
+
+    if (!record) return res.json(null);
+
+    res.json(record);
+
+  } catch (err) {
+    console.error("Error fetching Performance Requirements:", err);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
+
+
+// ---------------- BILL OF MATERIALS ----------------
+
+router.post("/bill-of-materials", authenticate, async (req, res) => {
+  try {
+    const user_id = req.user.userId;
+
+    const { bom_data } = req.body;
+    // Expected:
+    // [{ component, material, quantity }]
+
+    let record = await BillOfMaterial.findOne({
+      where: { user_id }
+    });
+
+    if (record) {
+      await record.update({ bom_data });
+    } else {
+      record = await BillOfMaterial.create({
+        user_id,
+        bom_data
+      });
+    }
+
+    await TeamUpload.upsert({
+      user_id,
+      week_number: 9,
+      file_url: "#",
+      status: "SUBMITTED",
+    });
+
+
+    if (mentor) {
+      const client = Sib.ApiClient.instance;
+      const apiKey = client.authentications["api-key"];
+      apiKey.apiKey = process.env.EMAIL_PASSWORD;
+
+      const transEmailApi = new Sib.TransactionalEmailsApi();
+      const sender = {
+        email: process.env.EMAIL_USER,
+        name: "IPD-TEAM",
+      };
+
+      await transEmailApi.sendTransacEmail({
+        sender,
+        to: [{ email: mentor.email }],
+        subject: `Team Upload Notification - Bill Of Materials`,
+        htmlContent: `
+      <h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
+      <p>Your mentee has submitted <strong>Bill Of Materials</strong>.</p>
+      <p><a href="https://agni-ipd.onrender.com/" target="_blank">IPD Dashboard Link</a></p>
+      <p>Team Name: <strong>${user.team_name}</strong></p>
+      <p>Contact No: <strong>${user.mobile}</strong></p>
+      <p>Best Regards,<br />IPD Team</p>
+    `
+      });
+    }
+
+    res.status(200).json({ success: true, data: record });
+
+  } catch (err) {
+    console.error("Error saving Bill Of Materials:", err);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+});
+
+
+router.get("/bill-of-materials/mine", authenticate, async (req, res) => {
+  try {
+    const record = await BillOfMaterial.findOne({
+      where: { user_id: req.user.userId }
+    });
+
+    if (!record) return res.json(null);
+
+    res.json(record);
+
+  } catch (err) {
+    console.error("Error fetching Bill Of Materials:", err);
+    res.status(500).json({ error: "Server Error" });
+  }
+});
 
 
 export default router;
