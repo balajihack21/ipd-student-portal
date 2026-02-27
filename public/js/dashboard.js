@@ -1283,6 +1283,7 @@ if (savePopupBtn) {
 
       alert("Saved Successfully ");
       closeModal();
+        await loadUploadHistory();
 
     } catch (err) {
       console.error("Error saving:", err);

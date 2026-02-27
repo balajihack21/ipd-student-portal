@@ -499,8 +499,10 @@ function renderHistoryTableFiltered(filteredTeams) {
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
         <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
           ${
-            team.TeamUploads.length > 0
-              ? team.TeamUploads.map(u => {
+            team.TeamUploads.filter(u => u.status === "REVIEWED").length > 0
+  ? team.TeamUploads
+      .filter(u => u.status === "REVIEWED")
+      .map(u => {
                   const daysPending = Math.floor(
                     (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
                   );

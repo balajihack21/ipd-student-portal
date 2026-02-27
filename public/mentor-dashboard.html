@@ -238,8 +238,8 @@
           </div>
         </div>
 
-<!-- Workbook Evaluation -->
-<!-- <div id="workbookSection" class="bg-white p-6 rounded-xl shadow-md mt-6">
+        <!-- Workbook Evaluation -->
+        <!-- <div id="workbookSection" class="bg-white p-6 rounded-xl shadow-md mt-6">
   <h2 class="text-2xl font-bold mb-4 text-blue-600">Workbook Evaluation</h2>
 
   <label for="workbookTeamSelect" class="block mb-2 font-semibold">Select Team:</label>
@@ -257,32 +257,32 @@
 
 
 
-<div id="workbookSection" class="bg-white p-6 rounded-xl shadow-md mt-6">
-  <h2 class="text-2xl font-bold mb-4 text-blue-600">Workbook Evaluation</h2>
+        <div id="workbookSection" class="bg-white p-6 rounded-xl shadow-md mt-6">
+          <h2 class="text-2xl font-bold mb-4 text-blue-600">Workbook Evaluation</h2>
 
-  <label for="workbookTeamSelect" class="block mb-2 font-semibold">Select Team:</label>
-  <select id="workbookTeamSelect" class="border rounded px-3 py-2 w-full mb-4"></select>
+          <label for="workbookTeamSelect" class="block mb-2 font-semibold">Select Team:</label>
+          <select id="workbookTeamSelect" class="border rounded px-3 py-2 w-full mb-4"></select>
 
-  <label for="workbookScoreInput" class="block mb-2 font-semibold">Enter Score (0–40):</label>
-  <input type="number" id="workbookScoreInput" min="0" max="40" class="border rounded px-3 py-2 w-full mb-4">
+          <label for="workbookScoreInput" class="block mb-2 font-semibold">Enter Score (0–40):</label>
+          <input type="number" id="workbookScoreInput" min="0" max="40" class="border rounded px-3 py-2 w-full mb-4">
 
-  <button id="submitWorkbookScore" class="bg-blue-500 text-white px-4 py-2 rounded">Submit Score</button>
+          <button id="submitWorkbookScore" class="bg-blue-500 text-white px-4 py-2 rounded">Submit Score</button>
 
-  <hr class="my-6">
+          <hr class="my-6">
 
-  <h3 class="text-xl font-semibold mb-3">📊 Submitted Workbook Scores</h3>
-  <table id="workbookScoreTable" class="w-full border-collapse border border-gray-300">
-    <thead>
-      <tr class="bg-gray-100 text-left">
-        <th class="border p-2">Team Name</th>
-        <th class="border p-2">Department</th>
-        <th class="border p-2">Section</th>
-        <th class="border p-2">Score</th>
-      </tr>
-    </thead>
-    <tbody id="workbookScoreTableBody"></tbody>
-  </table>
-</div>
+          <h3 class="text-xl font-semibold mb-3">📊 Submitted Workbook Scores</h3>
+          <table id="workbookScoreTable" class="w-full border-collapse border border-gray-300">
+            <thead>
+              <tr class="bg-gray-100 text-left">
+                <th class="border p-2">Team Name</th>
+                <th class="border p-2">Department</th>
+                <th class="border p-2">Section</th>
+                <th class="border p-2">Score</th>
+              </tr>
+            </thead>
+            <tbody id="workbookScoreTableBody"></tbody>
+          </table>
+        </div>
 
         <div id="mentorUploadHistory" class="mt-4"></div>
 
@@ -350,29 +350,57 @@
   </div>
 
   <!-- Idea Generation Modal -->
-    <div id="ideaModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white p-6 rounded-lg w-full max-w-3xl relative overflow-auto max-h-[90vh]">
-            <button id="closeIdeaModal"
-                class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold">&times;</button>
-            <iframe id="ideaIframe" src="" class="w-full h-[80vh] border rounded"
-                style="width:100%; height:80vh; border-radius:6px; border:1px solid #ccc;">
-            </iframe>
-        </div>
+  <div id="ideaModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white p-6 rounded-lg w-full max-w-3xl relative overflow-auto max-h-[90vh]">
+      <button id="closeIdeaModal"
+        class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold">&times;</button>
+      <iframe id="ideaIframe" src="" class="w-full h-[80vh] border rounded"
+        style="width:100%; height:80vh; border-radius:6px; border:1px solid #ccc;">
+      </iframe>
+    </div>
+  </div>
+
+
+
+  <!-- Value Proposition Modal -->
+  <div id="valueModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white p-6 rounded-lg w-full max-w-3xl relative overflow-auto max-h-[90vh]">
+      <button id="closeValueModal"
+        class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold">&times;</button>
+      <iframe id="valueIframe" src="" class="w-full h-[80vh] border rounded"
+        style="width:100%; height:80vh; border-radius:6px; border:1px solid #ccc;">
+      </iframe>
+    </div>
+  </div>
+  <div id="popupModal"
+     class="hidden fixed inset-0 bg-black bg-opacity-50 overflow-y-auto z-50">
+
+  <div class="min-h-screen flex items-start justify-center p-6">
+
+    <div class="bg-white w-4/5 max-h-[90vh] rounded-lg shadow-lg flex flex-col">
+
+      <!-- Header -->
+      <div class="p-6 border-b flex-shrink-0">
+        <h2 id="modalTitle" class="text-xl font-bold"></h2>
+      </div>
+
+      <!-- Scrollable Content -->
+      <div id="modalTableContainer"
+           class="flex-1 overflow-y-auto p-6">
+      </div>
+
+      <!-- Footer -->
+      <div class="p-6 border-t text-right flex-shrink-0">
+        <button id="cancelPopupBtn"
+                class="bg-gray-500 text-white px-4 py-2 rounded">
+          Cancel
+        </button>
+      </div>
+
     </div>
 
-
-
-    <!-- Value Proposition Modal -->
-    <div id="valueModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white p-6 rounded-lg w-full max-w-3xl relative overflow-auto max-h-[90vh]">
-            <button id="closeValueModal"
-                class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold">&times;</button>
-            <iframe id="valueIframe" src="" class="w-full h-[80vh] border rounded"
-                style="width:100%; height:80vh; border-radius:6px; border:1px solid #ccc;">
-            </iframe>
-        </div>
-    </div>
-
+  </div>
+</div>
 
 
 

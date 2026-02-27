@@ -1176,6 +1176,11 @@ router.get("/user-requirements/mine", authenticate, async (req, res) => {
 router.post("/product-dimensions", authenticate, async (req, res) => {
   try {
     const user_id = req.user.userId;
+    const user = await User.findByPk(user_id);
+
+    const mentor = user.mentor_id
+      ? await Mentor.findByPk(user.mentor_id)
+      : null;
 
     const { dimensions } = req.body;
     // Expected format:
@@ -1214,7 +1219,7 @@ router.post("/product-dimensions", authenticate, async (req, res) => {
 
       await transEmailApi.sendTransacEmail({
         sender,
-        to: [{ email: mentor.email }],
+        to: [{ email: mentor.email}],
         subject: `Team Upload Notification - Product Dimensions`,
         htmlContent: `
       <h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
@@ -1257,6 +1262,11 @@ router.get("/product-dimensions/mine", authenticate, async (req, res) => {
 router.post("/performance-requirements", authenticate, async (req, res) => {
   try {
     const user_id = req.user.userId;
+    const user = await User.findByPk(user_id);
+
+    const mentor = user.mentor_id
+      ? await Mentor.findByPk(user.mentor_id)
+      : null;
 
     const { performance_data } = req.body;
     // Expected:
@@ -1296,7 +1306,7 @@ router.post("/performance-requirements", authenticate, async (req, res) => {
 
       await transEmailApi.sendTransacEmail({
         sender,
-        to: [{ email: mentor.email }],
+        to: [{ email: mentor.email}],
         subject: `Team Upload Notification - Product Dimensions`,
         htmlContent: `
       <h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
@@ -1340,6 +1350,12 @@ router.get("/performance-requirements/mine", authenticate, async (req, res) => {
 router.post("/bill-of-materials", authenticate, async (req, res) => {
   try {
     const user_id = req.user.userId;
+
+    const user = await User.findByPk(user_id);
+
+    const mentor = user.mentor_id
+      ? await Mentor.findByPk(user.mentor_id)
+      : null;
 
     const { bom_data } = req.body;
     // Expected:

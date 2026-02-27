@@ -425,7 +425,7 @@ const weekTitles = {
   13: "HLD",
   14: "Tech Stack Architecture",
   15: "User Flow Diagram",
-  16:"Mock Up / Wireframe"
+  16: "Mock Up / Wireframe"
 };
 async function loadTeams() {
   try {
@@ -570,6 +570,106 @@ async function loadTeams() {
             // if (ideaSubmitBtn) ideaSubmitBtn.style.display = "none";
             document.getElementById("ideaIframe").src = `value-mentor.html?id=${team.UserId}&type=value`;
           }
+
+          else if (week === 6 && team.UserRequirementCanvas) {
+
+            const urc = team.UserRequirementCanvas;
+
+            // -------- FIRST TABLE (User Requirements + Product Features) --------
+
+            const headers = ["User Requirements", "Product Features"];
+
+            const userReq = urc.user_requirements || [];
+            const productFeat = urc.product_features || [];
+
+            const maxLength = Math.max(userReq.length, productFeat.length);
+
+            const dataRows = [];
+
+            for (let i = 0; i < maxLength; i++) {
+              dataRows.push({
+                "User Requirements": userReq[i] || "",
+                "Product Features": productFeat[i] || ""
+              });
+            }
+
+            openModal("User Requirement Canvas", headers, "week6", dataRows);
+
+            // -------- AFTER RENDERING FIRST TABLE, ADD MOSCOW SECTION --------
+
+            const moscowHTML = `
+    <div class="mt-6">
+      <h3 class="font-bold text-lg mb-2">MoSCoW Prioritization</h3>
+      <table class="w-full border border-collapse">
+        <tbody>
+          <tr>
+            <td class="border p-2 font-semibold bg-gray-100">Must Have</td>
+            <td class="border p-2">${urc.must_have || ""}</td>
+          </tr>
+          <tr>
+            <td class="border p-2 font-semibold bg-gray-100">Should Have</td>
+            <td class="border p-2">${urc.should_have || ""}</td>
+          </tr>
+          <tr>
+            <td class="border p-2 font-semibold bg-gray-100">Could Have</td>
+            <td class="border p-2">${urc.could_have || ""}</td>
+          </tr>
+          <tr>
+            <td class="border p-2 font-semibold bg-gray-100">Won't Have</td>
+            <td class="border p-2">${urc.wont_have || ""}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  `;
+
+            document.getElementById("modalTableContainer").innerHTML += moscowHTML;
+          }
+
+          else if (week === 7 && team.ProductDimension) {
+
+            const pd = team.ProductDimension;
+
+            const headers = ["Dimension", "Parameter"];
+
+            const dataRows = (pd.dimensions || []).map(item => ({
+              "Dimension": item.dimension || "",
+              "Parameter": item.parameter || ""
+            }));
+
+            openModal("Product Dimensions", headers, "week7", dataRows);
+          }
+          else if (week === 8 && team.PerformanceRequirement) {
+
+            const pr = team.PerformanceRequirement;
+
+            const headers = ["Parameter", "Justification", "Expected Performance"];
+
+            const dataRows = (pr.performance_data || []).map(item => ({
+              "Parameter": item.parameter || "",
+              "Justification": item.justification || "",
+              "Expected Performance": item.expectedPerformance || ""
+            }));
+
+            openModal("Performance Requirement", headers, "week8", dataRows);
+          }
+
+          else if (week === 9 && team.BillOfMaterial) {
+
+            const bom = team.BillOfMaterial;
+
+            const headers = ["Material", "Quantity", "Component"];
+
+            const dataRows = (bom.bom_data || []).map(item => ({
+              "Material": item.material || "",
+              "Quantity": item.quantity || "",
+              "Component": item.component || ""
+            }));
+
+            openModal("Bill Of Materials", headers, "week9", dataRows);
+          }
+
+
         });
       });
     });
@@ -594,7 +694,62 @@ async function loadTeams() {
 }
 
 
+let currentModalType = null;
 
+function openModal(title, headers, type, dataRows = []) {
+
+  currentModalType = type;
+
+  document.getElementById("modalTitle").innerText = title;
+
+  let tableHTML = `<table class="w-full border border-collapse">`;
+  tableHTML += "<thead><tr>";
+
+  headers.forEach(h => {
+    tableHTML += `<th class="border p-2 bg-gray-100">${h}</th>`;
+  });
+
+  tableHTML += "</tr></thead><tbody>";
+
+  const totalRows = 10; // same as original structure
+
+  for (let i = 0; i < totalRows; i++) {
+
+    tableHTML += "<tr>";
+
+    headers.forEach(header => {
+
+      // If data exists for this row
+      let value = "";
+      if (dataRows[i] && dataRows[i][header] !== undefined) {
+        value = dataRows[i][header];
+      }
+
+      tableHTML += `
+        <td class="border p-1">
+          <input 
+            type="text" 
+            value="${value}" 
+            class="w-full border p-1 rounded table-input"
+            ${value ? "disabled" : ""}
+          />
+        </td>
+      `;
+    });
+
+    tableHTML += "</tr>";
+  }
+
+  tableHTML += "</tbody></table>";
+
+  document.getElementById("modalTableContainer").innerHTML = tableHTML;
+
+  document.getElementById("popupModal").classList.remove("hidden");
+}
+
+function closeModal() {
+  document.getElementById("popupModal").classList.add("hidden");
+}
 
 function renderSwotModal(team) {
   const container = document.getElementById("swotContainer");
@@ -778,6 +933,11 @@ async function submitWorkbookScore() {
 document.getElementById("submitWorkbookScore").addEventListener("click", submitWorkbookScore);
 
 
+const cancelBtn = document.getElementById("cancelPopupBtn");
+
+if (cancelBtn) {
+  cancelBtn.addEventListener("click", closeModal);
+}
 
 loadTeams();
 loadMentorDetails();
