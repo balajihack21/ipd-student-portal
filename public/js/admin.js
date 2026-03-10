@@ -27,8 +27,8 @@ tabs.forEach(tab => {
     }
 
     if (tab.dataset.tab === "reviewTab") {
-  fetchReviewScores();
-}
+      fetchReviewScores();
+    }
 
   });
 });
@@ -160,9 +160,8 @@ function renderReviewPagination() {
   const makeBtn = (label, page, disabled = false, active = false) => {
     const btn = document.createElement("button");
     btn.textContent = label;
-    btn.className = `px-3 py-1 rounded border ${
-      active ? "bg-blue-600 text-white" : "bg-white"
-    } ${disabled ? "opacity-50" : "hover:bg-blue-100"}`;
+    btn.className = `px-3 py-1 rounded border ${active ? "bg-blue-600 text-white" : "bg-white"
+      } ${disabled ? "opacity-50" : "hover:bg-blue-100"}`;
     btn.disabled = disabled;
     if (!disabled)
       btn.onclick = () => {
@@ -457,11 +456,10 @@ function renderHistoryTableFiltered(filteredTeams) {
           <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
         </div>
         <div>
-          ${
-            team.isLocked
-              ? `<button class="unlock-btn bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700" data-team-id="${team.UserId}">Unlock</button>`
-              : `<button class="lock-btn bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700" data-team-id="${team.UserId}">Lock</button>`
-          }
+          ${team.isLocked
+      ? `<button class="unlock-btn bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700" data-team-id="${team.UserId}">Unlock</button>`
+      : `<button class="lock-btn bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700" data-team-id="${team.UserId}">Lock</button>`
+    }
         </div>
       </div>
 
@@ -480,11 +478,10 @@ function renderHistoryTableFiltered(filteredTeams) {
       <div>
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
         <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
-          ${
-            team.Students.map(s =>
-              `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
-            ).join('')
-          }
+          ${team.Students.map(s =>
+      `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
+    ).join('')
+    }
         </ul>
       </div>
 
@@ -498,48 +495,48 @@ function renderHistoryTableFiltered(filteredTeams) {
       <div>
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
         <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
-          ${
-            team.TeamUploads.filter(u => u.status === "REVIEWED").length > 0
-  ? team.TeamUploads
-      .filter(u => u.status === "REVIEWED")
-      .map(u => {
-                  const daysPending = Math.floor(
-                    (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
-                  );
-                  const isPendingTooLong = u.status !== 'REVIEWED' && daysPending > 2;
+          ${team.TeamUploads.filter(u => u.status === "REVIEWED").length > 0
+      ? team.TeamUploads
+        .filter(u =>
+          u.status === "REVIEWED" ||
+          (u.comment && u.comment.trim() !== "")
+        )
+        .map(u => {
+          const daysPending = Math.floor(
+            (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
+          );
+          const isPendingTooLong = u.status !== 'REVIEWED' && daysPending > 2;
 
-                  // ✅ New view/download logic
-                  let viewLink = "";
-                  if (u.file_url) {
-                    viewLink = `<a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File-${u.week_number}</a>`;
-                  } else {
-                    let dataType = "";
-                    if (u.week_number == 3) dataType = "idea";
-                    else if (u.week_number == 4) dataType = "swot";
-                    else if (u.week_number == 5) dataType = "value";
+          // ✅ New view/download logic
+          let viewLink = "";
+          if (u.file_url) {
+            viewLink = `<a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File-${u.week_number}</a>`;
+          } else {
+            let dataType = "";
+            if (u.week_number == 3) dataType = "idea";
+            else if (u.week_number == 4) dataType = "swot";
+            else if (u.week_number == 5) dataType = "value";
 
-                    viewLink = `<a href="#" class="text-blue-600 underline view-link" data-week="${u.week_number}" data-type="${dataType}" data-id="${team.UserId}">File-${u.week_number}</a>`;
-                  }
+            viewLink = `<a href="#" class="text-blue-600 underline view-link" data-week="${u.week_number}" data-type="${dataType}" data-id="${team.UserId}">File-${u.week_number}</a>`;
+          }
 
-                  return `
+          return `
                     <li>
                       ${viewLink}
                       <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
-                      ${
-                        isPendingTooLong
-                          ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
-                          : ''
-                      }
+                      ${isPendingTooLong
+              ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
+              : ''
+            }
                       <div class="ml-4 mt-1 text-gray-600">
                         <div>
                           <strong>Status:</strong>
-                          <span class="font-medium ${
-                            u.status === 'REVIEWED'
-                              ? 'text-green-600'
-                              : u.status === 'SUBMITTED'
-                                ? 'text-red-600'
-                                : 'text-yellow-600'
-                          }">
+                          <span class="font-medium ${u.status === 'REVIEWED'
+              ? 'text-green-600'
+              : u.status === 'SUBMITTED'
+                ? 'text-red-600'
+                : 'text-yellow-600'
+            }">
                             ${u.status || 'Pending'}
                           </span>
                         </div>
@@ -561,41 +558,40 @@ function renderHistoryTableFiltered(filteredTeams) {
                           Send Comment
                         </button>
 
-                        ${
-                          localStorage.getItem("adminComment-" + u.id)
-                            ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
-                            : ""
-                        }
+                        ${localStorage.getItem("adminComment-" + u.id)
+              ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
+              : ""
+            }
                       </div>
                     </li>
                   `;
-                }).join('')
-              : (() => {
-                  let fallbackLinks = '';
+        }).join('')
+      : (() => {
+        let fallbackLinks = '';
 
-                  if (team.IdeaSelection) {
-                    fallbackLinks += `
+        if (team.IdeaSelection) {
+          fallbackLinks += `
                       <a href="#" class="text-blue-600 underline view-link" data-week="3" data-type="idea" data-id="${team.UserId}">View Idea Generation</a>
                     `;
-                  }
-                  if (team.SwotAnalysis) {
-                    fallbackLinks += `
+        }
+        if (team.SwotAnalysis) {
+          fallbackLinks += `
                       <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="4" data-type="swot" data-id="${team.UserId}">View SWOT Analysis</a>
                     `;
-                  }
-                  if (team.ValueProposition) {
-                    fallbackLinks += `
+        }
+        if (team.ValueProposition) {
+          fallbackLinks += `
                       <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="5" data-type="value" data-id="${team.UserId}">View Value Proposition</a>
                     `;
-                  }
+        }
 
-                  if (!fallbackLinks) {
-                    fallbackLinks = `<span class="text-gray-600 italic">No data available yet</span>`;
-                  }
+        if (!fallbackLinks) {
+          fallbackLinks = `<span class="text-gray-600 italic">No data available yet</span>`;
+        }
 
-                  return `<div class="ml-4">${fallbackLinks}</div>`;
-                })()
-          }
+        return `<div class="ml-4">${fallbackLinks}</div>`;
+      })()
+    }
         </ul>
       </div>
     </div>
@@ -758,11 +754,10 @@ function renderHistoryTable(filteredTeams = historyData) {
           <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
         </div>
         <div>
-          ${
-            team.isLocked
-              ? `<button class="unlock-btn bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700" data-team-id="${team.UserId}">Unlock</button>`
-              : `<button class="lock-btn bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700" data-team-id="${team.UserId}">Lock</button>`
-          }
+          ${team.isLocked
+      ? `<button class="unlock-btn bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700" data-team-id="${team.UserId}">Unlock</button>`
+      : `<button class="lock-btn bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700" data-team-id="${team.UserId}">Lock</button>`
+    }
         </div>
       </div>
 
@@ -783,11 +778,10 @@ function renderHistoryTable(filteredTeams = historyData) {
       <div>
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
         <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
-          ${
-            team.Students.map(s =>
-              `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
-            ).join('')
-          }
+          ${team.Students.map(s =>
+      `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
+    ).join('')
+    }
         </ul>
       </div>
 
@@ -802,46 +796,43 @@ function renderHistoryTable(filteredTeams = historyData) {
       <div>
         <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
         <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
-          ${
-            team.TeamUploads.length > 0
-              ? team.TeamUploads.map(u => {
-                  const daysPending = Math.floor(
-                    (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
-                  );
-                  const isPendingTooLong = u.status !== 'REVIEWED' && daysPending > 2;
+          ${team.TeamUploads.length > 0
+      ? team.TeamUploads.map(u => {
+        const daysPending = Math.floor(
+          (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
+        );
+        const isPendingTooLong = u.status !== 'REVIEWED' && daysPending > 2;
 
-                  // ✅ Smart View/Download logic
-                  let viewLink = "";
-                  if (u.file_url) {
-                    viewLink = `<a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File-${u.week_number}</a>`;
-                  } else {
-                    let dataType = "";
-                    if (u.week_number == 3) dataType = "idea";
-                    else if (u.week_number == 4) dataType = "swot";
-                    else if (u.week_number == 5) dataType = "value";
+        // ✅ Smart View/Download logic
+        let viewLink = "";
+        if (u.file_url) {
+          viewLink = `<a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File-${u.week_number}</a>`;
+        } else {
+          let dataType = "";
+          if (u.week_number == 3) dataType = "idea";
+          else if (u.week_number == 4) dataType = "swot";
+          else if (u.week_number == 5) dataType = "value";
 
-                    viewLink = `<a href="#" class="text-blue-600 underline view-link" data-week="${u.week_number}" data-type="${dataType}" data-id="${team.UserId}">File-${u.week_number}</a>`;
-                  }
+          viewLink = `<a href="#" class="text-blue-600 underline view-link" data-week="${u.week_number}" data-type="${dataType}" data-id="${team.UserId}">File-${u.week_number}</a>`;
+        }
 
-                  return `
+        return `
                     <li>
                       ${viewLink}
                       <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
-                      ${
-                        isPendingTooLong
-                          ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
-                          : ''
-                      }
+                      ${isPendingTooLong
+            ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
+            : ''
+          }
                       <div class="ml-4 mt-1 text-gray-600">
                         <div>
                           <strong>Status:</strong>
-                          <span class="font-medium ${
-                            u.status === 'REVIEWED'
-                              ? 'text-green-600'
-                              : u.status === 'SUBMITTED'
-                                ? 'text-red-600'
-                                : 'text-yellow-600'
-                          }">
+                          <span class="font-medium ${u.status === 'REVIEWED'
+            ? 'text-green-600'
+            : u.status === 'SUBMITTED'
+              ? 'text-red-600'
+              : 'text-yellow-600'
+          }">
                             ${u.status || 'Pending'}
                           </span>
                         </div>
@@ -863,42 +854,41 @@ function renderHistoryTable(filteredTeams = historyData) {
                           Send Comment
                         </button>
 
-                        ${
-                          localStorage.getItem("adminComment-" + u.id)
-                            ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
-                            : ""
-                        }
+                        ${localStorage.getItem("adminComment-" + u.id)
+            ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
+            : ""
+          }
                       </div>
                     </li>
                   `;
-                }).join('')
-              : (() => {
-                  // 🧩 Fallback: show “View” links even when TeamUploads is empty
-                  let fallbackLinks = '';
+      }).join('')
+      : (() => {
+        // 🧩 Fallback: show “View” links even when TeamUploads is empty
+        let fallbackLinks = '';
 
-                  if (team.IdeaSelection) {
-                    fallbackLinks += `
+        if (team.IdeaSelection) {
+          fallbackLinks += `
                       <a href="#" class="text-blue-600 underline view-link" data-week="3" data-type="idea" data-id="${team.UserId}">View Idea Generation</a>
                     `;
-                  }
-                  if (team.SwotAnalysis) {
-                    fallbackLinks += `
+        }
+        if (team.SwotAnalysis) {
+          fallbackLinks += `
                       <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="4" data-type="swot" data-id="${team.UserId}">View SWOT Analysis</a>
                     `;
-                  }
-                  if (team.ValueProposition) {
-                    fallbackLinks += `
+        }
+        if (team.ValueProposition) {
+          fallbackLinks += `
                       <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="5" data-type="value" data-id="${team.UserId}">View Value Proposition</a>
                     `;
-                  }
+        }
 
-                  if (!fallbackLinks) {
-                    fallbackLinks = `<span class="text-gray-600 italic">No data available yet</span>`;
-                  }
+        if (!fallbackLinks) {
+          fallbackLinks = `<span class="text-gray-600 italic">No data available yet</span>`;
+        }
 
-                  return `<div class="ml-4">${fallbackLinks}</div>`;
-                })()
-          }
+        return `<div class="ml-4">${fallbackLinks}</div>`;
+      })()
+    }
         </ul>
       </div>
     </div>
@@ -1635,7 +1625,7 @@ document.addEventListener("click", (e) => {
 
 
 async function reassignMentor(teamId, mentorId) {
-  console.log(teamId,mentorId)
+  console.log(teamId, mentorId)
   if (!mentorId) {
     alert("Please select a mentor.");
     return;
