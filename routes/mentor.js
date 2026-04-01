@@ -23,24 +23,90 @@ const router = express.Router();
 
 router.get("/teams/dropdown", authenticate, async (req, res) => {
   try {
-    const { reviewType } = req.query; // "review1" or "review2"
+    const mentorId = req.user.mentorId;
 
-    let whereClause = {};
-    if (reviewType === "review1") {
-      whereClause.review1_score = null; // not submitted yet
-    } else if (reviewType === "review2") {
-      whereClause.review2_score = null;
+    // 1️⃣ Get mentor
+    const mentor = await Mentor.findByPk(mentorId);
+    if (!mentor || !mentor.is_coordinator) {
+      return res.status(403).json({ error: "Only coordinators allowed" });
     }
 
+    // 2️⃣ Get teams only from same department
     const teams = await User.findAll({
-      where: whereClause,
-      attributes: ["UserId", "team_name"]
+      attributes: ["UserId", "team_name"],
+      include: [
+        {
+          model: Student,
+          attributes: [],
+          where: {
+            dept: mentor.department,
+            is_leader: true // ensures 1 row per team
+          },
+          required: true
+        }
+      ]
     });
 
     res.json(teams);
   } catch (err) {
-    console.error("Error fetching teams:", err);
-    res.status(500).json({ error: "Failed to fetch teams" });
+    console.error("Error fetching dropdown teams:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+router.get("/teams/:teamId/students", authenticate, async (req, res) => {
+  try {
+    const { teamId } = req.params;
+
+    const students = await Student.findAll({
+      where: { user_id: teamId },
+      attributes: [
+        "id",
+        "student_name",
+        "register_no",
+        "dept",
+        "section",
+        "sem2_review1"
+      ],
+      order: [["student_name", "ASC"]]
+    });
+
+    res.json(students);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch students" });
+  }
+});
+
+
+router.post("/teams/:teamId/sem2-review1", authenticate, async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId;
+    const { teamId } = req.params;
+    const { students } = req.body;
+
+    const mentor = await Mentor.findByPk(mentorId);
+    if (!mentor || !mentor.is_coordinator) {
+      return res.status(403).json({ error: "Only coordinators allowed" });
+    }
+
+    if (!Array.isArray(students)) {
+      return res.status(400).json({ error: "طلاب data invalid" });
+    }
+
+    for (const s of students) {
+      await Student.update(
+        { sem2_review1: s.mark },
+        { where: { id: s.id, user_id: teamId } }
+      );
+    }
+
+    res.json({ message: "Marks updated successfully" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to update marks" });
   }
 });
 

@@ -179,29 +179,49 @@
 
 
 
+// import sequelize from './models/index.js';
+// import Mentor from './models/Mentor.js';
+
+// const addMentor = async () => {
+//   try {
+//     const mentor = await Mentor.create({
+//       mentorId: 136,
+//       title: 'Mrs.',
+//       name: 'Aruljyothi V',
+//       email: 'aruljyothi.aids@act.edu.in',
+//       department: 'AIDS',
+//       designation: 'ASSISTANT PROFESSOR',
+//       password: 'default123',
+//       is_coordinator: false,
+//       firstLogin: true,
+//       file_url: null,
+//       file_key: null
+//     });
+
+//     console.log('Mentor added:', mentor.toJSON());
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
+
+// addMentor();
+
+
 import sequelize from './models/index.js';
-import Mentor from './models/Mentor.js';
 
-const addMentor = async () => {
+(async () => {
   try {
-    const mentor = await Mentor.create({
-      mentorId: 134,
-      title: 'Mr.',
-      name: 'Saminathan',
-      email: 'saminathan.ece@act.edu.in',
-      department: 'ECE',
-      designation: 'ASSISTANT PROFESSOR',
-      password: 'default123',
-      is_coordinator: false,
-      firstLogin: true,
-      file_url: null,
-      file_key: null
-    });
+    console.log("🚀 Adding sem2_review1 column...");
 
-    console.log('Mentor added:', mentor.toJSON());
-  } catch (error) {
-    console.error(error);
+    await sequelize.query(`
+      ALTER TABLE students
+      ADD COLUMN sem2_review1 INT NULL
+    `);
+
+    console.log("✅ sem2_review1 column added successfully");
+    process.exit();
+  } catch (err) {
+    console.error("❌ Error adding column:", err);
+    process.exit(1);
   }
-};
-
-addMentor();
+})();

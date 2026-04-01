@@ -844,6 +844,101 @@ async function loadMentorUpload() {
   }
 }
 
+
+async function loadSem2Teams() {
+  const token = localStorage.getItem("token");
+
+  const res = await axios.get("/mentor/teams/dropdown", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const select = document.getElementById("sem2TeamSelect");
+  select.innerHTML = '<option value="">-- Select Team --</option>';
+
+  res.data.forEach(team => {
+    const opt = document.createElement("option");
+    opt.value = team.UserId;
+    opt.textContent = team.team_name;
+    select.appendChild(opt);
+  });
+}
+
+document.getElementById("sem2TeamSelect").addEventListener("change", async (e) => {
+  const teamId = e.target.value;
+  if (!teamId) return;
+
+  const token = localStorage.getItem("token");
+
+  const res = await axios.get(`/mentor/teams/${teamId}/students`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  renderStudentTable(res.data);
+});
+
+function renderStudentTable(students) {
+  const container = document.getElementById("studentTableContainer");
+
+  let html = `
+    <table class="w-full border">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="border p-2">Name</th>
+          <th class="border p-2">Register No</th>
+          <th class="border p-2">Dept</th>
+          <th class="border p-2">Section</th>
+          <th class="border p-2">Marks</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  students.forEach(s => {
+    html += `
+      <tr>
+        <td class="border p-2">${s.student_name}</td>
+        <td class="border p-2">${s.register_no}</td>
+        <td class="border p-2">${s.dept}</td>
+        <td class="border p-2">${s.section}</td>
+        <td class="border p-2">
+          <input 
+            type="number" 
+            class="mark-input border p-1 w-full"
+            data-id="${s.id}"
+            value="${s.sem2_review1 ?? ""}"
+          />
+        </td>
+      </tr>
+    `;
+  });
+
+  html += `</tbody></table>`;
+
+  container.innerHTML = html;
+
+  document.getElementById("submitSem2Marks").classList.remove("hidden");
+}
+
+document.getElementById("submitSem2Marks").addEventListener("click", async () => {
+  const teamId = document.getElementById("sem2TeamSelect").value;
+
+  const inputs = document.querySelectorAll(".mark-input");
+
+  const students = Array.from(inputs).map(input => ({
+    id: input.dataset.id,
+    mark: input.value ? Number(input.value) : null
+  }));
+
+  const token = localStorage.getItem("token");
+
+  await axios.post(`/mentor/teams/${teamId}/sem2-review1`, {
+    students
+  }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  alert("Marks submitted successfully!");
+});
 // async function loadWorkbookScores() {
 //   try {
 //     const token = localStorage.getItem('token');
@@ -941,6 +1036,7 @@ if (cancelBtn) {
 
 loadTeams();
 loadMentorDetails();
+loadSem2Teams();
 // loadWorkbookTeams(); // load teams into workbook evaluation dropdown
 // loadWorkbookScores()
 // loadRubricsTeams();

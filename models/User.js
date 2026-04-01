@@ -99,7 +99,11 @@ const User = sequelize.define('User', {
   review2_score: {
     type: DataTypes.INTEGER,
     allowNull: true
-  }
+  },
+  sem2_review1: {
+  type: DataTypes.INTEGER,
+  allowNull: true
+}
 }, { tableName: 'users' });
 
 // Associations

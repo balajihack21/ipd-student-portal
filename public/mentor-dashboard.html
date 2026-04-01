@@ -238,6 +238,22 @@
           </div>
         </div>
 
+
+        <div id="sem2Section" class="bg-white p-6 rounded-xl shadow-md mt-6">
+          <h2 class="text-2xl font-bold mb-4 text-blue-600">SEM 2 - Review 1 Marks</h2>
+
+          <label class="block mb-2 font-semibold">Select Team:</label>
+          <select id="sem2TeamSelect" class="border px-3 py-2 w-full mb-4">
+            <option value="">-- Select Team --</option>
+          </select>
+
+          <div id="studentTableContainer"></div>
+
+          <button id="submitSem2Marks" class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 hidden">
+            Submit Marks
+          </button>
+        </div>
+
         <!-- Workbook Evaluation -->
         <!-- <div id="workbookSection" class="bg-white p-6 rounded-xl shadow-md mt-6">
   <h2 class="text-2xl font-bold mb-4 text-blue-600">Workbook Evaluation</h2>
@@ -372,35 +388,32 @@
       </iframe>
     </div>
   </div>
-  <div id="popupModal"
-     class="hidden fixed inset-0 bg-black bg-opacity-50 overflow-y-auto z-50">
+  <div id="popupModal" class="hidden fixed inset-0 bg-black bg-opacity-50 overflow-y-auto z-50">
 
-  <div class="min-h-screen flex items-start justify-center p-6">
+    <div class="min-h-screen flex items-start justify-center p-6">
 
-    <div class="bg-white w-4/5 max-h-[90vh] rounded-lg shadow-lg flex flex-col">
+      <div class="bg-white w-4/5 max-h-[90vh] rounded-lg shadow-lg flex flex-col">
 
-      <!-- Header -->
-      <div class="p-6 border-b flex-shrink-0">
-        <h2 id="modalTitle" class="text-xl font-bold"></h2>
-      </div>
+        <!-- Header -->
+        <div class="p-6 border-b flex-shrink-0">
+          <h2 id="modalTitle" class="text-xl font-bold"></h2>
+        </div>
 
-      <!-- Scrollable Content -->
-      <div id="modalTableContainer"
-           class="flex-1 overflow-y-auto p-6">
-      </div>
+        <!-- Scrollable Content -->
+        <div id="modalTableContainer" class="flex-1 overflow-y-auto p-6">
+        </div>
 
-      <!-- Footer -->
-      <div class="p-6 border-t text-right flex-shrink-0">
-        <button id="cancelPopupBtn"
-                class="bg-gray-500 text-white px-4 py-2 rounded">
-          Cancel
-        </button>
+        <!-- Footer -->
+        <div class="p-6 border-t text-right flex-shrink-0">
+          <button id="cancelPopupBtn" class="bg-gray-500 text-white px-4 py-2 rounded">
+            Cancel
+          </button>
+        </div>
+
       </div>
 
     </div>
-
   </div>
-</div>
 
 
 
