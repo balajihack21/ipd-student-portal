@@ -112,7 +112,9 @@ async function loadUploadHistory() {
         13: "HLD",
         14: "Tech Stack Architecture",
         15: "User Flow Diagram",
-        16:"Mock Up / Wireframe"
+        16:"Mock Up / Wireframe",
+        17:"BMC Template",
+        18:"Prototype Planning Canvas"
       };
 
       const title = weekTitles[upload.week_number] || `File ${upload.week_number}`;
@@ -555,6 +557,10 @@ handleUpload("userFlowForm", "userFlowFile", "userFlowProgress", "userFlowStatus
 
 handleUpload("mockupForm", "mockupFile", "mockupProgress", "mockupStatus", 16);
 
+handleUpload("BMCForm", "BMCFile", "BMCProgress", "BMCStatus", 17);
+
+handleUpload("PPCForm", "PPCFile", "PPCProgress", "PPCStatus", 18);
+
 
 
 
@@ -589,7 +595,9 @@ handleUpload("mockupForm", "mockupFile", "mockupProgress", "mockupStatus", 16);
 // Load Template Files (static list or fetched from server)
 const templates = [
   { name: "Affinity Diagram", file: "Affinity Diagram.docx" },
-  { name: "Problem Statement Canvas_ACT", file: "Problem Statement Canvas_ACT.docx" }
+  { name: "Problem Statement Canvas_ACT", file: "Problem Statement Canvas_ACT.docx" },
+  { name: "BMC Template", file: "BMC_Template-1.docx" },
+  { name: "Prototype Planning Canvas", file: "Prototype Planning canvas-1.docx" }
 ];
 
 function loadTemplateFiles() {

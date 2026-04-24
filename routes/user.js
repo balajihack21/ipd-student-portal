@@ -855,8 +855,10 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
       13: "HLD",
       14: "Tech Stack Architecture",
       15: "User Flow Diagram",
-      16: "Mock Up"
-    }; 
+      16: "Mock Up",
+      17: "BMC Template",
+      18: "Prototype Planning Canvas"
+    };
 
     const submissionTitle = weekTitles[weekNumber] || `File ${weekNumber}`;
 
@@ -873,7 +875,7 @@ router.post("/upload", authenticate, upload.single("file"), async (req, res) => 
 
     await transEmailApi.sendTransacEmail({
       sender,
-      to: [{ email: mentor.email}],
+      to: [{ email: mentor.email }],
       subject: `Team Upload Notification - ${submissionTitle}`,
       htmlContent: `
     <h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
@@ -1219,7 +1221,7 @@ router.post("/product-dimensions", authenticate, async (req, res) => {
 
       await transEmailApi.sendTransacEmail({
         sender,
-        to: [{ email: mentor.email}],
+        to: [{ email: mentor.email }],
         subject: `Team Upload Notification - Product Dimensions`,
         htmlContent: `
       <h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
@@ -1306,7 +1308,7 @@ router.post("/performance-requirements", authenticate, async (req, res) => {
 
       await transEmailApi.sendTransacEmail({
         sender,
-        to: [{ email: mentor.email}],
+        to: [{ email: mentor.email }],
         subject: `Team Upload Notification - Product Dimensions`,
         htmlContent: `
       <h3>Hello ${mentor.title || ""} ${mentor.name},</h3>
