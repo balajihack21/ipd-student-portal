@@ -844,6 +844,103 @@ async function loadMentorUpload() {
   }
 }
 
+async function loadSem2Review2Teams() {
+  const token = localStorage.getItem("token");
+
+  const res = await axios.get("/mentor/teams/dropdown", {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  const select = document.getElementById("sem2Review2TeamSelect");
+  select.innerHTML = '<option value="">-- Select Team --</option>';
+
+  res.data.forEach(team => {
+    const opt = document.createElement("option");
+    opt.value = team.UserId;
+    opt.textContent = team.team_name;
+    select.appendChild(opt);
+  });
+}
+
+document.getElementById("sem2Review2TeamSelect")
+.addEventListener("change", async (e) => {
+  const teamId = e.target.value;
+  if (!teamId) return;
+
+  const token = localStorage.getItem("token");
+
+  const res = await axios.get(`/mentor/teams/${teamId}/students`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  renderStudentTableReview2(res.data);
+});
+
+function renderStudentTableReview2(students) {
+  const container = document.getElementById("studentTableContainer2");
+
+  let html = `
+    <table class="w-full border">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="border p-2">Name</th>
+          <th class="border p-2">Register No</th>
+          <th class="border p-2">Dept</th>
+          <th class="border p-2">Section</th>
+          <th class="border p-2">Review 2 Marks</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  students.forEach(s => {
+    html += `
+      <tr>
+        <td class="border p-2">${s.student_name}</td>
+        <td class="border p-2">${s.register_no}</td>
+        <td class="border p-2">${s.dept}</td>
+        <td class="border p-2">${s.section}</td>
+        <td class="border p-2">
+          <input 
+            type="number" 
+            class="mark-input2 border p-1 w-full"
+            data-id="${s.id}"
+            value="${s.sem2_review2 ?? ""}"
+          />
+        </td>
+      </tr>
+    `;
+  });
+
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+
+  document.getElementById("submitSem2Review2Marks")
+    .classList.remove("hidden");
+}
+
+document.getElementById("submitSem2Review2Marks")
+.addEventListener("click", async () => {
+
+  const teamId = document.getElementById("sem2Review2TeamSelect").value;
+
+  const inputs = document.querySelectorAll(".mark-input2");
+
+  const students = Array.from(inputs).map(input => ({
+    id: input.dataset.id,
+    mark: input.value ? Number(input.value) : null
+  }));
+
+  const token = localStorage.getItem("token");
+
+  await axios.post(`/mentor/teams/${teamId}/sem2-review2`, {
+    students
+  }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+
+  alert("Review 2 Marks submitted successfully!");
+});
 
 async function loadSem2Teams() {
   const token = localStorage.getItem("token");
@@ -939,93 +1036,93 @@ document.getElementById("submitSem2Marks").addEventListener("click", async () =>
 
   alert("Marks submitted successfully!");
 });
-// async function loadWorkbookScores() {
-//   try {
-//     const token = localStorage.getItem('token');
-//     const res = await axios.get('/mentor/workbook-scores', {
-//       headers: { Authorization: `Bearer ${token}` }
-//     });
+async function loadWorkbookScores() {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.get('/mentor/workbook-scores', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-//     const tableBody = document.getElementById('workbookScoreTableBody');
-//     tableBody.innerHTML = '';
+    const tableBody = document.getElementById('workbookScoreTableBody');
+    tableBody.innerHTML = '';
 
-//     res.data.forEach(team => {
-//       const leader = team.Students[0];
-//       const tr = document.createElement('tr');
-//       tr.innerHTML = `
-//         <td class="border p-2">${team.team_name}</td>
-//         <td class="border p-2">${leader.dept}</td>
-//         <td class="border p-2">${leader.section}</td>
-//         <td class="border p-2">${leader.workbook_score ?? '-'}</td>
-//       `;
-//       tableBody.appendChild(tr);
-//     });
+    res.data.forEach(team => {
+      const leader = team.Students[0];
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="border p-2">${team.team_name}</td>
+        <td class="border p-2">${leader.dept}</td>
+        <td class="border p-2">${leader.section}</td>
+        <td class="border p-2">${leader.sem2_workbook ?? '-'}</td>
+      `;
+      tableBody.appendChild(tr);
+    });
 
-//   } catch (err) {
-//     console.error('Error loading workbook scores:', err);
-//   }
-// }
+  } catch (err) {
+    console.error('Error loading workbook scores:', err);
+  }
+}
 
 
-// async function loadWorkbookTeams() {
-//   try {
-//     const token = localStorage.getItem('token');
-//     const res = await axios.get('/mentor/teams', {
-//       headers: { Authorization: `Bearer ${token}` }
-//     });
+async function loadWorkbookTeams() {
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.get('/mentor/teams', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-//     const teamSelect = document.getElementById('workbookTeamSelect');
-//     teamSelect.innerHTML = '<option value="">-- Select a team --</option>';
+    const teamSelect = document.getElementById('workbookTeamSelect');
+    teamSelect.innerHTML = '<option value="">-- Select a team --</option>';
 
-//     res.data.forEach(team => {
-//       // Get leader (since include only leader details)
-//       const leader = team.Students && team.Students[0];
-//       const dept = leader ? leader.dept : 'N/A';
-//       const section = leader ? leader.section : 'N/A';
+    res.data.forEach(team => {
+      // Get leader (since include only leader details)
+      const leader = team.Students && team.Students[0];
+      const dept = leader ? leader.dept : 'N/A';
+      const section = leader ? leader.section : 'N/A';
 
-//       const option = document.createElement('option');
-//       option.value = team.UserId; // use UserId to update all students in team
-//       option.textContent = `${team.team_name} - ${dept}-${section}`;
-//       teamSelect.appendChild(option);
-//     });
+      const option = document.createElement('option');
+      option.value = team.UserId; // use UserId to update all students in team
+      option.textContent = `${team.team_name} - ${dept}-${section}`;
+      teamSelect.appendChild(option);
+    });
 
-//   } catch (err) {
-//     console.error('Error loading teams for workbook evaluation:', err);
-//   }
-// }
+  } catch (err) {
+    console.error('Error loading teams for workbook evaluation:', err);
+  }
+}
 
 
 // Submit workbook score
-// async function submitWorkbookScore() {
-//   try {
-//     const teamId = document.getElementById("workbookTeamSelect").value;
-//     const score = document.getElementById("workbookScoreInput").value;
+async function submitWorkbookScore() {
+  try {
+    const teamId = document.getElementById("workbookTeamSelect").value;
+    const score = document.getElementById("workbookScoreInput").value;
 
-//     if (!teamId || !score) {
-//       alert("Please select a team and enter a score.");
-//       return;
-//     }
+    if (!teamId || !score) {
+      alert("Please select a team and enter a score.");
+      return;
+    }
 
-//     const token = localStorage.getItem("token");
-//     const res = await axios.post(
-//       "/mentor/workbook-score",
-//       { teamId, score },
-//       { headers: { Authorization: `Bearer ${token}` } }
-//     );
+    const token = localStorage.getItem("token");
+    const res = await axios.post(
+      "/mentor/workbook-score",
+      { teamId, score },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
-//     alert(res.data.message);
-//     document.getElementById("workbookScoreInput").value = "";
+    alert(res.data.message);
+    document.getElementById("workbookScoreInput").value = "";
 
-//     // 🔄 Reload table after successful submission
-//     // await loadWorkbookScores();
+    // 🔄 Reload table after successful submission
+    await loadWorkbookScores();
 
-//   } catch (err) {
-//     console.error("Error submitting workbook score:", err);
-//     alert(err.response?.data?.error || "Failed to submit workbook score");
-//   }
-// }
+  } catch (err) {
+    console.error("Error submitting workbook score:", err);
+    alert(err.response?.data?.error || "Failed to submit workbook score");
+  }
+}
 
-// document.getElementById("submitWorkbookScore").addEventListener("click", submitWorkbookScore);
+document.getElementById("submitWorkbookScore").addEventListener("click", submitWorkbookScore);
 
 
 const cancelBtn = document.getElementById("cancelPopupBtn");
@@ -1037,6 +1134,7 @@ if (cancelBtn) {
 loadTeams();
 loadMentorDetails();
 loadSem2Teams();
-// loadWorkbookTeams(); // load teams into workbook evaluation dropdown
-// loadWorkbookScores()
+loadSem2Review2Teams();
+loadWorkbookTeams(); // load teams into workbook evaluation dropdown
+loadWorkbookScores()
 // loadRubricsTeams();

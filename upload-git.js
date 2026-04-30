@@ -211,14 +211,14 @@ import sequelize from './models/index.js';
 
 (async () => {
   try {
-    console.log("🚀 Adding sem2_review1 column...");
+    console.log("🚀 Adding sem2_workbook column...");
 
     await sequelize.query(`
       ALTER TABLE students
-      ADD COLUMN sem2_review1 INT NULL
+      ADD COLUMN sem2_workbook INT NULL
     `);
 
-    console.log("✅ sem2_review1 column added successfully");
+    console.log("✅ sem2_workbook column added successfully");
     process.exit();
   } catch (err) {
     console.error("❌ Error adding column:", err);

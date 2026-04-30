@@ -84,6 +84,14 @@ const Student = sequelize.define('Student', {
    sem2_review1: {
   type: DataTypes.INTEGER,
   allowNull: true
+},
+sem2_review2: {
+  type: DataTypes.INTEGER,
+  allowNull: true
+},
+sem2_workbook: {
+  type: DataTypes.INTEGER,
+  allowNull: true
 }
 }, {
   tableName: 'students'

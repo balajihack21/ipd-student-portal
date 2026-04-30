@@ -67,7 +67,8 @@ router.get("/teams/:teamId/students", authenticate, async (req, res) => {
         "register_no",
         "dept",
         "section",
-        "sem2_review1"
+        "sem2_review1",
+        "sem2_review2"
       ],
       order: [["student_name", "ASC"]]
     });
@@ -110,6 +111,36 @@ router.post("/teams/:teamId/sem2-review1", authenticate, async (req, res) => {
   }
 });
 
+
+router.post("/teams/:teamId/sem2-review2", authenticate, async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId;
+    const { teamId } = req.params;
+    const { students } = req.body;
+
+    const mentor = await Mentor.findByPk(mentorId);
+    if (!mentor || !mentor.is_coordinator) {
+      return res.status(403).json({ error: "Only coordinators allowed" });
+    }
+
+    if (!Array.isArray(students)) {
+      return res.status(400).json({ error: "Students data invalid" });
+    }
+
+    for (const s of students) {
+      await Student.update(
+        { sem2_review2: s.mark },   // ✅ CHANGE FIELD
+        { where: { id: s.id, user_id: teamId } }
+      );
+    }
+
+    res.json({ message: "Review 2 marks updated successfully" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to update marks" });
+  }
+});
 
 router.get('/teams', authenticate, async (req, res) => {
   try {
@@ -825,7 +856,7 @@ router.get("/workbook-scores", authenticate, async (req, res) => {
       include: [
         {
           model: Student,
-          attributes: ["workbook_score", "dept", "section"],
+          attributes: ["sem2_workbook", "dept", "section"],
           where: {
             is_leader: true,
             dept: mentor.department
@@ -872,7 +903,7 @@ router.post("/workbook-score", authenticate, async (req, res) => {
 
     // Update all students in that team
     const [updatedCount] = await Student.update(
-      { workbook_score: numericScore },
+      { sem2_workbook: numericScore },
       { where: { user_id: teamId } }
     );
 
