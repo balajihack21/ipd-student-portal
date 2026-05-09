@@ -1324,7 +1324,92 @@ router.get("/my-upload", authenticate, async (req, res) => {
   }
 });
 
+router.get("/all-review-scores", authenticate, async (req, res) => {
+  try {
+    const mentorId = req.user.mentorId;
 
+    // ✅ Check coordinator
+    const mentor = await Mentor.findByPk(mentorId);
+
+    if (!mentor || !mentor.is_coordinator) {
+      return res.status(403).json({
+        error: "Only coordinators allowed",
+      });
+    }
+
+    // ✅ Fetch only same department students
+    const teams = await User.findAll({
+      attributes: ["UserId"],
+
+      include: [
+        {
+          model: Student,
+
+          attributes: [
+            "student_name",
+            "section",
+            "register_no",
+            "dept",
+            "sem2_review1",
+            "sem2_review2",
+            "sem2_workbook",
+          ],
+
+          where: {
+            dept: mentor.department,
+          },
+
+          required: true,
+        },
+      ],
+
+     order: [
+  [Student, "register_no", "ASC"]
+],
+    });
+
+    const allScores = [];
+
+    teams.forEach((team) => {
+      team.Students.forEach((student) => {
+
+        const r1 = student.sem2_review1 || 0;
+        const r2 = student.sem2_review2 || 0;
+        const wb = student.sem2_workbook || 0;
+
+        const total = r1 + r2 + wb;
+
+        allScores.push({
+          teamId: team.UserId,
+
+          name: student.student_name,
+          section: student.section,
+          register_no: String(student.register_no),
+          dept: student.dept,
+
+          review1score: r1,
+          review2score: r2,
+          workbook_score: wb,
+
+          total_score: total,
+        });
+      });
+    });
+
+    allScores.sort((a, b) =>
+  a.register_no.localeCompare(b.register_no)
+);
+
+    res.json(allScores);
+
+  } catch (err) {
+    console.error("❌ Error fetching review scores:", err);
+
+    res.status(500).json({
+      error: "Failed to fetch review scores",
+    });
+  }
+});
 
 
 

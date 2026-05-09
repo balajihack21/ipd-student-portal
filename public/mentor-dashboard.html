@@ -7,6 +7,7 @@
   <title>Mentor Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <style>
     .rubric-label {
       padding: 6px 12px;
@@ -255,20 +256,20 @@
         </div>
 
         <div id="sem2Review2Section" class="bg-white p-6 rounded-xl shadow-md mt-6">
-  <h2 class="text-2xl font-bold mb-4 text-blue-600">SEM 2 - Review 2 Marks</h2>
+          <h2 class="text-2xl font-bold mb-4 text-blue-600">SEM 2 - Review 2 Marks</h2>
 
-  <label class="block mb-2 font-semibold">Select Team:</label>
-  <select id="sem2Review2TeamSelect" class="border px-3 py-2 w-full mb-4">
-    <option value="">-- Select Team --</option>
-  </select>
+          <label class="block mb-2 font-semibold">Select Team:</label>
+          <select id="sem2Review2TeamSelect" class="border px-3 py-2 w-full mb-4">
+            <option value="">-- Select Team --</option>
+          </select>
 
-  <div id="studentTableContainer2"></div>
+          <div id="studentTableContainer2"></div>
 
-  <button id="submitSem2Review2Marks"
-    class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 hidden">
-    Submit Review 2 Marks
-  </button>
-</div>
+          <button id="submitSem2Review2Marks"
+            class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 hidden">
+            Submit Review 2 Marks
+          </button>
+        </div>
 
         <!-- Workbook Evaluation -->
         <!-- <div id="workbookSection" class="bg-white p-6 rounded-xl shadow-md mt-6">
@@ -299,7 +300,9 @@
           <input type="number" id="workbookScoreInput" min="0" max="40" class="border rounded px-3 py-2 w-full mb-4">
 
           <button id="submitWorkbookScore" class="bg-blue-500 text-white px-4 py-2 rounded">Submit Score</button>
-
+          <button id="exportHistoryExcel" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
+            Export to Excel
+          </button>
           <hr class="my-6">
 
           <h3 class="text-xl font-semibold mb-3">📊 Submitted Workbook Scores</h3>

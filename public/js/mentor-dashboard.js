@@ -1138,3 +1138,102 @@ loadSem2Review2Teams();
 loadWorkbookTeams(); // load teams into workbook evaluation dropdown
 loadWorkbookScores()
 // loadRubricsTeams();
+
+
+document
+  .getElementById("exportHistoryExcel")
+  .addEventListener("click", exportReviewScoresExcel);
+
+async function exportReviewScoresExcel() {
+  try {
+    // Fetch API data
+   const token = localStorage.getItem("token");
+
+    const res = await axios.get("/mentor/all-review-scores", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    let reviewData = Array.isArray(res.data) ? res.data : [];
+
+   // ================= TEAM ROLE LOGIC =================
+// ================= TEAM ROLE LOGIC =================
+const groupedByTeam = {};
+
+reviewData.forEach((student) => {
+  if (!groupedByTeam[student.teamId]) {
+    groupedByTeam[student.teamId] = [];
+  }
+
+  groupedByTeam[student.teamId].push(student);
+});
+
+Object.values(groupedByTeam).forEach((members) => {
+  let count = 1;
+
+  members.forEach((m) => {
+    if (!m.is_leader) {
+      m.role = `Student ${count++}`;
+    }
+  });
+});
+    // ================= FORMAT DATA FOR EXCEL =================
+   const excelData = reviewData.map((r, index) => {
+      const r1 = r.review1score ?? 0;
+      const r2 = r.review2score ?? 0;
+      const wb = r.workbook_score ?? 0;
+
+      const reviewTotal = r1 + r2;
+      const total = r.total_score ?? reviewTotal + wb;
+
+      return {
+       "S No": index + 1,
+        "Register No": r.register_no || "",
+        "Student Name": r.name || "",
+        Section: r.section || "",
+        Department: r.dept || "",
+        "Review 1 (30)": r1,
+        "Review 2 (30)": r2,
+        "Workbook (40)": wb,
+        "Total (100)": total
+      };
+    });
+
+    // ================= CREATE WORKBOOK =================
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+
+    // Column widths
+    worksheet["!cols"] = [
+      { wch: 10 },
+      { wch: 25 },
+      { wch: 25 },
+      { wch: 10 },
+      { wch: 18 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 18 },
+      { wch: 15 },
+      { wch: 15 },
+      { wch: 25 },
+      { wch: 20 },
+    ];
+
+    const workbook = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(
+      workbook,
+      worksheet,
+      "Review Scores"
+    );
+
+    // ================= DOWNLOAD EXCEL =================
+    XLSX.writeFile(workbook, "Review_Scores.xlsx");
+
+  } catch (err) {
+    console.error("Export failed:", err);
+    alert("Failed to export review scores");
+  }
+}
