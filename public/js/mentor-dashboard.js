@@ -1192,7 +1192,6 @@ Object.values(groupedByTeam).forEach((members) => {
         "Register No": r.register_no || "",
         "Student Name": r.name || "",
         Section: r.section || "",
-        Department: r.dept || "",
         "Review 1 (30)": r1,
         "Review 2 (30)": r2,
         "Workbook (40)": wb,
