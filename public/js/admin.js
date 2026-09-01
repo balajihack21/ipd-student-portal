@@ -1,6 +1,47 @@
 const tabs = document.querySelectorAll(".tab");
 const contents = document.querySelectorAll(".tab-content");
 
+// ======================= BATCH FILTER =======================
+let currentBatch = "all"; // "all" | "24IPD" | "25IPD"
+
+function matchesBatch(userId) {
+  if (currentBatch === "all") return true;
+  return (userId || "").toString().toUpperCase().startsWith(currentBatch);
+}
+
+function refreshAllTabsForBatch() {
+  // Teams tab
+  if (currentTeams.length) {
+    filteredTeams = currentTeams.filter(t => matchesBatch(t.UserId));
+    currentPage = 1;
+    renderTeams(filteredTeams);
+
+    // Reassign tab shares filteredTeams
+    currentReassignPage = 1;
+    renderReassignMentorTable();
+  }
+
+  // History tab
+  if (historyData.length) {
+    applyHistoryFilters();
+  }
+
+  // Review tab
+  if (reviewData.length) {
+    applyReviewFilters();
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const batchFilterEl = document.getElementById("batchFilter");
+  if (batchFilterEl) {
+    batchFilterEl.addEventListener("change", (e) => {
+      currentBatch = e.target.value;
+      refreshAllTabsForBatch();
+    });
+  }
+});
+
 tabs.forEach(tab => {
   tab.addEventListener("click", () => {
     // Reset all tabs and contents
@@ -77,7 +118,7 @@ async function fetchReviewScores() {
     }
 
     attachReviewFilters();
-    renderReviewTable();
+    applyReviewFilters();
   } catch (err) {
     console.error("Error fetching review scores:", err);
     document.getElementById("reviewTable").innerHTML =
@@ -227,7 +268,8 @@ function applyReviewFilters() {
       (!teamVal || (r.team_name || "").toLowerCase().includes(teamVal)) &&
       (!studentVal || (r.name || "").toLowerCase().includes(studentVal)) &&
       (!deptVal || (r.dept || "").toLowerCase().includes(deptVal)) &&
-      (!secVal || (r.section || "").toLowerCase().includes(secVal))
+      (!secVal || (r.section || "").toLowerCase().includes(secVal)) &&
+      matchesBatch(r.teamId)
     );
   });
 
@@ -304,60 +346,12 @@ let filteredHistory = [];
 async function fetchTeams() {
   const res = await axios.get("/admin/teams");
   currentTeams = res.data;
-  filteredTeams = [...currentTeams];
+  filteredTeams = currentTeams.filter(t => matchesBatch(t.UserId));
   renderTeams(filteredTeams);
   attachFilters()
 
 
 }
-
-
-
-
-
-// function renderTeams(teams) {
-//   const container = document.getElementById("teamsTable");
-//   container.innerHTML = `
-//     <table id="teamsTableData" class="min-w-full table-auto border rounded overflow-hidden shadow text-sm text-left">
-//       <thead class="bg-blue-100">
-//         <tr>
-//           <th class="p-3">Team ID</th>
-//           <th class="p-3">Team Name</th>
-//           <th class="p-3">Email</th>
-//           <th class="p-3">Mentor</th>
-//           <th class="p-3">Mentor Dept</th>
-//           <th class="p-3">Team Leader</th>
-//           <th class="p-3">Student Dept</th>
-//           <th class="p-3">Members</th>
-//           <th class="p-3">Actions</th>
-//         </tr>
-//       </thead>
-//       <tbody id="teamBody" class="bg-white divide-y">
-//         ${teams.map(team => {
-//           const leader = team.Students?.find(s => s.is_leader);
-//           return `
-//             <tr>
-//               <td class="p-3">${team.UserId}</td>
-//               <td class="p-3 font-medium text-blue-800">${team.team_name}</td>
-//               <td class="p-3">${team.email}</td>
-//               <td class="p-3">${team.mentor?.name || 'Unassigned'}</td>
-//               <td class="p-3">${team.mentor?.department || 'N/A'}</td>
-//               <td class="p-3">${leader?.student_name || 'N/A'}</td>
-//               <td class="p-3">${leader?.dept || 'N/A'}</td>
-//               <td class="p-3">${team.Students?.map(s => s.student_name).join(", ") || 'No members'}</td>
-//               <td class="p-3">
-//                 <button onclick="editTeam('${team.UserId}')" class="text-blue-600 hover:underline">Edit</button>
-//                 <button onclick="deleteTeam('${team.UserId}')" class="text-red-600 hover:underline ml-2">Delete</button>
-//               </td>
-//             </tr>
-//           `;
-//         }).join("")}
-//       </tbody>
-//     </table>
-//   `;
-
-//   attachFilters();
-// }
 
 let currentPage = 1;
 const itemsPerPage = 10;
@@ -370,14 +364,14 @@ async function fetchAllTeamHistories() {
   try {
     const res = await axios.get(`/admin/team-history`); // should return all
     historyData = res.data.teams; // store for pagination
-    filteredHistory = [...historyData];
+    filteredHistory = historyData.filter(t => matchesBatch(t.UserId));
     console.log(res.data)
     document.getElementById('uploadedTeamsCount').textContent =
       `Uploaded Teams: ${res.data.uploadedCount}`;
     document.getElementById('notUploadedTeamsCount').textContent =
       `Not Uploaded Teams: ${res.data.notUploadedCount}`;
     historyCurrentPage = 1; // reset to first page
-    renderHistoryTable();
+    renderHistoryTableFiltered(filteredHistory);
     attachHistoryFilters();
     document.getElementById("uploadStatusFilter").addEventListener("change", applyHistoryFilters);
 
@@ -430,7 +424,7 @@ function applyHistoryFilters(resetPage = true) {
       );
 
 
-    return matchesUploadStatus && matchesId && matchesName && matchesMentor && matchesLeaderDept && matchesStatus;
+    return matchesUploadStatus && matchesId && matchesName && matchesMentor && matchesLeaderDept && matchesStatus && matchesBatch(team.UserId);
   });
 
   // ✅ Only reset page when a new filter is applied
@@ -1290,7 +1284,8 @@ function attachFilters() {
         team.team_name.toLowerCase().includes(teamVal) &&
         (team.mentor?.department || "").toLowerCase().includes(mentorVal) &&
         (team.Students?.find(s => s.is_leader)?.dept || "").toLowerCase().includes(leaderVal) &&
-        team.Students?.some(s => s.student_name.toLowerCase().includes(studentnameVal))
+        team.Students?.some(s => s.student_name.toLowerCase().includes(studentnameVal)) &&
+        matchesBatch(team.UserId)
       );
 
       renderTeams(filteredTeams);
@@ -1432,120 +1427,10 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
 
 
 async function fetchMentorsAndTeams() {
-  // const [mentorsRes, teamsRes] = await Promise.all([
-  //   axios.get('/admin/mentors'),
-  //   axios.get('/admin/assigned-teams')
-  // ]);
-
-  // allMentors = mentorsRes.data;
-
-  // const mentorSelect = document.getElementById("mentorSelect");
-  // const teamSelect = document.getElementById("teamSelect");
-
-  // mentorSelect.innerHTML = `<option value="">Select Mentor</option>`;
-  // mentorsRes.data.forEach(m => {
-  //   const opt = document.createElement("option");
-  //   opt.value = m.MentorId;
-  //   opt.textContent = `${m.name} (${m.department})`;
-  //   mentorSelect.appendChild(opt);
-  // });
-
-  // teamSelect.innerHTML = `<option value="">Select Team</option>`;
-  // teamsRes.data.forEach(t => {
-  //   const opt = document.createElement("option");
-  //   opt.value = t.UserId;
-  //   opt.textContent = t.team_name;
-  //   teamSelect.appendChild(opt);
-  // });
   const mentorsRes = await axios.get('/admin/mentors');
   allMentors = mentorsRes.data;
 }
 
-
-// document.getElementById("assignBtn").addEventListener("click", async () => {
-//   const team_id = document.getElementById("teamSelect").value;
-//   const mentor_id = document.getElementById("mentorSelect").value;
-//   await axios.put('/admin/assign-mentor', { team_id, mentor_id });
-//   alert("Mentor assigned successfully");
-//   location.reload();
-// });
-
-// document.getElementById("historySearch").addEventListener("keypress", async (e) => {
-//   if (e.key === 'Enter') {
-//     const teamId = e.target.value.trim();
-//     const res = await axios.get(`/admin/team-history/${teamId}`);
-//     const data = res.data;
-//     console.log(data)
-
-//     let html = `<h2 class="text-xl font-bold mb-2">${data.team_name}</h2>`;
-//     html += `<p>Email: ${data.email}</p>`;
-//     html += `<p>Mentor: ${data.mentor?.name || 'None'} (${data.mentor?.department || 'N/A'})</p>`;
-//     html+=`<p>Mentor Email: ${data.mentor?.email || "None"}`;
-
-//     html += `<h3 class="mt-4 font-semibold">Students:</h3><ul class="list-disc ml-6">`;
-//     data.Students.forEach(s => {
-//       html += `<li>${s.student_name} (${s.register_no}) - ${s.dept} -${s.section} ${s.is_leader ? "(Leader)" : ""} </li>`;
-//     });
-//     html += '</ul>';
-
-//     html += `<h3 class="mt-4 font-semibold">Uploads:</h3><ul class="list-disc ml-6">`;
-//     data.TeamUploads.forEach(u => {
-//       html += `<li><a href="${u.file_url}" class="text-blue-600" target="_blank">Week -${u.week_number}</a> (${new Date(u.createdAt).toLocaleString()})</li>`;
-//     });
-//     html += '</ul>';
-
-//     document.getElementById("historyContent").innerHTML = html;
-//   }
-// });
-
-
-// document.getElementById("historySearch").addEventListener("keypress", async (e) => {
-//   if (e.key === 'Enter') {
-//     const teamId = e.target.value.trim();
-//     const res = await axios.get(`/admin/team-history/${teamId}`);
-//     const data = res.data;
-
-//     let html = `
-//       <div class="bg-white shadow rounded p-6 space-y-4">
-//         <h2 class="text-2xl font-semibold text-blue-700">${data.team_name}</h2>
-
-//         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-//           <p><strong>Email:</strong> ${data.email}</p>
-//           <p><strong>Mentor:</strong> ${data.mentor?.name || 'None'} (${data.mentor?.department || 'N/A'})</p>
-//           <p><strong>Mentor Email:</strong> ${data.mentor?.email || 'None'}</p>
-//         </div>
-
-//         <div>
-//           <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
-//           <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
-//             ${data.Students.map(s =>
-//       `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
-//     ).join('')}
-//           </ul>
-//         </div>
-
-//         <div>
-//   <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
-//   <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
-//     ${data.TeamUploads.map(u => `
-//       <li>
-//         <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
-//         <span class="text-xs text-gray-500 ml-1">(${new Date(u.createdAt).toLocaleString()})</span>
-//         <div class="ml-4 mt-1 text-gray-600">
-//           <div><strong>Status:</strong> <span class="font-medium ${u.status === 'REVIEWED' ? 'text-green-600' : u.status === 'SUBMITTED' ? 'text-red-600' : 'text-yellow-600'}">${u.status || 'Pending'}</span></div>
-//           <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
-//         </div>
-//       </li>
-//     `).join('')}
-//   </ul>
-// </div>
-
-//       </div>
-//     `;
-
-//     document.getElementById("historyContent").innerHTML = html;
-//   }
-// });
 
 function attachReassignFilters() {
   const teamIdInput = document.getElementById("filterTeamId");
@@ -1564,7 +1449,8 @@ function attachReassignFilters() {
         team.UserId.toLowerCase().includes(idVal) &&
         team.team_name.toLowerCase().includes(nameVal) &&
         (team.Students.find(s => s.is_leader)?.student_name || "").toLowerCase().includes(leaderVal) &&
-        (team.mentor?.name || "").toLowerCase().includes(mentorVal)
+        (team.mentor?.name || "").toLowerCase().includes(mentorVal) &&
+        matchesBatch(team.UserId)
       );
 
       filteredTeams = filtered;
@@ -1587,28 +1473,6 @@ window.deleteTeam = async (id) => {
   }
 };
 
-
-// window.reassignMentor = async function (teamId) {
-//   const select = document.getElementById(`reassign-${teamId}`);
-//   const mentorId = select.value;
-//   if (!mentorId) return alert("Please select a mentor.");
-// window.reassignMentor = async function (teamId) {
-//   const select = document.getElementById(`reassign-${teamId}`);
-//   const mentorId = select.value;
-//   if (!mentorId) return alert("Please select a mentor.");
-
-//   try {
-//     await axios.put('/admin/assign-mentor', {
-//       team_id: teamId,
-//       mentor_id: mentorId
-//     });
-//     alert("Mentor reassigned successfully.");
-//     fetchTeams();
-//   } catch (err) {
-//     console.error(err);
-//     alert("Failed to reassign mentor.");
-//   }
-// };
 
 document.addEventListener("click", (e) => {
   if (e.target.classList.contains("reassign-btn")) {
@@ -1645,27 +1509,13 @@ async function reassignMentor(teamId, mentorId) {
 };
 
 
-function attachTeamsGeneralSearch() {
-  const searchInput = document.getElementById("teamsGeneralSearch");
-  searchInput.addEventListener("input", () => {
-    const query = searchInput.value.toLowerCase();
-    let filtered = currentTeams.filter(team =>
-      JSON.stringify(team).toLowerCase().includes(query)
-    );
-    currentPage = 1;
-    filteredTeams = filtered;
-    renderTeams(filteredTeams);
-  });
-}
-
-
 // TEAMS GENERAL SEARCH
 function attachTeamsGeneralSearch() {
   const searchInput = document.getElementById("teamsGeneralSearch");
   searchInput.addEventListener("input", () => {
     const query = searchInput.value.toLowerCase();
     filteredTeams = currentTeams.filter(team =>
-      JSON.stringify(team).toLowerCase().includes(query)
+      JSON.stringify(team).toLowerCase().includes(query) && matchesBatch(team.UserId)
     );
     currentPage = 1; // reset pagination
     renderTeams(filteredTeams);
@@ -1691,7 +1541,7 @@ function attachHistoryGeneralSearch() {
   searchInput.addEventListener("input", () => {
     const query = searchInput.value.toLowerCase();
     filteredHistory = historyData.filter(record =>
-      JSON.stringify(record).toLowerCase().includes(query)
+      JSON.stringify(record).toLowerCase().includes(query) && matchesBatch(record.UserId)
     );
     historyCurrentPage = 1;
     renderHistoryTableFiltered(filteredHistory);
@@ -1720,55 +1570,6 @@ catch (err) {
   window.location.href = "/login.html";
   console.error(err);
 }
-
-// async function loadTimelineDates() {
-//   const token = localStorage.getItem('token');
-//   try {
-//     const res = await axios.get('/rubrics/deadline/review1', {
-//       headers: { Authorization: `Bearer ${token}` }
-//     });
-
-//     const { start, deadline } = res.data;
-
-//     // Fill inputs
-//     if (start) document.getElementById("review1Start").value = new Date(start).toISOString().slice(0, 16);
-//     if (deadline) document.getElementById("review1Deadline").value = new Date(deadline).toISOString().slice(0, 16);
-
-//     // Show display
-//     if (start || deadline) {
-//       document.getElementById("currentTimeline").classList.remove("hidden");
-//       document.getElementById("currentStart").textContent = new Date(start).toLocaleString();
-//       document.getElementById("currentEnd").textContent = new Date(deadline).toLocaleString();
-//     }
-//   } catch (err) {
-//     console.error("Failed to load review1 deadline:", err);
-//   }
-// }
-
-
-// document.getElementById("saveReview1").addEventListener("click", async () => {
-//   const token = localStorage.getItem("token");
-//   const startDate = document.getElementById("review1Start").value;
-//   const deadline = document.getElementById("review1Deadline").value;
-
-//   if (!startDate || !deadline) {
-//     return alert("Please enter both start and deadline.");
-//   }
-
-//   try {
-//     await axios.post("/rubrics/deadline/review1",
-//       { start: startDate, deadline: deadline },
-//       { headers: { Authorization: `Bearer ${token}` } }
-//     );
-
-//     alert("Timeline saved successfully!");
-//     loadTimelineDates(); // refresh display
-//   } catch (err) {
-//     console.error("Failed to save timeline:", err);
-//     alert("Failed to save timeline.");
-//   }
-// });
-
 
 // Define all stages
 const stages = [
@@ -1904,6 +1705,3 @@ async function submitAdminComment(uploadId) {
 // Initialize timelines on page load
 renderTimelineSections();
 loadAllTimelineDates();
-
-
-
