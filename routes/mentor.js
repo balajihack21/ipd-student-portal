@@ -320,15 +320,42 @@ import ValueProposition from "../models/Value.js";
 
 
 
+
+
 router.get("/my-teams", authenticate, async (req, res) => {
   try {
     const mentorId = req.user.mentorId;
+    const { batch } = req.query;
+
     console.log("👨‍🏫 Mentor:", req.user);
+    console.log("📚 Batch:", batch);
+
+    // ---------------------------------------------------------
+    // BATCH FILTER
+    // ---------------------------------------------------------
+    // 24ipd -> UserId starts with 24ipd
+    // 25ipd -> UserId starts with 25ipd
+    //
+    // If no batch is selected, no batch filter is applied.
+    // ---------------------------------------------------------
+
+    const userWhere = {
+      mentor_id: mentorId
+    };
+
+    if (batch === "24ipd" || batch === "25ipd") {
+      userWhere.UserId = {
+        [Op.like]: `${batch}%`
+      };
+    }
+
 
     // ✅ Fetch all students under this mentor (with related data)
     const teams = await User.findAll({
-      where: { mentor_id: mentorId },
+      where: userWhere,
+
       attributes: ["UserId", "team_name", "email", "mobile"],
+
       include: [
         {
           model: TeamUpload,
@@ -342,6 +369,7 @@ router.get("/my-teams", authenticate, async (req, res) => {
           ],
           required: false,
         },
+
         {
           model: IdeaSelection,
           attributes: [
@@ -354,6 +382,7 @@ router.get("/my-teams", authenticate, async (req, res) => {
           ],
           required: false,
         },
+
         {
           model: SwotAnalysis,
           attributes: [
@@ -365,6 +394,7 @@ router.get("/my-teams", authenticate, async (req, res) => {
           ],
           required: false,
         },
+
         {
           model: ValueProposition,
           attributes: [
@@ -379,25 +409,37 @@ router.get("/my-teams", authenticate, async (req, res) => {
           ],
           required: false,
         },
+
         UserRequirementCanvas,
         ProductDimensions,
         PerformanceRequirement,
         BillOfMaterial
       ],
+
       order: [[TeamUpload, "uploaded_at", "DESC"]],
     });
+
 
     // ✅ Add signed URLs for TeamUploads
     const finalTeams = await Promise.all(
       teams.map(async (team) => {
+
         const teamData = team.toJSON();
+
         const uploads = await Promise.all(
           (teamData.TeamUploads || []).map(async (upload) => {
+
             let signedUrl = null;
+
             if (upload.file_key) {
               signedUrl = await getSignedFileUrl(upload.file_key);
             }
-            return { ...upload, file_url: signedUrl };
+
+            return {
+              ...upload,
+              file_url: signedUrl
+            };
+
           })
         );
 
@@ -405,13 +447,21 @@ router.get("/my-teams", authenticate, async (req, res) => {
           ...teamData,
           TeamUploads: uploads,
         };
+
       })
     );
 
+
     res.json(finalTeams);
+
   } catch (err) {
+
     console.error("❌ Error fetching assigned teams:", err);
-    res.status(500).json({ error: "Server error fetching teams" });
+
+    res.status(500).json({
+      error: "Server error fetching teams"
+    });
+
   }
 });
 

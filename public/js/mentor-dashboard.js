@@ -427,13 +427,17 @@ const weekTitles = {
   15: "User Flow Diagram",
   16: "Mock Up / Wireframe"
 };
-async function loadTeams() {
+
+async function loadTeams(batch = "24ipd") {
   try {
     const token = localStorage.getItem('token');
-    const res = await axios.get('/mentor/my-teams', {
+
+    // Send selected batch to backend
+    const res = await axios.get(`/mentor/my-teams?batch=${batch}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
-    console.log(res.data);
+
+    console.log(`Teams loaded for ${batch}:`, res.data);
 
     const teamList = document.getElementById('teamList');
     teamList.innerHTML = '';
@@ -450,12 +454,6 @@ async function loadTeams() {
           const alreadyReviewed = !!upload.review_comment;
           const stat = upload.status;
 
-          // let dataType = "upload"; // default
-
-          // if (upload.week_number === 3) dataType = "idea";
-          // else if (upload.week_number === 4) dataType = "swot";
-          // else if (upload.week_number === 5) dataType = "value";
-
           // build link depending on file_url availability
           let viewLink = "";
           if (upload.file_url) {
@@ -466,61 +464,92 @@ async function loadTeams() {
 
           return `
             <div class="p-3 border rounded bg-gray-50">
-             <p class="font-semibold">
-  ${weekTitles[upload.week_number] || `Week ${upload.week_number}`}
-</p>
+              <p class="font-semibold">
+                ${weekTitles[upload.week_number] || `Week ${upload.week_number}`}
+              </p>
+
               ${viewLink}
+
               ${alreadyReviewed && stat === "REVIEWED"
               ? `
                   <textarea class="w-full mt-2 p-2 border rounded bg-gray-100" readonly>${upload.review_comment}</textarea>
-                  <button class="mt-2 bg-gray-400 text-white px-3 py-1 rounded cursor-not-allowed" disabled>Reviewed</button>
+
+                  <button
+                    class="mt-2 bg-gray-400 text-white px-3 py-1 rounded cursor-not-allowed"
+                    disabled>
+                    Reviewed
+                  </button>
                 `
               : `
-                  <textarea placeholder="Write your review..." class="w-full mt-2 p-2 border rounded review-text"></textarea>
-                  <button 
+                  <textarea
+                    placeholder="Write your review..."
+                    class="w-full mt-2 p-2 border rounded review-text">
+                  </textarea>
+
+                  <button
                     class="mt-2 bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 submitReviewBtn"
-                    data-team-id="${team.id}" 
+                    data-team-id="${team.id}"
                     data-upload-id="${upload.id}">
                     Submit Review
                   </button>
                 `
-            }
+              }
             </div>
           `;
         }).join('');
       } else {
+
         let fallbackLinks = '';
 
         // if idea data exists
         if (team.IdeaSelection) {
           fallbackLinks += `
-      <a href="#" class="text-blue-600 underline view-link" data-week="3">View Idea Generation</a>
-    `;
+            <a
+              href="#"
+              class="text-blue-600 underline view-link"
+              data-week="3">
+              View Idea Generation
+            </a>
+          `;
         }
 
         // if SWOT data exists
         if (team.SwotAnalysis) {
           fallbackLinks += `
-      <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="4">View SWOT Analysis</a>
-    `;
+            <a
+              href="#"
+              class="ml-4 text-blue-600 underline view-link"
+              data-week="4">
+              View SWOT Analysis
+            </a>
+          `;
         }
 
-        // if Value Proposition exists (week 5 maybe?)
+        // if Value Proposition exists
         if (team.ValueProposition) {
           fallbackLinks += `
-      <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="5">View Value Proposition</a>
-    `;
+            <a
+              href="#"
+              class="ml-4 text-blue-600 underline view-link"
+              data-week="5">
+              View Value Proposition
+            </a>
+          `;
         }
 
         if (!fallbackLinks) {
-          fallbackLinks = `<span class="text-gray-600 italic">No data available yet</span>`;
+          fallbackLinks = `
+            <span class="text-gray-600 italic">
+              No data available yet
+            </span>
+          `;
         }
 
         uploadsContent = `
-    <div class="p-3 border rounded bg-gray-50">
-      ${fallbackLinks}
-    </div>
-  `;
+          <div class="p-3 border rounded bg-gray-50">
+            ${fallbackLinks}
+          </div>
+        `;
       }
 
 
@@ -530,8 +559,13 @@ async function loadTeams() {
             <h3 class="font-bold text-lg">${team.team_name}</h3>
             <p class="text-gray-600">Leader: ${team.email}</p>
           </div>
-          <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 toggleUploads">View Uploads</button>
+
+          <button
+            class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 toggleUploads">
+            View Uploads
+          </button>
         </div>
+
         <div class="uploads mt-4 hidden space-y-3">
           ${uploadsContent}
         </div>
@@ -541,48 +575,54 @@ async function loadTeams() {
 
       // attach modal logic for "view-link" anchors
       const viewLinks = teamCard.querySelectorAll(".view-link");
+
       viewLinks.forEach(link => {
         link.addEventListener("click", (e) => {
           e.preventDefault();
-          const type = link.getAttribute("data-type");
 
-          // Update URL in current page with team id
-          // const url = new URL(window.location);
-          // url.searchParams.set("id", team.UserId);
-          // url.searchParams.set("type", type); // optional
-          // window.history.pushState({}, "", url);
-
-          const week = parseInt(link.getAttribute("data-week"), 10);
+          const week = parseInt(
+            link.getAttribute("data-week"),
+            10
+          );
 
           if (week === 4) {
             document.getElementById("swotModal").classList.remove("hidden");
-            // const swotSubmitBtn = document.getElementById("swotSubmitBtn");
-            // if (swotSubmitBtn) swotSubmitBtn.style.display = "none";
-            document.getElementById("swotIframe").src = `swot-mentor.html?id=${team.UserId}&type=swot`;
+
+            document.getElementById("swotIframe").src =
+              `swot-mentor.html?id=${team.UserId}&type=swot`;
+
           } else if (week === 3) {
+
             document.getElementById("ideaModal").classList.remove("hidden");
-            // const ideaSubmitBtn = document.getElementById("ideaSubmitBtn");
-            // if (ideaSubmitBtn) ideaSubmitBtn.style.display = "none";
-            document.getElementById("ideaIframe").src = `idea-mentor.html?id=${team.UserId}&type=idea`;
+
+            document.getElementById("ideaIframe").src =
+              `idea-mentor.html?id=${team.UserId}&type=idea`;
+
           } else if (week === 5) {
+
             document.getElementById("ideaModal").classList.remove("hidden");
-            // const ideaSubmitBtn = document.getElementById("ideaSubmitBtn");
-            // if (ideaSubmitBtn) ideaSubmitBtn.style.display = "none";
-            document.getElementById("ideaIframe").src = `value-mentor.html?id=${team.UserId}&type=value`;
+
+            document.getElementById("ideaIframe").src =
+              `value-mentor.html?id=${team.UserId}&type=value`;
+
           }
 
           else if (week === 6 && team.UserRequirementCanvas) {
 
             const urc = team.UserRequirementCanvas;
 
-            // -------- FIRST TABLE (User Requirements + Product Features) --------
-
-            const headers = ["User Requirements", "Product Features"];
+            const headers = [
+              "User Requirements",
+              "Product Features"
+            ];
 
             const userReq = urc.user_requirements || [];
             const productFeat = urc.product_features || [];
 
-            const maxLength = Math.max(userReq.length, productFeat.length);
+            const maxLength = Math.max(
+              userReq.length,
+              productFeat.length
+            );
 
             const dataRows = [];
 
@@ -593,105 +633,172 @@ async function loadTeams() {
               });
             }
 
-            openModal("User Requirement Canvas", headers, "week6", dataRows);
-
-            // -------- AFTER RENDERING FIRST TABLE, ADD MOSCOW SECTION --------
+            openModal(
+              "User Requirement Canvas",
+              headers,
+              "week6",
+              dataRows
+            );
 
             const moscowHTML = `
-    <div class="mt-6">
-      <h3 class="font-bold text-lg mb-2">MoSCoW Prioritization</h3>
-      <table class="w-full border border-collapse">
-        <tbody>
-          <tr>
-            <td class="border p-2 font-semibold bg-gray-100">Must Have</td>
-            <td class="border p-2">${urc.must_have || ""}</td>
-          </tr>
-          <tr>
-            <td class="border p-2 font-semibold bg-gray-100">Should Have</td>
-            <td class="border p-2">${urc.should_have || ""}</td>
-          </tr>
-          <tr>
-            <td class="border p-2 font-semibold bg-gray-100">Could Have</td>
-            <td class="border p-2">${urc.could_have || ""}</td>
-          </tr>
-          <tr>
-            <td class="border p-2 font-semibold bg-gray-100">Won't Have</td>
-            <td class="border p-2">${urc.wont_have || ""}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  `;
+              <div class="mt-6">
+                <h3 class="font-bold text-lg mb-2">
+                  MoSCoW Prioritization
+                </h3>
 
-            document.getElementById("modalTableContainer").innerHTML += moscowHTML;
+                <table class="w-full border border-collapse">
+                  <tbody>
+                    <tr>
+                      <td class="border p-2 font-semibold bg-gray-100">
+                        Must Have
+                      </td>
+                      <td class="border p-2">
+                        ${urc.must_have || ""}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="border p-2 font-semibold bg-gray-100">
+                        Should Have
+                      </td>
+                      <td class="border p-2">
+                        ${urc.should_have || ""}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="border p-2 font-semibold bg-gray-100">
+                        Could Have
+                      </td>
+                      <td class="border p-2">
+                        ${urc.could_have || ""}
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td class="border p-2 font-semibold bg-gray-100">
+                        Won't Have
+                      </td>
+                      <td class="border p-2">
+                        ${urc.wont_have || ""}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            `;
+
+            document.getElementById("modalTableContainer")
+              .innerHTML += moscowHTML;
           }
 
           else if (week === 7 && team.ProductDimension) {
 
             const pd = team.ProductDimension;
 
-            const headers = ["Dimension", "Parameter"];
+            const headers = [
+              "Dimension",
+              "Parameter"
+            ];
 
-            const dataRows = (pd.dimensions || []).map(item => ({
-              "Dimension": item.dimension || "",
-              "Parameter": item.parameter || ""
-            }));
+            const dataRows =
+              (pd.dimensions || []).map(item => ({
+                "Dimension": item.dimension || "",
+                "Parameter": item.parameter || ""
+              }));
 
-            openModal("Product Dimensions", headers, "week7", dataRows);
+            openModal(
+              "Product Dimensions",
+              headers,
+              "week7",
+              dataRows
+            );
           }
+
           else if (week === 8 && team.PerformanceRequirement) {
 
             const pr = team.PerformanceRequirement;
 
-            const headers = ["Parameter", "Justification", "Expected Performance"];
+            const headers = [
+              "Parameter",
+              "Justification",
+              "Expected Performance"
+            ];
 
-            const dataRows = (pr.performance_data || []).map(item => ({
-              "Parameter": item.parameter || "",
-              "Justification": item.justification || "",
-              "Expected Performance": item.expectedPerformance || ""
-            }));
+            const dataRows =
+              (pr.performance_data || []).map(item => ({
+                "Parameter": item.parameter || "",
+                "Justification": item.justification || "",
+                "Expected Performance":
+                  item.expectedPerformance || ""
+              }));
 
-            openModal("Performance Requirement", headers, "week8", dataRows);
+            openModal(
+              "Performance Requirement",
+              headers,
+              "week8",
+              dataRows
+            );
           }
 
           else if (week === 9 && team.BillOfMaterial) {
 
             const bom = team.BillOfMaterial;
 
-            const headers = ["Material", "Quantity", "Component"];
+            const headers = [
+              "Material",
+              "Quantity",
+              "Component"
+            ];
 
-            const dataRows = (bom.bom_data || []).map(item => ({
-              "Material": item.material || "",
-              "Quantity": item.quantity || "",
-              "Component": item.component || ""
-            }));
+            const dataRows =
+              (bom.bom_data || []).map(item => ({
+                "Material": item.material || "",
+                "Quantity": item.quantity || "",
+                "Component": item.component || ""
+              }));
 
-            openModal("Bill Of Materials", headers, "week9", dataRows);
+            openModal(
+              "Bill Of Materials",
+              headers,
+              "week9",
+              dataRows
+            );
           }
-
-
         });
       });
     });
 
     // close buttons for modals
-    document.getElementById("closeSwotModal").addEventListener("click", () => {
-      document.getElementById("swotModal").classList.add("hidden");
-    });
+    document.getElementById("closeSwotModal").addEventListener(
+      "click",
+      () => {
+        document.getElementById("swotModal")
+          .classList.add("hidden");
+      }
+    );
 
-    document.getElementById("closeIdeaModal").addEventListener("click", () => {
-      document.getElementById("ideaModal").classList.add("hidden");
-    });
+    document.getElementById("closeIdeaModal").addEventListener(
+      "click",
+      () => {
+        document.getElementById("ideaModal")
+          .classList.add("hidden");
+      }
+    );
 
-    document.getElementById("closeValueModal").addEventListener("click", () => {
-      document.getElementById("valueModal").classList.add("hidden");
-    });
+    document.getElementById("closeValueModal").addEventListener(
+      "click",
+      () => {
+        document.getElementById("valueModal")
+          .classList.add("hidden");
+      }
+    );
 
   } catch (err) {
-    console.error(err);
-    // window.location.href = "/login.html";
+    console.error("Error loading mentor teams:", err);
   }
 }
+
 
 
 let currentModalType = null;
@@ -1131,7 +1238,20 @@ if (cancelBtn) {
   cancelBtn.addEventListener("click", closeModal);
 }
 
-loadTeams();
+const batchSelect = document.getElementById("batchSelect");
+
+if (batchSelect) {
+  batchSelect.addEventListener("change", () => {
+    const selectedBatch = batchSelect.value;
+
+    console.log("Selected batch:", selectedBatch);
+
+    loadTeams(selectedBatch);
+  });
+}
+
+// Default batch
+loadTeams("25ipd");
 loadMentorDetails();
 loadSem2Teams();
 loadSem2Review2Teams();

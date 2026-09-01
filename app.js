@@ -23,6 +23,8 @@ import userRoutes from './routes/user.js';
 import adminRoutes from './routes/admin.js'
 import mentorRoutes from './routes/mentor.js'
 import rubricRoutes from './routes/rubrics.js'
+// import rubricsRoutes from './routes/rubricsRoutes.js';
+// app.use('/rubrics', rubricsRoutes);
 
 const app = express();
 

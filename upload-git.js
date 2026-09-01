@@ -207,21 +207,44 @@
 // addMentor();
 
 
+// import sequelize from './models/index.js';
+
+// (async () => {
+//   try {
+//     console.log("🚀 Adding sem2_workbook column...");
+
+//     await sequelize.query(`
+//       ALTER TABLE students
+//       ADD COLUMN sem2_workbook INT NULL
+//     `);
+
+//     console.log("✅ sem2_workbook column added successfully");
+//     process.exit();
+//   } catch (err) {
+//     console.error("❌ Error adding column:", err);
+//     process.exit(1);
+//   }
+// })();
+
+
+import 'dotenv/config';
 import sequelize from './models/index.js';
+import Student from './models/Student.js';
 
-(async () => {
+async function updateSchema() {
   try {
-    console.log("🚀 Adding sem2_workbook column...");
+    await sequelize.authenticate();
 
-    await sequelize.query(`
-      ALTER TABLE students
-      ADD COLUMN sem2_workbook INT NULL
-    `);
+    console.log('✓ Connected to MySQL');
 
-    console.log("✅ sem2_workbook column added successfully");
-    process.exit();
-  } catch (err) {
-    console.error("❌ Error adding column:", err);
-    process.exit(1);
+    await Student.sync({ alter: true });
+
+    console.log('✓ Student table schema updated successfully');
+  } catch (error) {
+    console.error('Schema update failed:', error);
+  } finally {
+    await sequelize.close();
   }
-})();
+}
+
+updateSchema();
