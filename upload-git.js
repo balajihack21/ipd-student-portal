@@ -227,24 +227,24 @@
 // })();
 
 
-import 'dotenv/config';
-import sequelize from './models/index.js';
-import Student from './models/Student.js';
+// import 'dotenv/config';
+// import sequelize from './models/index.js';
+// import Student from './models/Student.js';
 
-async function updateSchema() {
-  try {
-    await sequelize.authenticate();
+// async function updateSchema() {
+//   try {
+//     await sequelize.authenticate();
 
-    console.log('✓ Connected to MySQL');
+//     console.log('✓ Connected to MySQL');
 
-    await Student.sync({ alter: true });
+//     await Student.sync({ alter: true });
 
-    console.log('✓ Student table schema updated successfully');
-  } catch (error) {
-    console.error('Schema update failed:', error);
-  } finally {
-    await sequelize.close();
-  }
-}
+//     console.log('✓ Student table schema updated successfully');
+//   } catch (error) {
+//     console.error('Schema update failed:', error);
+//   } finally {
+//     await sequelize.close();
+//   }
+// }
 
-updateSchema();
+// updateSchema();

@@ -49,7 +49,7 @@ const Student = sequelize.define('Student', {
     type: DataTypes.INTEGER,
     allowNull: true
   },
- review1_score: {
+ sem1_review1: {
     type: DataTypes.INTEGER,
     allowNull: true
   },
@@ -73,11 +73,11 @@ const Student = sequelize.define('Student', {
     type: DataTypes.INTEGER,
     allowNull: true
   },
- review2_score: {
+ sem1_review2: {
     type: DataTypes.INTEGER,
     allowNull: true
   },
-  workbook_score: {
+  sem1_workbook: {
     type: DataTypes.INTEGER,
     allowNull: true
   },
@@ -90,6 +90,18 @@ sem2_review2: {
   allowNull: true
 },
 sem2_workbook: {
+  type: DataTypes.INTEGER,
+  allowNull: true
+},
+sem3_review1: {
+  type: DataTypes.INTEGER,
+  allowNull: true
+},
+sem3_review2: {
+  type: DataTypes.INTEGER,
+  allowNull: true
+},
+sem3_workbook: {
   type: DataTypes.INTEGER,
   allowNull: true
 }

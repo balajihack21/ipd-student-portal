@@ -80,8 +80,23 @@ async function loadMentorDetails() {
         console.error("Error checking review1 deadline:", err);
         document.getElementById("review1Section").classList.add("hidden");
       }
+
+      // ✅ Coordinator-only: Sem 3 / Sem 1 review marks sections
+      const sem3Section = document.getElementById("sem3Section");
+      const sem1Section = document.getElementById("sem1Section");
+      if (sem3Section) sem3Section.classList.remove("hidden");
+      if (sem1Section) sem1Section.classList.remove("hidden");
+
+      loadSem3Teams();
+      loadSem1Teams();
     } else {
       document.getElementById("review1Section").classList.add("hidden");
+
+      // Non-coordinator mentors never see review marks sections
+      const sem3Section = document.getElementById("sem3Section");
+      const sem1Section = document.getElementById("sem1Section");
+      if (sem3Section) sem3Section.classList.add("hidden");
+      if (sem1Section) sem1Section.classList.add("hidden");
     }
 
   } catch (err) {
@@ -91,156 +106,156 @@ async function loadMentorDetails() {
 
 
 
-async function loadRubricsTeams() {
-  try {
-    const token = localStorage.getItem('token');
+// async function loadRubricsTeams() {
+//   try {
+//     const token = localStorage.getItem('token');
 
-    // Get deadlines
-    const res = await axios.get('/rubrics/deadline/review1', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const { start, deadline } = res.data;
+//     // Get deadlines
+//     const res = await axios.get('/rubrics/deadline/review1', {
+//       headers: { Authorization: `Bearer ${token}` }
+//     });
+//     const { start, deadline } = res.data;
 
-    const now = new Date();
-    const startDate = new Date(start);
-    const deadlineDate = new Date(deadline);
-    console.log(startDate, deadlineDate)
+//     const now = new Date();
+//     const startDate = new Date(start);
+//     const deadlineDate = new Date(deadline);
+//     console.log(startDate, deadlineDate)
 
-    // Only show section if in window
-    if (now >= startDate && now <= deadlineDate) {
-      document.getElementById("rubricsSection").style.display = "block";
-      try {
-        const token = localStorage.getItem('token');
-        const mentorRes = await axios.get('/mentor/details', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+//     // Only show section if in window
+//     if (now >= startDate && now <= deadlineDate) {
+//       document.getElementById("rubricsSection").style.display = "block";
+//       try {
+//         const token = localStorage.getItem('token');
+//         const mentorRes = await axios.get('/mentor/details', {
+//           headers: { Authorization: `Bearer ${token}` }
+//         });
 
-        const mentor = mentorRes.data;
-        if (!mentor.is_coordinator) return; // only coordinators see rubrics
+//         const mentor = mentorRes.data;
+//         if (!mentor.is_coordinator) return; // only coordinators see rubrics
 
-        //here
-        document.getElementById('rubricsSection').classList.remove('hidden');
+//         //here
+//         document.getElementById('rubricsSection').classList.remove('hidden');
 
-        // Fetch teams in mentor department
-        const teamRes = await axios.get(`/mentor/teams?reviewType=review1`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+//         // Fetch teams in mentor department
+//         const teamRes = await axios.get(`/mentor/teams?reviewType=review1`, {
+//           headers: { Authorization: `Bearer ${token}` }
+//         });
 
-        const teamSelect = document.getElementById('teamSelect');
-        teamRes.data.forEach(team => {
-          const option = document.createElement('option');
-          option.value = team.UserId;
-          option.textContent = `${team.team_name} (${team.email})`;
-          teamSelect.appendChild(option);
-        });
+//         const teamSelect = document.getElementById('teamSelect');
+//         teamRes.data.forEach(team => {
+//           const option = document.createElement('option');
+//           option.value = team.UserId;
+//           option.textContent = `${team.team_name} (${team.email})`;
+//           teamSelect.appendChild(option);
+//         });
 
-        // When team is selected → load rubrics
-        teamSelect.addEventListener('change', () => {
-          const teamId = teamSelect.value;
-          console.log(teamId)
-          if (!teamId) {
-            document.getElementById('rubricsForm').classList.add('hidden');
-            return;
-          }
-          renderRubricsForm(teamId);
-        });
+//         // When team is selected → load rubrics
+//         teamSelect.addEventListener('change', () => {
+//           const teamId = teamSelect.value;
+//           console.log(teamId)
+//           if (!teamId) {
+//             document.getElementById('rubricsForm').classList.add('hidden');
+//             return;
+//           }
+//           renderRubricsForm(teamId);
+//         });
 
-      } catch (err) {
-        console.error('Error loading rubrics teams:', err);
-      }
-
-
-    } else {
-      // here
-      document.getElementById("rubricsSection").style.display = "none";
-    }
-
-  } catch (err) {
-    console.error('Error loading rubrics teams:', err);
-  }
-}
+//       } catch (err) {
+//         console.error('Error loading rubrics teams:', err);
+//       }
 
 
-function renderRubricsForm(teamId) {
-  const criteria = [
-    "Problem Identification",
-    "Problem Statement Canvas",
-    "Idea Generation & Affinity diagram",
-    "Team Presentation & Clarity",
-    "Mentor Interaction & Progress Tracking"
-  ];
+//     } else {
+//       // here
+//       document.getElementById("rubricsSection").style.display = "none";
+//     }
 
-  const rubricsForm = document.getElementById('rubricsForm');
-  rubricsForm.innerHTML = '';
-
-  criteria.forEach((criterion, index) => {
-    const row = document.createElement('div');
-    row.className = "mb-4";
-    row.innerHTML = `
-      <p class="font-semibold mb-2">${criterion}</p>
-      <div class="flex space-x-4">
-        ${[1, 2, 3, 4, 5].map(score => `
-          <label class="rubric-label">
-            <input type="radio" name="criterion_${index + 1}" value="${score}" class="rubric-score hidden">
-            <span>${score}</span>
-          </label>
-        `).join('')}
-      </div>
-    `;
-    rubricsForm.appendChild(row);
-  });
-
-  // Submit button
-  const submitBtn = document.createElement('button');
-  submitBtn.textContent = "Submit Rubrics";
-  submitBtn.className = "bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600";
-  submitBtn.addEventListener('click', () => submitRubrics(teamId, "review1"));
-  rubricsForm.appendChild(submitBtn);
-
-  rubricsForm.classList.remove('hidden');
-
-  // 🔥 Add event listener to toggle highlight
-  rubricsForm.querySelectorAll('.rubric-score').forEach(input => {
-    input.addEventListener('change', () => {
-      const group = rubricsForm.querySelectorAll(`input[name="${input.name}"]`);
-      group.forEach(r => r.parentElement.classList.remove('selected'));
-      input.parentElement.classList.add('selected');
-    });
-  });
-}
+//   } catch (err) {
+//     console.error('Error loading rubrics teams:', err);
+//   }
+// }
 
 
-async function submitRubrics(teamId, stage) {
-  const scores = {};
-  document.querySelectorAll('.rubric-score:checked').forEach(input => {
-    const critIndex = input.name.split('_')[1]; // e.g. "1"
-    scores[`rubric${critIndex}`] = parseInt(input.value, 10);
-  });
+// function renderRubricsForm(teamId) {
+//   const criteria = [
+//     "Problem Identification",
+//     "Problem Statement Canvas",
+//     "Idea Generation & Affinity diagram",
+//     "Team Presentation & Clarity",
+//     "Mentor Interaction & Progress Tracking"
+//   ];
 
-  const token = localStorage.getItem('token');
-  try {
-    await axios.post(`/mentor/teams/${teamId}/rubrics/${stage}`, { scores }, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    console.log(scores);
-    alert(`Rubrics for ${stage} submitted successfully!`);
+//   const rubricsForm = document.getElementById('rubricsForm');
+//   rubricsForm.innerHTML = '';
 
-    // ✅ Reset radio buttons
-    document.querySelectorAll('.rubric-score').forEach(input => {
-      input.checked = false;
-    });
+//   criteria.forEach((criterion, index) => {
+//     const row = document.createElement('div');
+//     row.className = "mb-4";
+//     row.innerHTML = `
+//       <p class="font-semibold mb-2">${criterion}</p>
+//       <div class="flex space-x-4">
+//         ${[1, 2, 3, 4, 5].map(score => `
+//           <label class="rubric-label">
+//             <input type="radio" name="criterion_${index + 1}" value="${score}" class="rubric-score hidden">
+//             <span>${score}</span>
+//           </label>
+//         `).join('')}
+//       </div>
+//     `;
+//     rubricsForm.appendChild(row);
+//   });
 
-    // ✅ Re-fetch teams to update dropdown
-    loadRubricsTeams();
+//   // Submit button
+//   const submitBtn = document.createElement('button');
+//   submitBtn.textContent = "Submit Rubrics";
+//   submitBtn.className = "bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600";
+//   submitBtn.addEventListener('click', () => submitRubrics(teamId, "review1"));
+//   rubricsForm.appendChild(submitBtn);
 
-    // ✅ Hide form after submission
-    document.getElementById('rubricsForm').classList.add('hidden');
+//   rubricsForm.classList.remove('hidden');
 
-  } catch (err) {
-    console.error('Error submitting rubrics:', err);
-    alert('Failed to submit rubrics.');
-  }
-}
+//   // 🔥 Add event listener to toggle highlight
+//   rubricsForm.querySelectorAll('.rubric-score').forEach(input => {
+//     input.addEventListener('change', () => {
+//       const group = rubricsForm.querySelectorAll(`input[name="${input.name}"]`);
+//       group.forEach(r => r.parentElement.classList.remove('selected'));
+//       input.parentElement.classList.add('selected');
+//     });
+//   });
+// }
+
+
+// async function submitRubrics(teamId, stage) {
+//   const scores = {};
+//   document.querySelectorAll('.rubric-score:checked').forEach(input => {
+//     const critIndex = input.name.split('_')[1]; // e.g. "1"
+//     scores[`rubric${critIndex}`] = parseInt(input.value, 10);
+//   });
+
+//   const token = localStorage.getItem('token');
+//   try {
+//     await axios.post(`/mentor/teams/${teamId}/rubrics/${stage}`, { scores }, {
+//       headers: { Authorization: `Bearer ${token}` }
+//     });
+//     console.log(scores);
+//     alert(`Rubrics for ${stage} submitted successfully!`);
+
+//     // ✅ Reset radio buttons
+//     document.querySelectorAll('.rubric-score').forEach(input => {
+//       input.checked = false;
+//     });
+
+//     // ✅ Re-fetch teams to update dropdown
+//     loadRubricsTeams();
+
+//     // ✅ Hide form after submission
+//     document.getElementById('rubricsForm').classList.add('hidden');
+
+//   } catch (err) {
+//     console.error('Error submitting rubrics:', err);
+//     alert('Failed to submit rubrics.');
+//   }
+// }
 
 
 
@@ -951,16 +966,112 @@ async function loadMentorUpload() {
   }
 }
 
-async function loadSem2Review2Teams() {
-  const token = localStorage.getItem("token");
+// async function loadSem2Review2Teams() {
+//   const token = localStorage.getItem("token");
 
-  const res = await axios.get("/mentor/teams/dropdown", {
+//   const res = await axios.get("/mentor/teams/dropdown", {
+//     headers: { Authorization: `Bearer ${token}` }
+//   });
+
+//   const select = document.getElementById("sem2Review2TeamSelect");
+//   select.innerHTML = '<option value="">-- Select Team --</option>';
+
+//   res.data.forEach(team => {
+//     const opt = document.createElement("option");
+//     opt.value = team.UserId;
+//     opt.textContent = team.team_name;
+//     select.appendChild(opt);
+//   });
+// }
+
+// document.getElementById("sem2Review2TeamSelect")
+// .addEventListener("change", async (e) => {
+//   const teamId = e.target.value;
+//   if (!teamId) return;
+
+//   const token = localStorage.getItem("token");
+
+//   const res = await axios.get(`/mentor/teams/${teamId}/students`, {
+//     headers: { Authorization: `Bearer ${token}` }
+//   });
+
+//   renderStudentTableReview2(res.data);
+// });
+
+// function renderStudentTableReview2(students) {
+//   const container = document.getElementById("studentTableContainer2");
+
+//   let html = `
+//     <table class="w-full border">
+//       <thead>
+//         <tr class="bg-gray-100">
+//           <th class="border p-2">Name</th>
+//           <th class="border p-2">Register No</th>
+//           <th class="border p-2">Dept</th>
+//           <th class="border p-2">Section</th>
+//           <th class="border p-2">Review 2 Marks</th>
+//         </tr>
+//       </thead>
+//       <tbody>
+//   `;
+
+//   students.forEach(s => {
+//     html += `
+//       <tr>
+//         <td class="border p-2">${s.student_name}</td>
+//         <td class="border p-2">${s.register_no}</td>
+//         <td class="border p-2">${s.dept}</td>
+//         <td class="border p-2">${s.section}</td>
+//         <td class="border p-2">
+//           <input 
+//             type="number" 
+//             class="mark-input2 border p-1 w-full"
+//             data-id="${s.id}"
+//             value="${s.sem2_review2 ?? ""}"
+//           />
+//         </td>
+//       </tr>
+//     `;
+//   });
+
+//   html += `</tbody></table>`;
+//   container.innerHTML = html;
+
+//   document.getElementById("submitSem2Review2Marks")
+//     .classList.remove("hidden");
+// }
+
+// document.getElementById("submitSem2Review2Marks")
+// .addEventListener("click", async () => {
+
+//   const teamId = document.getElementById("sem2Review2TeamSelect").value;
+
+//   const inputs = document.querySelectorAll(".mark-input2");
+
+//   const students = Array.from(inputs).map(input => ({
+//     id: input.dataset.id,
+//     mark: input.value ? Number(input.value) : null
+//   }));
+
+//   const token = localStorage.getItem("token");
+
+//   await axios.post(`/mentor/teams/${teamId}/sem2-review2`, {
+//     students
+//   }, {
+//     headers: { Authorization: `Bearer ${token}` }
+//   });
+
+//   alert("Review 2 Marks submitted successfully!");
+// });
+
+// ---- SEM 3 REVIEW 1 (24ipd batch only) ----
+async function loadSem3Teams() {
+  const token = localStorage.getItem("token");
+  const res = await axios.get("/mentor/teams/dropdown?batch=24ipd", {
     headers: { Authorization: `Bearer ${token}` }
   });
-
-  const select = document.getElementById("sem2Review2TeamSelect");
+  const select = document.getElementById("sem3TeamSelect");
   select.innerHTML = '<option value="">-- Select Team --</option>';
-
   res.data.forEach(team => {
     const opt = document.createElement("option");
     opt.value = team.UserId;
@@ -969,23 +1080,18 @@ async function loadSem2Review2Teams() {
   });
 }
 
-document.getElementById("sem2Review2TeamSelect")
-.addEventListener("change", async (e) => {
+document.getElementById("sem3TeamSelect").addEventListener("change", async (e) => {
   const teamId = e.target.value;
   if (!teamId) return;
-
   const token = localStorage.getItem("token");
-
   const res = await axios.get(`/mentor/teams/${teamId}/students`, {
     headers: { Authorization: `Bearer ${token}` }
   });
-
-  renderStudentTableReview2(res.data);
+  renderStudentTableSem3(res.data);
 });
 
-function renderStudentTableReview2(students) {
-  const container = document.getElementById("studentTableContainer2");
-
+function renderStudentTableSem3(students) {
+  const container = document.getElementById("studentTableContainerSem3");
   let html = `
     <table class="w-full border">
       <thead>
@@ -994,12 +1100,11 @@ function renderStudentTableReview2(students) {
           <th class="border p-2">Register No</th>
           <th class="border p-2">Dept</th>
           <th class="border p-2">Section</th>
-          <th class="border p-2">Review 2 Marks</th>
+          <th class="border p-2">Sem 3 Review 1 Marks</th>
         </tr>
       </thead>
       <tbody>
   `;
-
   students.forEach(s => {
     html += `
       <tr>
@@ -1008,57 +1113,39 @@ function renderStudentTableReview2(students) {
         <td class="border p-2">${s.dept}</td>
         <td class="border p-2">${s.section}</td>
         <td class="border p-2">
-          <input 
-            type="number" 
-            class="mark-input2 border p-1 w-full"
-            data-id="${s.id}"
-            value="${s.sem2_review2 ?? ""}"
-          />
+          <input type="number" class="mark-input-sem3 border p-1 w-full"
+            data-id="${s.id}" value="${s.sem3_review1 ?? ""}" />
         </td>
       </tr>
     `;
   });
-
   html += `</tbody></table>`;
   container.innerHTML = html;
-
-  document.getElementById("submitSem2Review2Marks")
-    .classList.remove("hidden");
+  document.getElementById("submitSem3Marks").classList.remove("hidden");
 }
 
-document.getElementById("submitSem2Review2Marks")
-.addEventListener("click", async () => {
-
-  const teamId = document.getElementById("sem2Review2TeamSelect").value;
-
-  const inputs = document.querySelectorAll(".mark-input2");
-
+document.getElementById("submitSem3Marks").addEventListener("click", async () => {
+  const teamId = document.getElementById("sem3TeamSelect").value;
+  const inputs = document.querySelectorAll(".mark-input-sem3");
   const students = Array.from(inputs).map(input => ({
     id: input.dataset.id,
     mark: input.value ? Number(input.value) : null
   }));
-
   const token = localStorage.getItem("token");
-
-  await axios.post(`/mentor/teams/${teamId}/sem2-review2`, {
-    students
-  }, {
+  await axios.post(`/mentor/teams/${teamId}/sem3-review1`, { students }, {
     headers: { Authorization: `Bearer ${token}` }
   });
-
-  alert("Review 2 Marks submitted successfully!");
+  alert("Sem 3 Review 1 marks submitted successfully!");
 });
 
-async function loadSem2Teams() {
+// ---- SEM 1 REVIEW 1 (25ipd batch only) ----
+async function loadSem1Teams() {
   const token = localStorage.getItem("token");
-
-  const res = await axios.get("/mentor/teams/dropdown", {
+  const res = await axios.get("/mentor/teams/dropdown?batch=25ipd", {
     headers: { Authorization: `Bearer ${token}` }
   });
-
-  const select = document.getElementById("sem2TeamSelect");
+  const select = document.getElementById("sem1TeamSelect");
   select.innerHTML = '<option value="">-- Select Team --</option>';
-
   res.data.forEach(team => {
     const opt = document.createElement("option");
     opt.value = team.UserId;
@@ -1067,22 +1154,18 @@ async function loadSem2Teams() {
   });
 }
 
-document.getElementById("sem2TeamSelect").addEventListener("change", async (e) => {
+document.getElementById("sem1TeamSelect").addEventListener("change", async (e) => {
   const teamId = e.target.value;
   if (!teamId) return;
-
   const token = localStorage.getItem("token");
-
   const res = await axios.get(`/mentor/teams/${teamId}/students`, {
     headers: { Authorization: `Bearer ${token}` }
   });
-
-  renderStudentTable(res.data);
+  renderStudentTableSem1(res.data);
 });
 
-function renderStudentTable(students) {
-  const container = document.getElementById("studentTableContainer");
-
+function renderStudentTableSem1(students) {
+  const container = document.getElementById("studentTableContainerSem1");
   let html = `
     <table class="w-full border">
       <thead>
@@ -1091,12 +1174,11 @@ function renderStudentTable(students) {
           <th class="border p-2">Register No</th>
           <th class="border p-2">Dept</th>
           <th class="border p-2">Section</th>
-          <th class="border p-2">Marks</th>
+          <th class="border p-2">Sem 1 Review 1 Marks</th>
         </tr>
       </thead>
       <tbody>
   `;
-
   students.forEach(s => {
     html += `
       <tr>
@@ -1105,131 +1187,213 @@ function renderStudentTable(students) {
         <td class="border p-2">${s.dept}</td>
         <td class="border p-2">${s.section}</td>
         <td class="border p-2">
-          <input 
-            type="number" 
-            class="mark-input border p-1 w-full"
-            data-id="${s.id}"
-            value="${s.sem2_review1 ?? ""}"
-          />
+          <input type="number" class="mark-input-sem1 border p-1 w-full"
+            data-id="${s.id}" value="${s.sem1_review1 ?? ""}" />
         </td>
       </tr>
     `;
   });
-
   html += `</tbody></table>`;
-
   container.innerHTML = html;
-
-  document.getElementById("submitSem2Marks").classList.remove("hidden");
+  document.getElementById("submitSem1Marks").classList.remove("hidden");
 }
 
-document.getElementById("submitSem2Marks").addEventListener("click", async () => {
-  const teamId = document.getElementById("sem2TeamSelect").value;
-
-  const inputs = document.querySelectorAll(".mark-input");
-
+document.getElementById("submitSem1Marks").addEventListener("click", async () => {
+  const teamId = document.getElementById("sem1TeamSelect").value;
+  const inputs = document.querySelectorAll(".mark-input-sem1");
   const students = Array.from(inputs).map(input => ({
     id: input.dataset.id,
     mark: input.value ? Number(input.value) : null
   }));
-
   const token = localStorage.getItem("token");
-
-  await axios.post(`/mentor/teams/${teamId}/sem2-review1`, {
-    students
-  }, {
+  await axios.post(`/mentor/teams/${teamId}/sem1-review1`, { students }, {
     headers: { Authorization: `Bearer ${token}` }
   });
-
-  alert("Marks submitted successfully!");
+  alert("Sem 1 Review 1 marks submitted successfully!");
 });
-async function loadWorkbookScores() {
-  try {
-    const token = localStorage.getItem('token');
-    const res = await axios.get('/mentor/workbook-scores', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
 
-    const tableBody = document.getElementById('workbookScoreTableBody');
-    tableBody.innerHTML = '';
+// async function loadSem2Teams() {
+//   const token = localStorage.getItem("token");
 
-    res.data.forEach(team => {
-      const leader = team.Students[0];
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="border p-2">${team.team_name}</td>
-        <td class="border p-2">${leader.dept}</td>
-        <td class="border p-2">${leader.section}</td>
-        <td class="border p-2">${leader.sem2_workbook ?? '-'}</td>
-      `;
-      tableBody.appendChild(tr);
-    });
+//   const res = await axios.get("/mentor/teams/dropdown", {
+//     headers: { Authorization: `Bearer ${token}` }
+//   });
 
-  } catch (err) {
-    console.error('Error loading workbook scores:', err);
-  }
-}
+//   const select = document.getElementById("sem2TeamSelect");
+//   select.innerHTML = '<option value="">-- Select Team --</option>';
+
+//   res.data.forEach(team => {
+//     const opt = document.createElement("option");
+//     opt.value = team.UserId;
+//     opt.textContent = team.team_name;
+//     select.appendChild(opt);
+//   });
+// }
+
+// document.getElementById("sem2TeamSelect").addEventListener("change", async (e) => {
+//   const teamId = e.target.value;
+//   if (!teamId) return;
+
+//   const token = localStorage.getItem("token");
+
+//   const res = await axios.get(`/mentor/teams/${teamId}/students`, {
+//     headers: { Authorization: `Bearer ${token}` }
+//   });
+
+//   renderStudentTable(res.data);
+// });
+
+// function renderStudentTable(students) {
+//   const container = document.getElementById("studentTableContainer");
+
+//   let html = `
+//     <table class="w-full border">
+//       <thead>
+//         <tr class="bg-gray-100">
+//           <th class="border p-2">Name</th>
+//           <th class="border p-2">Register No</th>
+//           <th class="border p-2">Dept</th>
+//           <th class="border p-2">Section</th>
+//           <th class="border p-2">Marks</th>
+//         </tr>
+//       </thead>
+//       <tbody>
+//   `;
+
+//   students.forEach(s => {
+//     html += `
+//       <tr>
+//         <td class="border p-2">${s.student_name}</td>
+//         <td class="border p-2">${s.register_no}</td>
+//         <td class="border p-2">${s.dept}</td>
+//         <td class="border p-2">${s.section}</td>
+//         <td class="border p-2">
+//           <input 
+//             type="number" 
+//             class="mark-input border p-1 w-full"
+//             data-id="${s.id}"
+//             value="${s.sem2_review1 ?? ""}"
+//           />
+//         </td>
+//       </tr>
+//     `;
+//   });
+
+//   html += `</tbody></table>`;
+
+//   container.innerHTML = html;
+
+//   document.getElementById("submitSem2Marks").classList.remove("hidden");
+// }
+
+// document.getElementById("submitSem2Marks").addEventListener("click", async () => {
+//   const teamId = document.getElementById("sem2TeamSelect").value;
+
+//   const inputs = document.querySelectorAll(".mark-input");
+
+//   const students = Array.from(inputs).map(input => ({
+//     id: input.dataset.id,
+//     mark: input.value ? Number(input.value) : null
+//   }));
+
+//   const token = localStorage.getItem("token");
+
+//   await axios.post(`/mentor/teams/${teamId}/sem2-review1`, {
+//     students
+//   }, {
+//     headers: { Authorization: `Bearer ${token}` }
+//   });
+
+//   alert("Marks submitted successfully!");
+// });
+
+// async function loadWorkbookScores() {
+//   try {
+//     const token = localStorage.getItem('token');
+//     const res = await axios.get('/mentor/workbook-scores', {
+//       headers: { Authorization: `Bearer ${token}` }
+//     });
+
+//     const tableBody = document.getElementById('workbookScoreTableBody');
+//     tableBody.innerHTML = '';
+
+//     res.data.forEach(team => {
+//       const leader = team.Students[0];
+//       const tr = document.createElement('tr');
+//       tr.innerHTML = `
+//         <td class="border p-2">${team.team_name}</td>
+//         <td class="border p-2">${leader.dept}</td>
+//         <td class="border p-2">${leader.section}</td>
+//         <td class="border p-2">${leader.sem2_workbook ?? '-'}</td>
+//       `;
+//       tableBody.appendChild(tr);
+//     });
+
+//   } catch (err) {
+//     console.error('Error loading workbook scores:', err);
+//   }
+// }
 
 
-async function loadWorkbookTeams() {
-  try {
-    const token = localStorage.getItem('token');
-    const res = await axios.get('/mentor/teams', {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+// async function loadWorkbookTeams() {
+//   try {
+//     const token = localStorage.getItem('token');
+//     const res = await axios.get('/mentor/teams', {
+//       headers: { Authorization: `Bearer ${token}` }
+//     });
 
-    const teamSelect = document.getElementById('workbookTeamSelect');
-    teamSelect.innerHTML = '<option value="">-- Select a team --</option>';
+//     const teamSelect = document.getElementById('workbookTeamSelect');
+//     teamSelect.innerHTML = '<option value="">-- Select a team --</option>';
 
-    res.data.forEach(team => {
-      // Get leader (since include only leader details)
-      const leader = team.Students && team.Students[0];
-      const dept = leader ? leader.dept : 'N/A';
-      const section = leader ? leader.section : 'N/A';
+//     res.data.forEach(team => {
+//       // Get leader (since include only leader details)
+//       const leader = team.Students && team.Students[0];
+//       const dept = leader ? leader.dept : 'N/A';
+//       const section = leader ? leader.section : 'N/A';
 
-      const option = document.createElement('option');
-      option.value = team.UserId; // use UserId to update all students in team
-      option.textContent = `${team.team_name} - ${dept}-${section}`;
-      teamSelect.appendChild(option);
-    });
+//       const option = document.createElement('option');
+//       option.value = team.UserId; // use UserId to update all students in team
+//       option.textContent = `${team.team_name} - ${dept}-${section}`;
+//       teamSelect.appendChild(option);
+//     });
 
-  } catch (err) {
-    console.error('Error loading teams for workbook evaluation:', err);
-  }
-}
+//   } catch (err) {
+//     console.error('Error loading teams for workbook evaluation:', err);
+//   }
+// }
 
 
 // Submit workbook score
-async function submitWorkbookScore() {
-  try {
-    const teamId = document.getElementById("workbookTeamSelect").value;
-    const score = document.getElementById("workbookScoreInput").value;
+// async function submitWorkbookScore() {
+//   try {
+//     const teamId = document.getElementById("workbookTeamSelect").value;
+//     const score = document.getElementById("workbookScoreInput").value;
 
-    if (!teamId || !score) {
-      alert("Please select a team and enter a score.");
-      return;
-    }
+//     if (!teamId || !score) {
+//       alert("Please select a team and enter a score.");
+//       return;
+//     }
 
-    const token = localStorage.getItem("token");
-    const res = await axios.post(
-      "/mentor/workbook-score",
-      { teamId, score },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+//     const token = localStorage.getItem("token");
+//     const res = await axios.post(
+//       "/mentor/workbook-score",
+//       { teamId, score },
+//       { headers: { Authorization: `Bearer ${token}` } }
+//     );
 
-    alert(res.data.message);
-    document.getElementById("workbookScoreInput").value = "";
+//     alert(res.data.message);
+//     document.getElementById("workbookScoreInput").value = "";
 
-    // 🔄 Reload table after successful submission
-    await loadWorkbookScores();
+//     // 🔄 Reload table after successful submission
+//     await loadWorkbookScores();
 
-  } catch (err) {
-    console.error("Error submitting workbook score:", err);
-    alert(err.response?.data?.error || "Failed to submit workbook score");
-  }
-}
+//   } catch (err) {
+//     console.error("Error submitting workbook score:", err);
+//     alert(err.response?.data?.error || "Failed to submit workbook score");
+//   }
+// }
 
-document.getElementById("submitWorkbookScore").addEventListener("click", submitWorkbookScore);
+// document.getElementById("submitWorkbookScore").addEventListener("click", submitWorkbookScore);
 
 
 const cancelBtn = document.getElementById("cancelPopupBtn");
@@ -1252,17 +1416,19 @@ if (batchSelect) {
 
 // Default batch
 loadTeams("25ipd");
-loadMentorDetails();
-loadSem2Teams();
-loadSem2Review2Teams();
-loadWorkbookTeams(); // load teams into workbook evaluation dropdown
-loadWorkbookScores()
+loadMentorDetails(); // also gates Sem3/Sem1 sections + triggers their loaders for coordinators only
+// loadSem2Teams();
+// loadSem2Review2Teams();
+// loadWorkbookTeams(); // load teams into workbook evaluation dropdown
+// loadWorkbookScores()
 // loadRubricsTeams();
 
 
-document
-  .getElementById("exportHistoryExcel")
-  .addEventListener("click", exportReviewScoresExcel);
+const exportHistoryBtn = document.getElementById("exportHistoryExcel");
+
+if (exportHistoryBtn) {
+  exportHistoryBtn.addEventListener("click", exportReviewScoresExcel);
+}
 
 async function exportReviewScoresExcel() {
   try {
