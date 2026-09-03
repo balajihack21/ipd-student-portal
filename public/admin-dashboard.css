@@ -487,12 +487,84 @@ body.admin-body {
   color: var(--ad-muted);
 }
 
-/* ---------- History cards (rendered by admin.js) ---------- */
+/* ---------- History table (rendered by admin.js) ---------- */
 
 #historyContent > div {
   border: 1px solid var(--ad-border);
   border-radius: var(--ad-radius);
   box-shadow: var(--ad-shadow);
+}
+
+.history-cell-sub {
+  font-size: 11.5px;
+  color: var(--ad-muted);
+}
+
+.history-badge {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.history-badge.is-success {
+  background: #e7f7ee;
+  color: #17794a;
+}
+
+.history-badge.is-warning {
+  background: #fff4e0;
+  color: #97600d;
+}
+
+.history-badge.is-danger {
+  background: #fdecee;
+  color: #b42d3c;
+}
+
+.history-badge.is-muted {
+  background: #f1f3f8;
+  color: var(--ad-muted);
+}
+
+.history-toggle {
+  padding: 4px 10px !important;
+  font-size: 12px !important;
+}
+
+.history-details > td {
+  background: #f8faff;
+  border-bottom: 2px solid var(--ad-border);
+  padding: 16px 18px;
+}
+
+.history-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+  font-size: 13px;
+  color: var(--ad-text);
+}
+
+.history-details-grid section p {
+  margin-bottom: 4px;
+}
+
+.history-details-uploads {
+  grid-column: 1 / -1;
+}
+
+.history-details-title {
+  font-size: 11.5px !important;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ad-muted) !important;
+  border-bottom: 1px solid var(--ad-border);
+  padding-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 #historyContent h2 {
