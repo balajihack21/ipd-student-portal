@@ -6,261 +6,265 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/admin-dashboard.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <style>
-    /* Ensure fixed header doesn't overlap content */
-    body {
-      padding-top: 70px;
-    }
-  </style>
 </head>
 
-<body class="bg-gradient-to-br from-blue-50 to-gray-100 font-sans min-h-screen">
+<body class="admin-body">
 
-  <!-- 🔹 Fixed Top Navigation -->
-  <header
-    class="fixed top-0 left-0 w-full bg-white shadow-md p-4 flex flex-col sm:flex-row justify-between items-center gap-3 z-50">
-    <h1 class="text-xl sm:text-2xl font-bold text-blue-700 text-center sm:text-left">📊 Admin Dashboard</h1>
-
-    <div class="flex items-center gap-3 w-full sm:w-auto">
-      <select id="batchFilter" class="p-2 border rounded-lg shadow-sm w-full sm:w-auto">
-        <option value="all">All Batches</option>
-        <option value="24IPD">24 Batch (24IPD)</option>
-        <option value="25IPD">25 Batch (25IPD)</option>
-      </select>
-
-      <button id="logoutBtn"
-        class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition w-full sm:w-auto">
-        🚪 Logout
-      </button>
-    </div>
-  </header>
-
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-
-    <!-- 🔹 Tabs -->
-    <div class="flex flex-wrap justify-center gap-2 mb-6">
-      <button
-        class="tab active px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-lg font-medium transition-all bg-white rounded-lg shadow"
-        data-tab="teamsTab">👥 Project Teams</button>
-      <button
-        class="tab px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-lg font-medium transition-all bg-white rounded-lg shadow"
-        data-tab="assignTab">🎓 Assign/Reassign Mentor</button>
-      <button
-        class="tab px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-lg font-medium transition-all bg-white rounded-lg shadow"
-        data-tab="historyTab">🕓 Team History</button>
-      <button
-        class="tab px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-lg font-medium transition-all bg-white rounded-lg shadow"
-        data-tab="timelineTab">⏳ Timeline</button>
-      <button
-        class="tab px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-lg font-medium transition-all bg-white rounded-lg shadow"
-        data-tab="reviewTab">📝 Review Scores</button>
-
-
-
-    </div>
-
-    <!-- 🔹 Teams Tab -->
-    <div id="teamsTab" class="tab-content">
-      <div class="mb-4">
-        <input type="text" id="teamsGeneralSearch" placeholder="🔍 Search anything..."
-          class="p-3 border rounded shadow-sm w-full">
-      </div>
-
-      <!-- Search Filters -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-        <input type="text" id="searchTeamName" placeholder="🔍 Search by team name..."
-          class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
-        <input type="text" id="searchUserId" placeholder="🔍 Search by User ID..."
-          class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
-        <input type="text" id="searchLeaderDept" placeholder="🔍 Search by Leader Dept..."
-          class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
-        <input type="text" id="searchMentorDept" placeholder="🔍 Search by Mentor Dept..."
-          class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
-        <input type="text" id="searchStudentName" placeholder="🔍 Search by Student Name..."
-          class="p-3 border border-gray-300 rounded-lg w-full shadow-sm">
-      </div>
-
-      <button id="exportExcel" class="mb-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-        Export to Excel
-      </button>
-
-      <!-- Pagination -->
-      <div id="paginationControls" class="mt-4 flex flex-wrap gap-2"></div>
-
-      <!-- Teams Table -->
-      <div id="teamsTable" class="bg-white rounded-lg shadow-lg p-4 overflow-x-auto">
-        <table class="min-w-full table-auto text-left text-sm">
-          <thead>
-            <tr class="bg-gray-100 text-gray-700">
-              <th class="p-2">User ID</th>
-              <th class="p-2">Team Name</th>
-              <th class="p-2">Team Leader</th>
-              <th class="p-2">Leader Dept</th>
-              <th class="p-2">Mentor</th>
-              <th class="p-2">Mentor Dept</th>
-              <th class="p-2">Members</th>
-              <th class="p-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="teamsBody">
-            <!-- Populated by JS -->
-          </tbody>
-        </table>
+  <!-- Sidebar -->
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="admin-brand">
+      <div class="admin-brand-mark">📊</div>
+      <div>
+        <div class="admin-brand-title">IPD Portal</div>
+        <div class="admin-brand-sub">Admin</div>
       </div>
     </div>
 
-    <!-- 🔹 Assign Tab -->
-    <div id="assignTab" class="tab-content hidden">
-      <div class="mb-4">
-        <input type="text" id="assignGeneralSearch" placeholder="🔍 Search anything..."
-          class="p-3 border rounded shadow-sm w-full">
+    <nav>
+      <div class="admin-nav-label">Manage</div>
+      <div class="admin-nav">
+        <button class="tab active" data-tab="teamsTab"><span class="tab-icon">👥</span> Project Teams</button>
+        <button class="tab" data-tab="assignTab"><span class="tab-icon">🎓</span> Assign Mentor</button>
+        <button class="tab" data-tab="historyTab"><span class="tab-icon">🕓</span> Team History</button>
+        <button class="tab" data-tab="timelineTab"><span class="tab-icon">⏳</span> Timeline</button>
+        <button class="tab" data-tab="reviewTab"><span class="tab-icon">📝</span> Review Scores</button>
       </div>
+    </nav>
 
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-        <input type="text" id="filterTeamId" placeholder="🔍 Search by Team ID..." class="p-3 border rounded shadow-sm">
-        <input type="text" id="filterTeamName" placeholder="🔍 Search by Team Name..."
-          class="p-3 border rounded shadow-sm">
-        <input type="text" id="filterLeaderName" placeholder="🔍 Search by Leader Name..."
-          class="p-3 border rounded shadow-sm">
-        <input type="text" id="filterMentorName" placeholder="🔍 Search by Mentor Name..."
-          class="p-3 border rounded shadow-sm">
-      </div>
+    <div class="admin-sidebar-footer">Innovation &amp; Product Development</div>
+  </aside>
 
-      <div id="reassignTableContainer" class="mt-6"></div>
-    </div>
+  <div class="admin-backdrop" id="sidebarBackdrop"></div>
 
-    <!-- 🔹 History Tab -->
-    <div id="historyTab" class="tab-content hidden">
-      <div class="mb-4 flex gap-4">
-        <span id="uploadedTeamsCount" class="bg-green-100 text-green-800 px-4 py-2 rounded shadow-sm">
-          Uploaded Teams: 0
-        </span>
-        <span id="notUploadedTeamsCount" class="bg-red-100 text-red-800 px-4 py-2 rounded shadow-sm">
-          Not Uploaded Teams: 0
-        </span>
-      </div>
-
-      <button id="exportHistoryExcel" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
-        Export to Excel
-      </button>
-
-
-      <div class="mb-4">
-        <input type="text" id="historyGeneralSearch" placeholder="🔍 Search anything..."
-          class="p-3 border rounded shadow-sm w-full">
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
-        <input type="text" id="historyFilterTeamId" placeholder="🔍 Team ID" class="p-3 border rounded shadow-sm">
-        <input type="text" id="historyFilterTeamName" placeholder="🔍 Team Name" class="p-3 border rounded shadow-sm">
-        <select id="historyFilterStatus" class="p-3 border rounded shadow-sm">
-          <option value="">All Status</option>
-          <option value="SUBMITTED">Submitted</option>
-          <option value="REVIEWED">Reviewed</option>
-        </select>
-        <select id="uploadStatusFilter" class="border rounded px-2 py-1">
-          <option value="all">All Teams</option>
-          <option value="uploaded">Uploaded Teams</option>
-          <option value="not_uploaded">Not Uploaded Teams</option>
-        </select>
-
-        <input type="text" id="historyFilterMentorName" placeholder="🔍 Mentor Name"
-          class="p-3 border rounded shadow-sm">
-        <input type="text" id="historyFilterLeaderDept" placeholder="🔍 Leader Dept"
-          class="p-3 border rounded shadow-sm">
-      </div>
-
-      <div id="historyContent"></div>
-      <div id="historyPaginationControls" class="mt-4 flex justify-center gap-2"></div>
-    </div>
-
-
-    <!-- 🔹 Timeline Tab -->
-    <!-- 🔹 Timeline Tab -->
-    <div id="timelineTab" class="tab-content hidden">
-      <h2 class="text-lg font-semibold mb-4">⏳ Timelines</h2>
-
-      <!-- Generic Timeline Blocks -->
-      <div id="timelineSections" class="space-y-8">
-        <!-- Each section is auto-generated by JS -->
-      </div>
-    </div>
-    <div id="reviewTab" class="tab-content hidden">
-      <div class="mb-4">
-        <input type="text" id="reviewGeneralSearch" placeholder="🔍 Search teams or members..."
-          class="p-3 border rounded shadow-sm w-full">
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-        <input type="text" id="reviewFilterTeamId" placeholder="🔍 Team ID" class="p-3 border rounded shadow-sm">
-        <input type="text" id="reviewFilterTeamName" placeholder="🔍 Team Name" class="p-3 border rounded shadow-sm">
-        <input type="text" id="reviewFilterStudentName" placeholder="🔍 Student Name"
-          class="p-3 border rounded shadow-sm">
-        <input type="text" id="reviewFilterDept" placeholder="🔍 Department" class="p-3 border rounded shadow-sm">
-        <input type="text" id="reviewFilterSection" placeholder="🔍 Section" class="p-3 border rounded shadow-sm">
-      </div>
-
-
-      <div class="flex gap-2 items-center mb-4">
-        <button id="exportReviewExcel" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Export to
-          Excel</button>
-        <div class="ml-auto">
-          <label class="text-sm mr-2">Rows per page</label>
-          <select id="reviewRowsPerPageSelect" class="p-2 border rounded">
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="20">20</option>
-          </select>
+  <!-- Main -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <div class="flex items-center gap-3">
+        <button class="admin-menu-btn" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
+        <div>
+          <h1>Admin Dashboard</h1>
+          <div class="admin-topbar-sub">Teams, mentors, timelines and review scores</div>
         </div>
       </div>
 
-      <div id="reviewTable" class="bg-white rounded-lg shadow-lg p-4 overflow-x-auto">
-        <!-- table rendered by JS -->
+      <div class="admin-topbar-actions">
+        <select id="batchFilter">
+          <option value="all">All Batches</option>
+          <option value="24IPD">24 Batch (24IPD)</option>
+          <option value="25IPD">25 Batch (25IPD)</option>
+        </select>
+
+        <button id="logoutBtn" class="admin-btn admin-btn-danger">🚪 Logout</button>
+      </div>
+    </header>
+
+    <main class="admin-content">
+
+      <!-- Teams Tab -->
+      <div id="teamsTab" class="tab-content">
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div>
+              <h2 class="admin-card-title">Project Teams</h2>
+              <p class="admin-card-desc">Search and manage every registered team and its members.</p>
+            </div>
+            <button id="exportExcel" class="admin-btn admin-btn-primary">⬇ Export to Excel</button>
+          </div>
+
+          <input type="text" id="teamsGeneralSearch" placeholder="🔍 Search anything..." class="mb-3">
+
+          <div class="admin-filter-grid">
+            <input type="text" id="searchTeamName" placeholder="Team name">
+            <input type="text" id="searchUserId" placeholder="User ID">
+            <input type="text" id="searchLeaderDept" placeholder="Leader dept">
+            <input type="text" id="searchMentorDept" placeholder="Mentor dept">
+            <input type="text" id="searchStudentName" placeholder="Student name">
+          </div>
+        </div>
+
+        <div id="teamsTable" class="admin-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Team Name</th>
+                <th>Team Leader</th>
+                <th>Leader Dept</th>
+                <th>Mentor</th>
+                <th>Mentor Dept</th>
+                <th>Members</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="teamsBody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="paginationControls" class="admin-pagination"></div>
       </div>
 
-      <div id="reviewPaginationControls" class="mt-4 flex flex-wrap gap-2"></div>
-    </div>
+      <!-- Assign Tab -->
+      <div id="assignTab" class="tab-content hidden">
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div>
+              <h2 class="admin-card-title">Assign / Reassign Mentor</h2>
+              <p class="admin-card-desc">Pick a mentor for any team and apply the change instantly.</p>
+            </div>
+          </div>
 
+          <input type="text" id="assignGeneralSearch" placeholder="🔍 Search anything..." class="mb-3">
 
+          <div class="admin-filter-grid">
+            <input type="text" id="filterTeamId" placeholder="Team ID">
+            <input type="text" id="filterTeamName" placeholder="Team name">
+            <input type="text" id="filterLeaderName" placeholder="Leader name">
+            <input type="text" id="filterMentorName" placeholder="Mentor name">
+          </div>
+        </div>
 
-    <!-- add here for others -->
+        <div id="reassignTableContainer" class="admin-table-wrap"></div>
+      </div>
+
+      <!-- History Tab -->
+      <div id="historyTab" class="tab-content hidden">
+        <div class="admin-stats">
+          <span id="uploadedTeamsCount" class="admin-stat is-success">Uploaded Teams: 0</span>
+          <span id="notUploadedTeamsCount" class="admin-stat is-danger">Not Uploaded Teams: 0</span>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div>
+              <h2 class="admin-card-title">Team History</h2>
+              <p class="admin-card-desc">Submissions, review status and admin comments per team.</p>
+            </div>
+            <button id="exportHistoryExcel" class="admin-btn admin-btn-primary">⬇ Export to Excel</button>
+          </div>
+
+          <input type="text" id="historyGeneralSearch" placeholder="🔍 Search anything..." class="mb-3">
+
+          <div class="admin-filter-grid">
+            <input type="text" id="historyFilterTeamId" placeholder="Team ID">
+            <input type="text" id="historyFilterTeamName" placeholder="Team name">
+            <select id="historyFilterStatus">
+              <option value="">All Status</option>
+              <option value="SUBMITTED">Submitted</option>
+              <option value="REVIEWED">Reviewed</option>
+            </select>
+            <select id="uploadStatusFilter">
+              <option value="all">All Teams</option>
+              <option value="uploaded">Uploaded Teams</option>
+              <option value="not_uploaded">Not Uploaded Teams</option>
+            </select>
+            <input type="text" id="historyFilterMentorName" placeholder="Mentor name">
+            <input type="text" id="historyFilterLeaderDept" placeholder="Leader dept">
+          </div>
+        </div>
+
+        <div id="historyContent"></div>
+        <div id="historyPaginationControls" class="admin-pagination justify-center"></div>
+      </div>
+
+      <!-- Timeline Tab -->
+      <div id="timelineTab" class="tab-content hidden">
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div>
+              <h2 class="admin-card-title">Stage Timelines</h2>
+              <p class="admin-card-desc">Set the start date and deadline for each project stage.</p>
+            </div>
+          </div>
+          <div id="timelineSections"><!-- generated by JS --></div>
+        </div>
+      </div>
+
+      <!-- Review Tab -->
+      <div id="reviewTab" class="tab-content hidden">
+        <div class="admin-card">
+          <div class="admin-card-head">
+            <div>
+              <h2 class="admin-card-title">Review Scores</h2>
+              <p class="admin-card-desc">Review 1, Review 2 and workbook marks for every student.</p>
+            </div>
+            <button id="exportReviewExcel" class="admin-btn admin-btn-primary">⬇ Export to Excel</button>
+          </div>
+
+          <input type="text" id="reviewGeneralSearch" placeholder="🔍 Search teams or members..." class="mb-3">
+
+          <div class="admin-filter-grid">
+            <input type="text" id="reviewFilterTeamId" placeholder="Team ID">
+            <input type="text" id="reviewFilterTeamName" placeholder="Team name">
+            <input type="text" id="reviewFilterStudentName" placeholder="Student name">
+            <input type="text" id="reviewFilterDept" placeholder="Department">
+            <input type="text" id="reviewFilterSection" placeholder="Section">
+          </div>
+
+          <div class="admin-toolbar-right mt-4">
+            <label for="reviewRowsPerPageSelect">Rows per page</label>
+            <select id="reviewRowsPerPageSelect" style="width:80px">
+              <option value="5">5</option>
+              <option value="10" selected>10</option>
+              <option value="20">20</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="reviewTable" class="admin-table-wrap">
+          <!-- table rendered by JS -->
+        </div>
+
+        <div id="reviewPaginationControls" class="admin-pagination"></div>
+      </div>
+
+    </main>
   </div>
 
+  <!-- SWOT Modal -->
   <div id="swotModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white p-6 rounded-lg w-full max-w-3xl relative overflow-auto max-h-[90vh]">
-      <button id="closeSwotModal"
-        class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold">&times;</button>
+    <div class="admin-modal-panel bg-white p-6 w-full max-w-3xl relative overflow-auto max-h-[90vh]">
+      <button id="closeSwotModal" class="admin-modal-close absolute top-3 right-3">&times;</button>
       <iframe id="swotIframe" src="" class="w-full h-[80vh] border rounded"
-        style="width:100%; height:80vh; border-radius:6px; border:1px solid #ccc;">
+        style="width:100%; height:80vh; border-radius:6px; border:1px solid #e4e8f0;">
       </iframe>
     </div>
   </div>
 
   <!-- Idea Generation Modal -->
   <div id="ideaModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white p-6 rounded-lg w-full max-w-3xl relative overflow-auto max-h-[90vh]">
-      <button id="closeIdeaModal"
-        class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold">&times;</button>
+    <div class="admin-modal-panel bg-white p-6 w-full max-w-3xl relative overflow-auto max-h-[90vh]">
+      <button id="closeIdeaModal" class="admin-modal-close absolute top-3 right-3">&times;</button>
       <iframe id="ideaIframe" src="" class="w-full h-[80vh] border rounded"
-        style="width:100%; height:80vh; border-radius:6px; border:1px solid #ccc;">
+        style="width:100%; height:80vh; border-radius:6px; border:1px solid #e4e8f0;">
       </iframe>
     </div>
   </div>
-
-
 
   <!-- Value Proposition Modal -->
   <div id="valueModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
-    <div class="bg-white p-6 rounded-lg w-full max-w-3xl relative overflow-auto max-h-[90vh]">
-      <button id="closeValueModal"
-        class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold">&times;</button>
+    <div class="admin-modal-panel bg-white p-6 w-full max-w-3xl relative overflow-auto max-h-[90vh]">
+      <button id="closeValueModal" class="admin-modal-close absolute top-3 right-3">&times;</button>
       <iframe id="valueIframe" src="" class="w-full h-[80vh] border rounded"
-        style="width:100%; height:80vh; border-radius:6px; border:1px solid #ccc;">
+        style="width:100%; height:80vh; border-radius:6px; border:1px solid #e4e8f0;">
       </iframe>
     </div>
   </div>
 
+  <script>
+    const sidebarToggle = document.getElementById("sidebarToggle");
+    const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+    const closeSidebar = () => document.body.classList.remove("sidebar-open");
+
+    sidebarToggle.addEventListener("click", () => document.body.classList.toggle("sidebar-open"));
+    sidebarBackdrop.addEventListener("click", closeSidebar);
+    document.querySelectorAll(".admin-nav .tab").forEach(tab => tab.addEventListener("click", closeSidebar));
+  </script>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
