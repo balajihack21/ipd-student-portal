@@ -357,7 +357,7 @@ let currentPage = 1;
 const itemsPerPage = 10;
 let historyData = [];  // will store all team histories
 let historyCurrentPage = 1;
-let historyRowsPerPage = 5; // you can change to 10
+let historyRowsPerPage = 10;
 
 
 async function fetchAllTeamHistories() {
@@ -436,58 +436,8 @@ function applyHistoryFilters(resetPage = true) {
 }
 
 
-// render filtered instead of all
-function renderHistoryTableFiltered(filteredTeams) {
-  const start = (historyCurrentPage - 1) * historyRowsPerPage;
-  const end = start + historyRowsPerPage;
-  const paginatedTeams = filteredTeams.slice(start, end);
-
-  let html = paginatedTeams.map(team => `
-    <div class="bg-white shadow rounded p-6 space-y-4 mb-6">
-      <div class="flex justify-between items-center">
-        <div>
-          <h2 class="text-2xl font-semibold text-blue-700">${team.UserId}</h2>
-          <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
-        </div>
-        <div>
-          ${team.isLocked
-      ? `<button class="unlock-btn bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700" data-team-id="${team.UserId}">Unlock</button>`
-      : `<button class="lock-btn bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700" data-team-id="${team.UserId}">Lock</button>`
-    }
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-        <p><strong>Email:</strong> ${team.email}</p>
-        <p><strong>Mentor:</strong> ${team.mentor?.name || 'None'} (${team.mentor?.department || 'N/A'})</p>
-        <p><strong>Mentor Email:</strong> ${team.mentor?.email || 'None'}</p>
-        
-        <img 
-          src="${team?.profilePhoto || '/images/christmas-celebration-concept.jpg'}" 
-          alt="Profile photo of ${team.team_name || 'Team Member'}"
-          class="w-20 h-20 object-cover rounded-full border border-gray-300 shadow-sm"
-        >
-      </div>
-
-      <div>
-        <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
-        <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
-          ${team.Students.map(s =>
-      `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
-    ).join('')
-    }
-        </ul>
-      </div>
-
-      <!-- Problem Statement & Selected Idea -->
-<div>
-  <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Problem Statement & Selected Idea</h3>
-  <p><strong>Problem Statement:</strong> ${team.ProblemStatements[0]?.problem_description || 'Not submitted yet'}</p>
-  <p><strong>Selected Idea:</strong> ${team.ProblemStatements[0]?.selected_idea || 'Not selected yet'}</p>
-</div>
-
-      <div>
-        <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
+function historyUploadsHtml(team) {
+  return `
         <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
           ${team.TeamUploads.filter(u => u.status === "REVIEWED").length > 0
       ? team.TeamUploads
@@ -586,13 +536,120 @@ function renderHistoryTableFiltered(filteredTeams) {
         return `<div class="ml-4">${fallbackLinks}</div>`;
       })()
     }
-        </ul>
-      </div>
-    </div>
-  `).join('');
+        </ul>`;
+}
 
-  document.getElementById("historyContent").innerHTML = html;
+function historyDetailsHtml(team) {
+  return `
+    <div class="history-details-grid">
+      <section>
+        <h3 class="history-details-title">Team</h3>
+        <p><strong>Email:</strong> ${team.email}</p>
+        <p><strong>Mentor:</strong> ${team.mentor?.name || 'None'} (${team.mentor?.department || 'N/A'})</p>
+        <p><strong>Mentor Email:</strong> ${team.mentor?.email || 'None'}</p>
+      </section>
+
+      <section>
+        <h3 class="history-details-title">Team Members</h3>
+        <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
+          ${team.Students.map(s =>
+    `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
+  ).join('')}
+        </ul>
+      </section>
+
+      <section>
+        <h3 class="history-details-title">Problem Statement &amp; Selected Idea</h3>
+        <p><strong>Problem Statement:</strong> ${team.ProblemStatements[0]?.problem_description || 'Not submitted yet'}</p>
+        <p><strong>Selected Idea:</strong> ${team.ProblemStatements[0]?.selected_idea || 'Not selected yet'}</p>
+      </section>
+
+      <section class="history-details-uploads">
+        <h3 class="history-details-title">Uploads</h3>
+        ${historyUploadsHtml(team)}
+      </section>
+    </div>`;
+}
+
+// render filtered instead of all
+function renderHistoryTableFiltered(filteredTeams) {
+  const start = (historyCurrentPage - 1) * historyRowsPerPage;
+  const end = start + historyRowsPerPage;
+  const paginatedTeams = filteredTeams.slice(start, end);
+
+  const rows = paginatedTeams.map(team => {
+    const leader = team.Students.find(s => s.is_leader);
+    const uploads = team.TeamUploads || [];
+    const reviewed = uploads.filter(u => u.status === "REVIEWED").length;
+    const lastUploadedAt = uploads.reduce((latest, u) => {
+      const at = new Date(u.uploaded_at);
+      return !latest || at > latest ? at : latest;
+    }, null);
+
+    return `
+      <tr>
+        <td>${team.UserId}</td>
+        <td class="font-semibold">${team.team_name}</td>
+        <td>
+          ${leader?.student_name || '-'}
+          <div class="history-cell-sub">${leader?.dept || ''} ${leader?.section || ''}</div>
+        </td>
+        <td>
+          ${team.mentor?.name || 'Unassigned'}
+          <div class="history-cell-sub">${team.mentor?.department || 'N/A'}</div>
+        </td>
+        <td class="text-center">${team.Students.length}</td>
+        <td>
+          ${uploads.length
+        ? `<span class="history-badge ${reviewed === uploads.length ? 'is-success' : 'is-warning'}">${reviewed}/${uploads.length} reviewed</span>`
+        : `<span class="history-badge is-muted">No uploads</span>`}
+        </td>
+        <td>${lastUploadedAt ? lastUploadedAt.toLocaleDateString() : '-'}</td>
+        <td>
+          <span class="history-badge ${team.isLocked ? 'is-danger' : 'is-success'}">${team.isLocked ? 'Locked' : 'Open'}</span>
+        </td>
+        <td class="whitespace-nowrap">
+          <button class="history-toggle admin-btn admin-btn-ghost" data-team-id="${team.UserId}">Details</button>
+          ${team.isLocked
+        ? `<button class="unlock-btn bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700 ml-1" data-team-id="${team.UserId}">Unlock</button>`
+        : `<button class="lock-btn bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700 ml-1" data-team-id="${team.UserId}">Lock</button>`}
+        </td>
+      </tr>
+      <tr id="historyDetails-${team.UserId}" class="history-details hidden">
+        <td colspan="9">${historyDetailsHtml(team)}</td>
+      </tr>`;
+  }).join('');
+
+  document.getElementById("historyContent").innerHTML = paginatedTeams.length
+    ? `<div class="admin-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Team ID</th>
+              <th>Team Name</th>
+              <th>Team Leader</th>
+              <th>Mentor</th>
+              <th>Members</th>
+              <th>Uploads</th>
+              <th>Last Upload</th>
+              <th>State</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`
+    : `<div class="admin-card text-center text-gray-500">No teams match the current filters.</div>`;
+
   renderHistoryPaginationControlsFiltered(filteredTeams.length);
+
+  document.querySelectorAll(".history-toggle").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const row = document.getElementById(`historyDetails-${btn.dataset.teamId}`);
+      const expanded = row.classList.toggle("hidden");
+      btn.textContent = expanded ? "Details" : "Hide";
+    });
+  });
 
   // 🔒 Lock / Unlock handlers
   document.querySelectorAll(".lock-btn").forEach(btn => {
@@ -734,198 +791,7 @@ function historyNextPageFiltered(totalItems) {
 
 
 function renderHistoryTable(filteredTeams = historyData) {
-  const start = (historyCurrentPage - 1) * historyRowsPerPage;
-  const end = start + historyRowsPerPage;
-  const paginatedTeams = filteredTeams.slice(start, end);
-  console.log(paginatedTeams)
-
-  let html = paginatedTeams.map(team => `
-    <div class="bg-white shadow rounded p-6 space-y-4 mb-6">
-      <!-- Header: Team info + Lock/Unlock -->
-      <div class="flex justify-between items-center">
-        <div>
-          <h2 class="text-2xl font-semibold text-blue-700">${team.UserId}</h2>
-          <h2 class="text-2xl font-semibold text-blue-700">${team.team_name}</h2>
-        </div>
-        <div>
-          ${team.isLocked
-      ? `<button class="unlock-btn bg-green-600 text-white text-xs px-3 py-1 rounded hover:bg-green-700" data-team-id="${team.UserId}">Unlock</button>`
-      : `<button class="lock-btn bg-red-600 text-white text-xs px-3 py-1 rounded hover:bg-red-700" data-team-id="${team.UserId}">Lock</button>`
-    }
-        </div>
-      </div>
-
-      <!-- Mentor + Team Info -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-        <p><strong>Email:</strong> ${team.email}</p>
-        <p><strong>Mentor:</strong> ${team.mentor?.name || 'None'} (${team.mentor?.department || 'N/A'})</p>
-        <p><strong>Mentor Email:</strong> ${team.mentor?.email || 'None'}</p>
-        
-        <img 
-          src="${team?.profilePhoto || '/images/christmas-celebration-concept.jpg'}" 
-          alt="Profile photo of ${team.team_name || 'Team Member'}"
-          class="w-20 h-20 object-cover rounded-full border border-gray-300 shadow-sm"
-        >
-      </div>
-
-      <!-- Team Members -->
-      <div>
-        <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Team Members</h3>
-        <ul class="space-y-1 list-disc list-inside text-gray-600 text-sm">
-          ${team.Students.map(s =>
-      `<li>${s.student_name} (${s.register_no}) - ${s.dept} ${s.section} ${s.is_leader ? "<span class='text-blue-600 font-medium'>(Leader)</span>" : ""}</li>`
-    ).join('')
-    }
-        </ul>
-      </div>
-
-      <!-- Problem Statement & Selected Idea -->
-<div>
-  <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Problem Statement & Selected Idea</h3>
-  <p><strong>Problem Statement:</strong> ${team.ProblemStatements[0]?.problem_description || 'Not submitted yet'}</p>
-  <p><strong>Selected Idea:</strong> ${team.ProblemStatements[0]?.selected_idea || 'Not selected yet'}</p>
-</div>
-
-      <!-- Uploads -->
-      <div>
-        <h3 class="text-lg font-medium text-gray-800 border-b pb-1 mb-2">Uploads</h3>
-        <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
-          ${team.TeamUploads.length > 0
-      ? team.TeamUploads.map(u => {
-        const daysPending = Math.floor(
-          (new Date() - new Date(u.uploaded_at)) / (1000 * 60 * 60 * 24)
-        );
-        const isPendingTooLong = u.status !== 'REVIEWED' && daysPending > 2;
-
-        // ✅ Smart View/Download logic
-        let viewLink = "";
-        if (u.file_url) {
-          viewLink = `<a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File-${u.week_number}</a>`;
-        } else {
-          let dataType = "";
-          if (u.week_number == 3) dataType = "idea";
-          else if (u.week_number == 4) dataType = "swot";
-          else if (u.week_number == 5) dataType = "value";
-
-          viewLink = `<a href="#" class="text-blue-600 underline view-link" data-week="${u.week_number}" data-type="${dataType}" data-id="${team.UserId}">File-${u.week_number}</a>`;
-        }
-
-        return `
-                    <li>
-                      ${viewLink}
-                      <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
-                      ${isPendingTooLong
-            ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
-            : ''
-          }
-                      <div class="ml-4 mt-1 text-gray-600">
-                        <div>
-                          <strong>Status:</strong>
-                          <span class="font-medium ${u.status === 'REVIEWED'
-            ? 'text-green-600'
-            : u.status === 'SUBMITTED'
-              ? 'text-red-600'
-              : 'text-yellow-600'
-          }">
-                            ${u.status || 'Pending'}
-                          </span>
-                        </div>
-                        <div><strong>Comment:</strong> ${u.review_comment || 'No comment'}</div>
-                      </div>
-
-                      <div class="ml-4 mt-2">
-                        <textarea 
-                          id="admin-comment-${u.id}" 
-                          rows="2" 
-                          class="w-full p-2 border rounded text-sm"
-                          placeholder="Write admin comment..."
-                        >${localStorage.getItem("adminComment-" + u.id) || ""}</textarea>
-
-                        <button 
-                          class="mt-1 bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 admin-comment-btn"
-                          data-upload-id="${u.id}"
-                        >
-                          Send Comment
-                        </button>
-
-                        ${localStorage.getItem("adminComment-" + u.id)
-            ? `<span class="ml-2 text-green-600 text-xs font-medium">(Reviewed by Admin)</span>`
-            : ""
-          }
-                      </div>
-                    </li>
-                  `;
-      }).join('')
-      : (() => {
-        // 🧩 Fallback: show “View” links even when TeamUploads is empty
-        let fallbackLinks = '';
-
-        if (team.IdeaSelection) {
-          fallbackLinks += `
-                      <a href="#" class="text-blue-600 underline view-link" data-week="3" data-type="idea" data-id="${team.UserId}">View Idea Generation</a>
-                    `;
-        }
-        if (team.SwotAnalysis) {
-          fallbackLinks += `
-                      <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="4" data-type="swot" data-id="${team.UserId}">View SWOT Analysis</a>
-                    `;
-        }
-        if (team.ValueProposition) {
-          fallbackLinks += `
-                      <a href="#" class="ml-4 text-blue-600 underline view-link" data-week="5" data-type="value" data-id="${team.UserId}">View Value Proposition</a>
-                    `;
-        }
-
-        if (!fallbackLinks) {
-          fallbackLinks = `<span class="text-gray-600 italic">No data available yet</span>`;
-        }
-
-        return `<div class="ml-4">${fallbackLinks}</div>`;
-      })()
-    }
-        </ul>
-      </div>
-    </div>
-  `).join('');
-
-  // 🧭 Render result
-  document.getElementById("historyContent").innerHTML = html;
-  renderHistoryPaginationControlsFiltered(filteredTeams.length);
-
-  // 🔒 Lock / Unlock
-  document.querySelectorAll(".lock-btn").forEach(btn =>
-    btn.addEventListener("click", async (e) => {
-      const teamId = e.target.dataset.teamId;
-      await toggleLock(teamId, true);
-    })
-  );
-
-  document.querySelectorAll(".unlock-btn").forEach(btn =>
-    btn.addEventListener("click", async (e) => {
-      const teamId = e.target.dataset.teamId;
-      await toggleLock(teamId, false);
-    })
-  );
-
-  // 👁️ View Links
-  document.querySelectorAll(".view-link").forEach(link =>
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      const dataType = link.getAttribute("data-type");
-      const teamId = link.getAttribute("data-id");
-
-      if (dataType === "swot") {
-        document.getElementById("swotModal").classList.remove("hidden");
-        document.getElementById("swotIframe").src = `swot-admin.html?id=${teamId}&type=swot`;
-      } else if (dataType === "idea") {
-        document.getElementById("ideaModal").classList.remove("hidden");
-        document.getElementById("ideaIframe").src = `idea-admin.html?id=${teamId}&type=idea`;
-      } else if (dataType === "value") {
-        document.getElementById("valueModal").classList.remove("hidden");
-        document.getElementById("valueIframe").src = `value-admin.html?id=${teamId}&type=value`;
-      }
-    })
-  );
+  renderHistoryTableFiltered(filteredTeams);
 }
 
 
