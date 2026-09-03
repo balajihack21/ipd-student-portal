@@ -537,6 +537,12 @@ body.admin-body {
 
 /* ---------- Modals ---------- */
 
+#swotModal,
+#ideaModal,
+#valueModal {
+  z-index: 70;
+}
+
 .admin-modal-panel {
   border-radius: var(--ad-radius);
   box-shadow: 0 24px 60px rgba(16, 26, 51, .35);
