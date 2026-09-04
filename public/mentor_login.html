@@ -194,6 +194,7 @@
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="/js/upload-titles.js"></script>
   <script src="/js/admin.js"></script>
 
 </body>
@@ -409,7 +410,7 @@ function renderHistoryTableFiltered(filteredTeams) {
 
     return `
         <li>
-          <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
+          <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">${getUploadTitle(u.week_number)}</a>
           <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
           ${isPendingTooLong
         ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
@@ -549,7 +550,7 @@ function renderHistoryTable() {
 
     return `
         <li>
-          <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
+          <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">${getUploadTitle(u.week_number)}</a>
           <span class="text-xs text-gray-500 ml-1">(${new Date(u.uploaded_at).toLocaleString()})</span>
           ${isPendingTooLong
         ? `<span class="ml-2 text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded">Pending > 2 days</span>`
@@ -963,7 +964,7 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
   ];
 
   for (let w = 1; w <= maxWeek; w++) {
-    headers.push(`Week ${w}`);
+    headers.push(getUploadTitle(w));
   }
 
   const rows = [headers];
@@ -1124,7 +1125,7 @@ async function fetchMentorsAndTeams() {
 //   <ul class="space-y-2 text-sm text-gray-700 list-disc list-inside">
 //     ${data.TeamUploads.map(u => `
 //       <li>
-//         <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">Week-${u.week_number}</a>
+//         <a href="${u.file_url}" class="text-blue-600 underline" target="_blank">${getUploadTitle(u.week_number)}</a>
 //         <span class="text-xs text-gray-500 ml-1">(${new Date(u.createdAt).toLocaleString()})</span>
 //         <div class="ml-4 mt-1 text-gray-600">
 //           <div><strong>Status:</strong> <span class="font-medium ${u.status === 'REVIEWED' ? 'text-green-600' : u.status === 'SUBMITTED' ? 'text-red-600' : 'text-yellow-600'}">${u.status || 'Pending'}</span></div>
@@ -1290,4 +1291,3 @@ document.getElementById('saveReview1').addEventListener('click', async () => {
   alert('Updated!');
 });
 }
-

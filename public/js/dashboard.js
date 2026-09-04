@@ -92,32 +92,16 @@ async function loadUploadHistory() {
     const uploadDiv = document.getElementById("uploadHistory");
     uploadDiv.innerHTML = ""; // Clear previous entries
 
-    res.data.forEach(upload => {
+    groupUploadsBySemester(res.data).forEach(group => {
+      const groupWrap = document.createElement("div");
+      groupWrap.className = "portal-upload-group";
+      groupWrap.innerHTML = `<h3 class="portal-group-title">${group.label}</h3>`;
+      uploadDiv.appendChild(groupWrap);
+
+      group.uploads.forEach(upload => {
       const item = document.createElement("div");
       const date = new Date(upload.uploaded_at).toLocaleString();
-      // Map week number to title
-      const weekTitles = {
-        1: "Problem Statement Canvas",
-        2: "Affinity Diagram",
-        3: "Idea Generation Canvas",
-        4: "SWOT Analysis",
-        5: "Value Proposition",
-        6: "User Requirements",
-        7: "Product Dimensions",
-        8: "Performance Requirement",
-        9: "Bill Of Materials",
-        10: "2D Modelling",
-        11: "3D Modelling",
-        12: "DB Schema",
-        13: "HLD",
-        14: "Tech Stack Architecture",
-        15: "User Flow Diagram",
-        16:"Mock Up / Wireframe",
-        17:"BMC Template",
-        18:"Prototype Planning Canvas"
-      };
-
-      const title = weekTitles[upload.week_number] || `File ${upload.week_number}`;
+      const title = getUploadTitle(upload.week_number);
 
       item.innerHTML = `
   <div class="bg-gray-100 p-3 rounded shadow-sm mb-3">
@@ -144,7 +128,7 @@ async function loadUploadHistory() {
   </div>
 `;
 
-      uploadDiv.appendChild(item);
+      groupWrap.appendChild(item);
 
       const viewLink = item.querySelector(".view-link");
 
@@ -225,6 +209,7 @@ async function loadUploadHistory() {
 
         });
       }
+      });
     });
 
     // Close buttons
@@ -1584,7 +1569,6 @@ window.addEventListener('load', loadUserRequirementCanvas);
 window.addEventListener("load", loadDimensions);
 window.addEventListener("load", loadPerformance);
 window.addEventListener("load", loadBOM);
-
 
 
 

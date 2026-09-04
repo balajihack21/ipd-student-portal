@@ -454,14 +454,14 @@ function historyUploadsHtml(team) {
           // ✅ New view/download logic
           let viewLink = "";
           if (u.file_url) {
-            viewLink = `<a href="${u.file_url}" class="text-blue-600 underline" target="_blank">File-${u.week_number}</a>`;
+            viewLink = `<a href="${u.file_url}" class="text-blue-600 underline" target="_blank">${getUploadTitle(u.week_number)}</a>`;
           } else {
             let dataType = "";
             if (u.week_number == 3) dataType = "idea";
             else if (u.week_number == 4) dataType = "swot";
             else if (u.week_number == 5) dataType = "value";
 
-            viewLink = `<a href="#" class="text-blue-600 underline view-link" data-week="${u.week_number}" data-type="${dataType}" data-id="${team.UserId}">File-${u.week_number}</a>`;
+            viewLink = `<a href="#" class="text-blue-600 underline view-link" data-week="${u.week_number}" data-type="${dataType}" data-id="${team.UserId}">${getUploadTitle(u.week_number)}</a>`;
           }
 
           return `
@@ -1228,7 +1228,7 @@ document.getElementById("exportHistoryExcel").addEventListener("click", () => {
   ];
 
   for (let w = 1; w <= maxWeek; w++) {
-    headers.push(`File ${w} Status`, `File ${w} Url`);
+    headers.push(`${getUploadTitle(w)} Status`, `${getUploadTitle(w)} Url`);
   }
 
   const rows = [headers];

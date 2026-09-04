@@ -424,24 +424,7 @@ async function loadMentorDetails() {
 //   }
 // }
 
-const weekTitles = {
-  1: "Problem Statement Canvas",
-  2: "Affinity Diagram",
-  3: "Idea Generation Canvas",
-  4: "SWOT Analysis",
-  5: "Value Proposition",
-  6: "User Requirements",
-  7: "Product Dimensions",
-  8: "Performance Requirement",
-  9: "Bill Of Materials",
-  10: "2D Modelling",
-  11: "3D Modelling",
-  12: "DB Schema",
-  13: "HLD",
-  14: "Tech Stack Architecture",
-  15: "User Flow Diagram",
-  16: "Mock Up / Wireframe"
-};
+const weekTitles = UPLOAD_TITLES;
 
 async function loadTeams(batch = "24ipd") {
   try {
@@ -465,7 +448,7 @@ async function loadTeams(batch = "24ipd") {
       // Check if uploads exist
       let uploadsContent = '';
       if (team.TeamUploads && team.TeamUploads.length > 0) {
-        uploadsContent = team.TeamUploads.map(upload => {
+        const renderUpload = (upload) => {
           const alreadyReviewed = !!upload.review_comment;
           const stat = upload.status;
 
@@ -511,7 +494,16 @@ async function loadTeams(batch = "24ipd") {
               }
             </div>
           `;
-        }).join('');
+        };
+
+        uploadsContent = groupUploadsBySemester(team.TeamUploads).map(group => `
+          <div class="portal-upload-group">
+            <h4 class="portal-group-title">${group.label}</h4>
+            <div class="space-y-3">
+              ${group.uploads.map(renderUpload).join('')}
+            </div>
+          </div>
+        `).join('');
       } else {
 
         let fallbackLinks = '';

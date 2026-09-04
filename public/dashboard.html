@@ -4,643 +4,502 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard</title>
+    <title>Student Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="/portal.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <style>
-        #logo {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        #logo #act-logo {
-            width: 40%
-        }
-
-        #logo img {
-            max-height: 72px;
-            max-width: 100%;
-            margin: 5px 0;
-        }
-
-        #logo h3 {
-            font-weight: 700;
-            color: #2c3e50;
-            text-align: center;
-            margin: 15px 0;
-            line-height: 1.4;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        .logo-aside {
-            width: 35%;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        #logo .logo-text h1 {
-            font-size: 22px;
-            margin: 0;
-            color: #2c3e50;
-            padding: 0 10px;
-            font-weight: 600;
-        }
-
-        @media (max-width: 600px) {
-
-            html,
-            body {
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-
-            body {
-                display: flex;
-                flex-direction: column;
-                align-items: stretch;
-                justify-content: flex-start;
-                background: #f2f5f9;
-                height: 100vh;
-            }
-
-            #logo {
-                gap: 15px;
-            }
-
-            #logo #act-logo {
-                height: 40%;
-                width: 100%
-            }
-
-            .logo-aside {
-                width: 70%;
-                display: flex;
-                /* border: 1px solid black; */
-                /* flex-direction: column; */
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            .logo-aside img {
-                max-height: 65px;
-                /* keep it visible but not too large */
-                max-width: 100%;
-            }
-
-            #logo #act-logo {
-                max-height: 50px;
-                max-width: 80%;
-            }
-
-            #logo h3 {
-                /* border: 1px solid black; */
-                width: 100%;
-                font-size: 14px;
-                font-weight: 600;
-                letter-spacing: 0.3px;
-                font-family: arial black;
-            }
-
-            .bg-white.rounded-xl.shadow-md.p-4.flex.items-center.justify-between {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-
-            .bg-white.rounded-xl.shadow-md.p-4.flex.items-center.justify-between img {
-                margin-bottom: 10px;
-            }
-
-            .bg-white.rounded-xl.shadow-md.p-4.flex.items-center.justify-between .flex.items-center.space-x-4 {
-                flex-direction: column;
-                space-x: 0;
-                gap: 10px;
-            }
-
-            #profilePhoto {
-                width: 80px;
-                height: 80px;
-            }
-
-            #editProfileBtn {
-                margin-top: 30px;
-            }
-        }
-    </style>
 </head>
 
-<body class="bg-gray-100 font-sans">
-    <!-- Header Section -->
-    <div id="logo">
-        <img src="./images/AGNI-LOGO-AUTO.png" alt="Agni top header" id="act-logo">
-        <div class="logo-aside">
+<body class="portal-body">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="portal-sidebar -translate-x-full">
+        <div class="portal-brand">
             <img src="./images/Agni Upscale.png" alt="IPD logo">
-            <h3>Innovation and Product Development Cell</h3>
-
-        </div>
-    </div>
-
-    <div class="flex min-h-screen">
-
-        <!-- Sidebar -->
-        <aside id="sidebar"
-            class="bg-white w-64 p-6 shadow-md fixed md:static top-0 left-0 h-full z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-200">
-            <h1 class="text-2xl font-bold mb-8 text-blue-600">Student Panel</h1>
-            <nav class="space-y-4" id="navMenu">
-                <a href="#" class="block text-gray-700 hover:text-blue-500 menu-item active">Dashboard</a>
-                <a href="#studentCards" class="block text-gray-700 hover:text-blue-500 menu-item">Team Members</a>
-                <a href="#uploadSection" class="block text-gray-700 hover:text-blue-500 menu-item">Upload Files</a>
-                <a href="#templateSection" class="block text-gray-700 hover:text-blue-500 menu-item">Templates</a>
-                <a href="#mentorSection" class="block text-gray-700 hover:text-blue-500 menu-item">Mentor</a>
-                <button id="logout"
-                    class="mt-8 bg-red-500 text-white w-full px-4 py-2 rounded hover:bg-red-600 transition">Logout</button>
-            </nav>
-        </aside>
-
-        <!-- Mobile Toggle Button -->
-        <div class="md:hidden fixed top-4 left-4 z-50">
-            <button id="toggleSidebar" class="text-gray-800 bg-white p-2 rounded shadow">
-                ☰
-            </button>
+            <div>
+                <div class="portal-brand-title">IPD Portal</div>
+                <div class="portal-brand-sub">Student</div>
+            </div>
         </div>
 
-        <!-- Main Content -->
-        <main class="flex-1 md:ml-64 p-4 mt-16 md:mt-0">
-            <div class="max-w-6xl mx-auto space-y-6">
+        <nav>
+            <div class="portal-nav-label">Workspace</div>
+            <div class="portal-nav" id="navMenu">
+                <a href="#overviewSection" class="menu-item active"><span class="nav-icon">🏠</span> Overview</a>
+                <a href="#teamSection" class="menu-item"><span class="nav-icon">👥</span> Team Members</a>
+                <a href="#uploadsSection" class="menu-item"><span class="nav-icon">⬆</span> Upload Files</a>
+                <a href="#canvasSection" class="menu-item"><span class="nav-icon">🧩</span> Canvases</a>
+                <a href="#categorySection" class="menu-item"><span class="nav-icon">⚙</span> Project Category</a>
+                <a href="#historySection" class="menu-item"><span class="nav-icon">🕓</span> Upload History</a>
+                <a href="#templateSection" class="menu-item"><span class="nav-icon">📄</span> Templates</a>
+                <a href="#mentorSection" class="menu-item"><span class="nav-icon">🎓</span> Mentor</a>
+            </div>
+        </nav>
 
-                <!-- Profile Card -->
-                <!-- Profile Card with Photo -->
-                <div class="bg-white rounded-xl shadow-md p-4 flex items-center justify-between">
-                    <div class="flex items-center space-x-4">
-                        <label for="photoInput" class="cursor-pointer relative">
-                            <img id="profilePhoto" src="./images/christmas-celebration-concept.jpg" alt="Profile Photo"
-                                class="w-16 h-16 rounded-full object-cover border border-gray-300" />
-                            <input type="file" id="photoInput" accept="image/*" class="hidden" />
-                        </label>
+        <div class="portal-sidebar-footer">
+            <div class="portal-sidebar-note">Innovation &amp; Product Development Cell</div>
+            <button id="logout" class="portal-logout">Logout</button>
+        </div>
+    </aside>
 
-                        <div id="profile-div-align">
-                            <h2 class="text-xl font-bold">Team Name: <span id="teamName" class="text-blue-600"></span>
-                            </h2>
-                            <p class="text-gray-500">Contact No:<span id="contactNo" class="text-blue-600"></span></p>
-                            <div class="w-full bg-gray-200 h-3 rounded-full mt-2">
-                                <div id="progressFill" class="bg-blue-500 h-3 rounded-full" style="width: 40%;"></div>
+    <div class="portal-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- Main -->
+    <div class="portal-main">
+        <header class="portal-topbar">
+            <div class="flex items-center gap-3">
+                <button class="portal-menu-btn" id="toggleSidebar" aria-label="Toggle navigation">☰</button>
+                <div>
+                    <h1>Student Dashboard</h1>
+                    <div class="portal-topbar-sub">Team profile, submissions and project canvases</div>
+                </div>
+            </div>
+
+            <div class="portal-topbar-actions">
+                <div class="portal-topbar-logos">
+                    <img src="./images/AGNI-LOGO-AUTO.png" alt="Agni College of Technology">
+                </div>
+            </div>
+        </header>
+
+        <main class="portal-content">
+
+            <!-- Overview -->
+            <section id="overviewSection" class="portal-section">
+                <div class="portal-card">
+                    <div class="portal-profile">
+                        <div class="portal-profile-main">
+                            <label for="photoInput" class="portal-avatar-wrap">
+                                <img id="profilePhoto" src="./images/christmas-celebration-concept.jpg"
+                                    alt="Profile Photo" class="portal-avatar" />
+                                <input type="file" id="photoInput" accept="image/*" class="hidden" />
+                            </label>
+
+                            <div id="profile-div-align">
+                                <h2 class="portal-profile-name">Team <span id="teamName"></span></h2>
+                                <p class="portal-profile-meta">Contact:<span id="contactNo"></span></p>
+                                <div class="portal-progress">
+                                    <div id="progressFill" style="width: 40%;"></div>
+                                </div>
                             </div>
                         </div>
+
+                        <button id="editProfileBtn" class="portal-btn portal-btn-primary">Edit Profile</button>
+                    </div>
+                </div>
+
+                <!-- Problem statement & selected idea -->
+                <div id="problemSection" class="portal-card">
+                    <div class="portal-card-head">
+                        <div>
+                            <h3 class="portal-card-title">Problem Statement &amp; Selected Idea</h3>
+                            <p class="portal-card-desc">The problem your team is solving and the idea taken forward.</p>
+                        </div>
+                        <button id="refreshProblemBtn" class="portal-btn portal-btn-ghost">Refresh</button>
+                    </div>
+                    <div id="problemDisplay">
+                        <p class="portal-empty">No problem statement added yet.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Team Members -->
+            <section id="teamSection" class="portal-section">
+                <div class="portal-section-head">
+                    <div>
+                        <h2 class="portal-section-title">Team Members</h2>
+                        <p class="portal-section-desc">Everyone registered under this team.</p>
+                    </div>
+                </div>
+
+                <div id="studentCards">
+                    <!-- JS appends student cards here -->
+                </div>
+            </section>
+
+            <!-- Uploads -->
+            <section id="uploadsSection" class="portal-section">
+                <div class="portal-section-head">
+                    <div>
+                        <h2 class="portal-section-title">Upload Files</h2>
+                        <p class="portal-section-desc">Submit each deliverable; the progress bar confirms the upload.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="portal-upload-group">
+                    <h3 class="portal-group-title">Semester 1</h3>
+                    <div class="portal-grid" id="uploadSection">
+                    <div class="portal-upload">
+                        <h3>Problem Statement Canvas</h3>
+                        <form id="problemForm">
+                            <input type="file" id="problemFile" required />
+                            <button type="submit" class="portal-btn portal-btn-primary portal-btn-block">Upload</button>
+                        </form>
+                        <div class="progress-bar-container">
+                            <div id="problemProgress" class="h-6 w-0 bg-blue-600 text-white text-xs">0%</div>
+                        </div>
+                        <p id="problemStatus"></p>
                     </div>
 
-                    <button id="editProfileBtn"
-                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-                        Edit Profile
-                    </button>
+                    <div class="portal-upload">
+                        <h3>Affinity Diagram</h3>
+                        <form id="affinityForm">
+                            <input type="file" id="affinityFile" required />
+                            <button type="submit" class="portal-btn portal-btn-primary portal-btn-block">Upload</button>
+                        </form>
+                        <div class="progress-bar-container">
+                            <div id="affinityProgress" class="h-6 w-0 bg-blue-600 text-white text-xs">0%</div>
+                        </div>
+                        <p id="affinityStatus"></p>
+                    </div>
+                    </div>
                 </div>
 
+                <div class="portal-upload-group">
+                    <h3 class="portal-group-title">Additional Submissions</h3>
+                    <div class="portal-grid">
+                    <div class="portal-upload">
+                        <h3>BMC Template</h3>
+                        <form id="BMCForm">
+                            <input type="file" id="BMCFile" required />
+                            <button type="submit" class="portal-btn portal-btn-primary portal-btn-block">Upload</button>
+                        </form>
+                        <div class="progress-bar-container">
+                            <div id="BMCProgress" class="h-6 w-0 bg-blue-600 text-white text-xs">0%</div>
+                        </div>
+                        <p id="BMCStatus"></p>
+                    </div>
 
+                    <div class="portal-upload">
+                        <h3>Prototype Planning Canvas</h3>
+                        <form id="PPCForm">
+                            <input type="file" id="PPCFile" required />
+                            <button type="submit" class="portal-btn portal-btn-primary portal-btn-block">Upload</button>
+                        </form>
+                        <div class="progress-bar-container">
+                            <div id="PPCProgress" class="h-6 w-0 bg-blue-600 text-white text-xs">0%</div>
+                        </div>
+                        <p id="PPCStatus"></p>
+                    </div>
+                    </div>
+                </div>
+            </section>
 
-
-
-                <!-- Student Cards -->
-                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4" id="studentCards">
-                    <!-- JS will append student cards here -->
+            <!-- Canvases -->
+            <section id="canvasSection" class="portal-section">
+                <div class="portal-section-head">
+                    <div>
+                        <h2 class="portal-section-title">Canvases</h2>
+                        <p class="portal-section-desc">Fill these in directly in the portal.</p>
+                    </div>
+                    <span class="portal-badge">Semester 1</span>
                 </div>
 
-                <!-- Template Files Section -->
-                <div id="templateSection" class="bg-white p-6 rounded-xl shadow-md mt-8">
-                    <h3 class="text-lg font-semibold mb-2">Template Files</h3>
-                    <ul id="templateList" class="list-disc list-inside space-y-2 text-blue-600">
-                        <!-- Files will be loaded here -->
-                    </ul>
-                </div>
-
-
-                <!-- Problem Statement & Selected Idea Section -->
-                <div id="problemSection" class="bg-white p-6 rounded-xl shadow-md mt-8">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold text-gray-800">Problem Statement & Selected Idea</h3>
-                        <button id="refreshProblemBtn"
-                            class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded-lg shadow-md transition">
-                            Refresh
+                <div class="portal-grid">
+                    <div>
+                        <button id="addIdeaBtn" class="portal-action">
+                            <span class="portal-action-icon">💡</span>
+                            <span>
+                                <span class="portal-action-title">Idea Generation Canvas</span>
+                                <span class="portal-action-desc">Capture and shortlist your team's ideas</span>
+                            </span>
                         </button>
                     </div>
-                    <div id="problemDisplay" class="space-y-4 text-gray-700">
-                        <p class="text-gray-500 text-sm italic">No problem statement added yet.</p>
-                    </div>
-                </div>
 
-                <!-- Upload History -->
-
-                <div class="bg-white p-6 rounded-xl shadow-md mt-8">
-                    <h3 class="text-lg font-semibold mb-2">Upload History</h3>
-                    <div id="uploadHistory" class="space-y-2 text-sm text-gray-700">
-                        <!-- Filled dynamically -->
-                    </div>
-                </div>
-
-
-                <div id="uploadSection">
-                    <!-- Problem Statement Canvas Upload -->
-                    <div class="max-w-md mx-auto p-4 space-y-4 border rounded-lg shadow-md mb-8">
-                        <h2 class="text-lg font-semibold text-gray-800">Problem Statement Canvas</h2>
-                        <form id="problemForm" class="space-y-3">
-                            <input type="file" id="problemFile" required
-                                class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            <button type="submit"
-                                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
-                                Upload
-                            </button>
-                        </form>
-                        <!-- Progress -->
-                        <div class="progress-bar-container bg-gray-200 rounded-lg overflow-hidden">
-                            <div id="problemProgress"
-                                class="h-6 w-0 bg-blue-600 text-white text-xs flex items-center justify-center transition-all duration-300">
-                                0%
-                            </div>
-                        </div>
-                        <p id="problemStatus" class="text-center text-sm font-medium text-gray-700 mt-2"></p>
-                    </div>
-
-                    <!-- Affinity Diagram Upload -->
-                    <div class="max-w-md mx-auto p-4 space-y-4 border rounded-lg shadow-md">
-                        <h2 class="text-lg font-semibold text-gray-800">Affinity Diagram</h2>
-                        <form id="affinityForm" class="space-y-3">
-                            <input type="file" id="affinityFile" required
-                                class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            <button type="submit"
-                                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
-                                Upload
-                            </button>
-                        </form>
-                        <!-- Progress -->
-                        <div class="progress-bar-container bg-gray-200 rounded-lg overflow-hidden">
-                            <div id="affinityProgress"
-                                class="h-6 w-0 bg-blue-600 text-white text-xs flex items-center justify-center transition-all duration-300">
-                                0%
-                            </div>
-                        </div>
-                        <p id="affinityStatus" class="text-center text-sm font-medium text-gray-700 mt-2"></p>
-                    </div>
-
-
-
-                </div>
-
-
-
-
-
-
-                <!--Idea Generation Button Section -->
-                <div class="bg-white p-6 rounded-xl shadow-md mt-8 text-center">
-                    <button id="addIdeaBtn"
-                        class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition">
-                        Add Idea Generation Canvas
-                    </button>
-                </div>
-
-
-                <!-- SWOT Button Section -->
-                <div class="bg-white p-6 rounded-xl shadow-md mt-8 text-center">
-                    <button id="addSwotBtn"
-                        class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition">
-                        Add SWOT Analysis
-                    </button>
-                </div>
-
-
-                <!-- Value Button Section -->
-                <div class="bg-white p-6 rounded-xl shadow-md mt-8 text-center">
-                    <button id="addValueBtn"
-                        class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition">
-                        Add Value Proposition
-                    </button>
-                </div>
-
-
-                <!-- Problem & idea Button Section -->
-                <div class="bg-white p-6 rounded-xl shadow-md mt-8 text-center">
-                    <button id="addProblemBtn"
-                        class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition">
-                        Add Problem Statement & Selected Idea
-                    </button>
-                </div>
-
-                <div class="max-w-md mx-auto p-4 space-y-4 border rounded-lg shadow-md">
-                    <h2 class="text-lg font-semibold text-gray-800">BMC Template</h2>
-                    <form id="BMCForm" class="space-y-3">
-                        <input type="file" id="BMCFile" required
-                            class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                        <button type="submit"
-                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
-                            Upload
+                    <div>
+                        <button id="addSwotBtn" class="portal-action">
+                            <span class="portal-action-icon">🧭</span>
+                            <span>
+                                <span class="portal-action-title">SWOT Analysis</span>
+                                <span class="portal-action-desc">Strengths, weaknesses, opportunities, threats</span>
+                            </span>
                         </button>
-                    </form>
-                    <!-- Progress -->
-                    <div class="progress-bar-container bg-gray-200 rounded-lg overflow-hidden">
-                        <div id="BMCProgress"
-                            class="h-6 w-0 bg-blue-600 text-white text-xs flex items-center justify-center transition-all duration-300">
-                            0%
-                        </div>
                     </div>
-                    <p id="BMCStatus" class="text-center text-sm font-medium text-gray-700 mt-2"></p>
+
+                    <div>
+                        <button id="addValueBtn" class="portal-action">
+                            <span class="portal-action-icon">🎯</span>
+                            <span>
+                                <span class="portal-action-title">Value Proposition</span>
+                                <span class="portal-action-desc">Who you serve and the value you deliver</span>
+                            </span>
+                        </button>
+                    </div>
+
+                    <div>
+                        <button id="addProblemBtn" class="portal-action">
+                            <span class="portal-action-icon">📌</span>
+                            <span>
+                                <span class="portal-action-title">Problem Statement &amp; Selected Idea</span>
+                                <span class="portal-action-desc">Record the problem and the chosen idea</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Project category -->
+            <section id="categorySection" class="portal-section">
+                <div class="portal-section-head">
+                    <div>
+                        <h2 class="portal-section-title">Project Category</h2>
+                        <p class="portal-section-desc">Pick a category to unlock the deliverables it requires.</p>
+                    </div>
+                    <span class="portal-badge">Semester 2</span>
                 </div>
 
-                                <div class="max-w-md mx-auto p-4 space-y-4 border rounded-lg shadow-md">
-                        <h2 class="text-lg font-semibold text-gray-800">Prototype Planning Canvas</h2>
-                        <form id="PPCForm" class="space-y-3">
-                            <input type="file" id="PPCFile" required
-                                class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                            <button type="submit"
-                                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
-                                Upload
-                            </button>
-                        </form>
-                        <!-- Progress -->
-                        <div class="progress-bar-container bg-gray-200 rounded-lg overflow-hidden">
-                            <div id="PPCProgress"
-                                class="h-6 w-0 bg-blue-600 text-white text-xs flex items-center justify-center transition-all duration-300">
-                                0%
-                            </div>
-                        </div>
-                        <p id="PPCStatus" class="text-center text-sm font-medium text-gray-700 mt-2"></p>
+                <div class="portal-card">
+                    <div class="portal-field">
+                        <label for="projectType" class="portal-label">Project type</label>
+                        <select id="projectType">
+                            <option value="">Select Project Type</option>
+                            <option value="hardware">Hardware</option>
+                            <option value="software">Software</option>
+                            <option value="hybrid">Hardware-Software</option>
+                        </select>
                     </div>
 
+                    <div id="categoryUploadSection" class="hidden">
+                        <hr class="portal-divider">
 
-
-                <!-- Project Type Selection Section -->
-                <div class="bg-white p-6 rounded-xl shadow-md mt-8">
-                    <h3 class="text-lg font-semibold mb-4">Project Category</h3>
-
-                    <select id="projectType" class="border p-2 rounded">
-                        <option value="">Select Project Type</option>
-                        <option value="hardware">Hardware</option>
-                        <option value="software">Software</option>
-                        <option value="hybrid">Hardware-Software</option>
-                    </select>
-
-                    <div id="categoryUploadSection" class="hidden mt-4 space-y-4">
-
-                        <!-- Common -->
-                        <div class="text-center">
-                            <button id="addUserReqBtn"
-                                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition">
-                                Add User Requirements & MOSCOW
+                        <div class="portal-grid">
+                            <button id="addUserReqBtn" class="portal-action">
+                                <span class="portal-action-icon">📋</span>
+                                <span>
+                                    <span class="portal-action-title">User Requirements &amp; MOSCOW</span>
+                                    <span class="portal-action-desc">Required for every project type</span>
+                                </span>
                             </button>
                         </div>
 
-                        <!-- Hardware Section -->
-                        <div id="hardwareSection" class="hidden space-y-3">
+                        <!-- Hardware -->
+                        <div id="hardwareSection" class="hidden">
+                            <hr class="portal-divider">
+                            <h3 class="portal-card-title mb-3">Hardware deliverables</h3>
 
-                            <div class="text-center">
-                                <button id="addDimensionsBtn"
-                                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition">
-                                    Add Product Dimensions
+                            <div class="portal-grid">
+                                <button id="addDimensionsBtn" class="portal-action">
+                                    <span class="portal-action-icon">📐</span>
+                                    <span>
+                                        <span class="portal-action-title">Product Dimensions</span>
+                                        <span class="portal-action-desc">Physical specification of the product</span>
+                                    </span>
+                                </button>
+
+                                <button id="addPerformanceBtn" class="portal-action">
+                                    <span class="portal-action-icon">⚡</span>
+                                    <span>
+                                        <span class="portal-action-title">Performance Requirements</span>
+                                        <span class="portal-action-desc">Targets the product must meet</span>
+                                    </span>
+                                </button>
+
+                                <button id="addBomBtn" class="portal-action">
+                                    <span class="portal-action-icon">🧾</span>
+                                    <span>
+                                        <span class="portal-action-title">Bill Of Materials</span>
+                                        <span class="portal-action-desc">Components, quantities and cost</span>
+                                    </span>
                                 </button>
                             </div>
 
-                            <div class="text-center">
-                                <button id="addPerformanceBtn"
-                                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition">
-                                    Add Performance Requirements
-                                </button>
-                            </div>
-
-                            <div class="text-center">
-                                <button id="addBomBtn"
-                                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg shadow-md transition">
-                                    Add Bill Of Materials
-                                </button>
-                            </div>
-
-                            <div class="max-w-md mx-auto p-4 space-y-4 border rounded-lg shadow-md mb-8">
-                                <h2 class="text-lg font-semibold text-gray-800">2D Modelling</h2>
-
-                                <form id="modelling2dForm" class="space-y-3">
-                                    <input type="file" id="modelling2dFile" required
-                                        class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                    <button type="submit"
-                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
-                                        Upload
-                                    </button>
-                                </form>
-
-                                <div class="progress-bar-container bg-gray-200 rounded-lg overflow-hidden">
-                                    <div id="modelling2dProgress"
-                                        class="h-6 w-0 bg-blue-600 text-white text-xs flex items-center justify-center transition-all duration-300">
-                                        0%
+                            <div class="portal-grid mt-4">
+                                <div class="portal-upload">
+                                    <h3>2D Modelling</h3>
+                                    <form id="modelling2dForm">
+                                        <input type="file" id="modelling2dFile" required />
+                                        <button type="submit"
+                                            class="portal-btn portal-btn-primary portal-btn-block">Upload</button>
+                                    </form>
+                                    <div class="progress-bar-container">
+                                        <div id="modelling2dProgress" class="h-6 w-0 bg-blue-600 text-white text-xs">0%
+                                        </div>
                                     </div>
+                                    <p id="modelling2dStatus"></p>
                                 </div>
 
-                                <p id="modelling2dStatus" class="text-center text-sm font-medium text-gray-700 mt-2">
-                                </p>
-                            </div>
-
-                            <div class="max-w-md mx-auto p-4 space-y-4 border rounded-lg shadow-md mb-8">
-                                <h2 class="text-lg font-semibold text-gray-800">3D Modelling</h2>
-
-                                <form id="modelling3dForm" class="space-y-3">
-                                    <input type="file" id="modelling3dFile" required
-                                        class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                    <button type="submit"
-                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
-                                        Upload
-                                    </button>
-                                </form>
-
-                                <div class="progress-bar-container bg-gray-200 rounded-lg overflow-hidden">
-                                    <div id="modelling3dProgress"
-                                        class="h-6 w-0 bg-blue-600 text-white text-xs flex items-center justify-center transition-all duration-300">
-                                        0%
+                                <div class="portal-upload">
+                                    <h3>3D Modelling</h3>
+                                    <form id="modelling3dForm">
+                                        <input type="file" id="modelling3dFile" required />
+                                        <button type="submit"
+                                            class="portal-btn portal-btn-primary portal-btn-block">Upload</button>
+                                    </form>
+                                    <div class="progress-bar-container">
+                                        <div id="modelling3dProgress" class="h-6 w-0 bg-blue-600 text-white text-xs">0%
+                                        </div>
                                     </div>
+                                    <p id="modelling3dStatus"></p>
                                 </div>
-
-                                <p id="modelling3dStatus" class="text-center text-sm font-medium text-gray-700 mt-2">
-                                </p>
                             </div>
-
-
                         </div>
 
-                        <!-- Software Section -->
-                        <div id="softwareSection" class="hidden space-y-3">
+                        <!-- Software -->
+                        <div id="softwareSection" class="hidden">
+                            <hr class="portal-divider">
+                            <h3 class="portal-card-title mb-3">Software deliverables</h3>
 
-                            <div class="max-w-md mx-auto p-4 space-y-4 border rounded-lg shadow-md mb-8">
-                                <h2 class="text-lg font-semibold text-gray-800">DB Schema</h2>
-
-                                <form id="dbSchemaForm" class="space-y-3">
-                                    <input type="file" id="dbSchemaFile" required
-                                        class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                    <button type="submit"
-                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
-                                        Upload
-                                    </button>
-                                </form>
-
-                                <div class="progress-bar-container bg-gray-200 rounded-lg overflow-hidden">
-                                    <div id="dbSchemaProgress"
-                                        class="h-6 w-0 bg-blue-600 text-white text-xs flex items-center justify-center transition-all duration-300">
-                                        0%
+                            <div class="portal-grid">
+                                <div class="portal-upload">
+                                    <h3>DB Schema</h3>
+                                    <form id="dbSchemaForm">
+                                        <input type="file" id="dbSchemaFile" required />
+                                        <button type="submit"
+                                            class="portal-btn portal-btn-primary portal-btn-block">Upload</button>
+                                    </form>
+                                    <div class="progress-bar-container">
+                                        <div id="dbSchemaProgress" class="h-6 w-0 bg-blue-600 text-white text-xs">0%
+                                        </div>
                                     </div>
+                                    <p id="dbSchemaStatus"></p>
                                 </div>
 
-                                <p id="dbSchemaStatus" class="text-center text-sm font-medium text-gray-700 mt-2">
-                                </p>
-                            </div>
-
-                            <div class="max-w-md mx-auto p-4 space-y-4 border rounded-lg shadow-md mb-8">
-                                <h2 class="text-lg font-semibold text-gray-800">HLD Design</h2>
-
-                                <form id="hldForm" class="space-y-3">
-                                    <input type="file" id="hldFile" required
-                                        class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                    <button type="submit"
-                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
-                                        Upload
-                                    </button>
-                                </form>
-
-                                <div class="progress-bar-container bg-gray-200 rounded-lg overflow-hidden">
-                                    <div id="hldProgress"
-                                        class="h-6 w-0 bg-blue-600 text-white text-xs flex items-center justify-center transition-all duration-300">
-                                        0%
+                                <div class="portal-upload">
+                                    <h3>HLD Design</h3>
+                                    <form id="hldForm">
+                                        <input type="file" id="hldFile" required />
+                                        <button type="submit"
+                                            class="portal-btn portal-btn-primary portal-btn-block">Upload</button>
+                                    </form>
+                                    <div class="progress-bar-container">
+                                        <div id="hldProgress" class="h-6 w-0 bg-blue-600 text-white text-xs">0%</div>
                                     </div>
+                                    <p id="hldStatus"></p>
                                 </div>
 
-                                <p id="hldStatus" class="text-center text-sm font-medium text-gray-700 mt-2">
-                                </p>
-                            </div>
-
-                            <div class="max-w-md mx-auto p-4 space-y-4 border rounded-lg shadow-md mb-8">
-                                <h2 class="text-lg font-semibold text-gray-800">Tech Stack Architecture</h2>
-
-                                <form id="techStackForm" class="space-y-3">
-                                    <input type="file" id="techStackFile" required
-                                        class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                    <button type="submit"
-                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
-                                        Upload
-                                    </button>
-                                </form>
-
-                                <div class="progress-bar-container bg-gray-200 rounded-lg overflow-hidden">
-                                    <div id="techStackProgress"
-                                        class="h-6 w-0 bg-blue-600 text-white text-xs flex items-center justify-center transition-all duration-300">
-                                        0%
+                                <div class="portal-upload">
+                                    <h3>Tech Stack Architecture</h3>
+                                    <form id="techStackForm">
+                                        <input type="file" id="techStackFile" required />
+                                        <button type="submit"
+                                            class="portal-btn portal-btn-primary portal-btn-block">Upload</button>
+                                    </form>
+                                    <div class="progress-bar-container">
+                                        <div id="techStackProgress" class="h-6 w-0 bg-blue-600 text-white text-xs">0%
+                                        </div>
                                     </div>
+                                    <p id="techStackStatus"></p>
                                 </div>
 
-                                <p id="techStackStatus" class="text-center text-sm font-medium text-gray-700 mt-2">
-                                </p>
-                            </div>
-
-                            <div class="max-w-md mx-auto p-4 space-y-4 border rounded-lg shadow-md mb-8">
-                                <h2 class="text-lg font-semibold text-gray-800">User Flow Diagram</h2>
-
-                                <form id="userFlowForm" class="space-y-3">
-                                    <input type="file" id="userFlowFile" required
-                                        class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                    <button type="submit"
-                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
-                                        Upload
-                                    </button>
-                                </form>
-
-                                <div class="progress-bar-container bg-gray-200 rounded-lg overflow-hidden">
-                                    <div id="userFlowProgress"
-                                        class="h-6 w-0 bg-blue-600 text-white text-xs flex items-center justify-center transition-all duration-300">
-                                        0%
+                                <div class="portal-upload">
+                                    <h3>User Flow Diagram</h3>
+                                    <form id="userFlowForm">
+                                        <input type="file" id="userFlowFile" required />
+                                        <button type="submit"
+                                            class="portal-btn portal-btn-primary portal-btn-block">Upload</button>
+                                    </form>
+                                    <div class="progress-bar-container">
+                                        <div id="userFlowProgress" class="h-6 w-0 bg-blue-600 text-white text-xs">0%
+                                        </div>
                                     </div>
+                                    <p id="userFlowStatus"></p>
                                 </div>
 
-                                <p id="userFlowStatus" class="text-center text-sm font-medium text-gray-700 mt-2">
-                                </p>
-                            </div>
-
-
-                            <div class="max-w-md mx-auto p-4 space-y-4 border rounded-lg shadow-md mb-8">
-                                <h2 class="text-lg font-semibold text-gray-800">Wireframe/Mockup</h2>
-
-                                <form id="mockupForm" class="space-y-3">
-                                    <input type="file" id="mockupFile" required
-                                        class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-                                    <button type="submit"
-                                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition">
-                                        Upload
-                                    </button>
-                                </form>
-
-                                <div class="progress-bar-container bg-gray-200 rounded-lg overflow-hidden">
-                                    <div id="mockupProgress"
-                                        class="h-6 w-0 bg-blue-600 text-white text-xs flex items-center justify-center transition-all duration-300">
-                                        0%
+                                <div class="portal-upload">
+                                    <h3>Wireframe / Mockup</h3>
+                                    <form id="mockupForm">
+                                        <input type="file" id="mockupFile" required />
+                                        <button type="submit"
+                                            class="portal-btn portal-btn-primary portal-btn-block">Upload</button>
+                                    </form>
+                                    <div class="progress-bar-container">
+                                        <div id="mockupProgress" class="h-6 w-0 bg-blue-600 text-white text-xs">0%</div>
                                     </div>
+                                    <p id="mockupStatus"></p>
                                 </div>
-
-                                <p id="mockupStatus" class="text-center text-sm font-medium text-gray-700 mt-2">
-                                </p>
                             </div>
-
                         </div>
 
                         <div id="userReqDisplay" class="mt-4"></div>
                         <div id="bomDisplay" class="mt-4"></div>
                         <div id="dimensionsDisplay" class="mt-4"></div>
                         <div id="performanceDisplay" class="mt-4"></div>
+                    </div>
+                </div>
+            </section>
 
+            <!-- Upload history -->
+            <section id="historySection" class="portal-section">
+                <div class="portal-section-head">
+                    <div>
+                        <h2 class="portal-section-title">Upload History</h2>
+                        <p class="portal-section-desc">Status and mentor comments for everything you submitted.</p>
                     </div>
                 </div>
 
-                <!-- Mentor Info -->
-                <div id="mentorSection" class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-lg font-semibold">Mentor</h3>
-                    <p id="mentorName" class="text-gray-600">Not Assigned</p>
+                <div class="portal-card">
+                    <div id="uploadHistory">
+                        <p class="portal-empty">No uploads yet.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Templates -->
+            <section id="templateSection" class="portal-section">
+                <div class="portal-section-head">
+                    <div>
+                        <h2 class="portal-section-title">Template Files</h2>
+                        <p class="portal-section-desc">Download the official templates before you submit.</p>
+                    </div>
                 </div>
 
+                <div class="portal-card">
+                    <ul id="templateList"></ul>
+                </div>
+            </section>
 
-                <!-- Contact Info -->
-
-                <div id="mentorSection" class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-lg font-semibold">Contact Details</h3>
-                    <p class="text-gray-600">Dr. PURUSHOTHAMAN</p>
-                    <p class="text-gray-600">HEAD - IPD</p>
-                    <p class="text-gray-600">head.ipd@act.edu.in</p>
+            <!-- Mentor & contact -->
+            <section id="mentorSection" class="portal-section">
+                <div class="portal-section-head">
+                    <div>
+                        <h2 class="portal-section-title">Mentor &amp; Contact</h2>
+                        <p class="portal-section-desc">Who to reach out to for guidance.</p>
+                    </div>
                 </div>
 
-            </div>
+                <div class="portal-grid">
+                    <div class="portal-card">
+                        <div class="portal-stat-label">Assigned mentor</div>
+                        <p id="mentorName" class="portal-profile-meta">Not Assigned</p>
+                    </div>
+
+                    <div class="portal-card">
+                        <div class="portal-stat-label">IPD Head</div>
+                        <div class="portal-stat-value">Dr. PURUSHOTHAMAN</div>
+                        <p class="portal-card-desc">HEAD - IPD</p>
+                        <p class="portal-card-desc">head.ipd@act.edu.in</p>
+                    </div>
+                </div>
+            </section>
+
         </main>
     </div>
 
-    <!-- Edit Modal -->
     <!-- Edit Profile Modal -->
     <div id="editModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white p-6 rounded-lg w-full max-w-lg relative">
-            <h2 class="text-2xl font-bold mb-4">Edit Profile</h2>
+        <div class="portal-modal-panel bg-white p-6 w-full max-w-lg relative">
+            <h2 class="text-xl font-bold mb-4">Edit Profile</h2>
 
             <form id="editForm" class="space-y-4">
                 <div>
-                    <label for="editMobile" class="block text-sm font-medium text-gray-700">Team Leader Mobile
-                        Number</label>
-                    <input type="text" id="editMobile" name="editMobile" maxlength="10"
-                        class="mt-1 p-2 w-full border rounded" required>
+                    <label for="editMobile" class="portal-label">Team leader mobile number</label>
+                    <input type="text" id="editMobile" name="editMobile" maxlength="10" class="p-2 w-full border rounded"
+                        required>
                 </div>
 
                 <div>
-                    <h3 class="text-lg font-semibold mt-4 mb-2">Team Members Contact Numbers</h3>
-                    <div id="studentEditFields" class="space-y-3">
-                        <!-- Populated dynamically via JS -->
-                    </div>
+                    <h3 class="portal-card-title mt-4 mb-2">Team members contact numbers</h3>
+                    <div id="studentEditFields" class="space-y-3"></div>
                 </div>
 
                 <p id="updateMsg" class="text-sm font-semibold"></p>
 
                 <div class="flex justify-end space-x-2 mt-4">
-                    <button type="button" id="cancelBtn"
-                        class="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded">Cancel</button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">Save</button>
+                    <button type="button" id="cancelBtn" class="portal-btn portal-btn-ghost">Cancel</button>
+                    <button type="submit" class="portal-btn portal-btn-primary">Save</button>
                 </div>
             </form>
         </div>
@@ -648,87 +507,69 @@
 
     <!-- SWOT Analysis Modal -->
     <div id="swotModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white p-6 rounded-lg w-full max-w-3xl relative overflow-auto max-h-[90vh]">
-            <button id="closeSwotModal"
-                class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold">&times;</button>
+        <div class="portal-modal-panel bg-white p-6 w-full max-w-3xl relative overflow-auto max-h-[90vh]">
+            <button id="closeSwotModal" class="portal-modal-close absolute top-3 right-3">&times;</button>
             <iframe id="swotIframe" src="swot.html" class="w-full h-[80vh] border rounded"
-                style="width:100%; height:80vh; border-radius:6px; border:1px solid #ccc;">
+                style="width:100%; height:80vh; border-radius:6px; border:1px solid #e4e8f0;">
             </iframe>
         </div>
     </div>
-
-
 
     <!-- Idea Generation Modal -->
     <div id="ideaModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white p-6 rounded-lg w-full max-w-3xl relative overflow-auto max-h-[90vh]">
-            <button id="closeIdeaModal"
-                class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold">&times;</button>
+        <div class="portal-modal-panel bg-white p-6 w-full max-w-3xl relative overflow-auto max-h-[90vh]">
+            <button id="closeIdeaModal" class="portal-modal-close absolute top-3 right-3">&times;</button>
             <iframe id="ideaIframe" src="idea.html" class="w-full h-[80vh] border rounded"
-                style="width:100%; height:80vh; border-radius:6px; border:1px solid #ccc;">
+                style="width:100%; height:80vh; border-radius:6px; border:1px solid #e4e8f0;">
             </iframe>
         </div>
     </div>
 
-
-
     <!-- Value Proposition Modal -->
     <div id="valueModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white p-6 rounded-lg w-full max-w-3xl relative overflow-auto max-h-[90vh]">
-            <button id="closeValueModal"
-                class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold">&times;</button>
+        <div class="portal-modal-panel bg-white p-6 w-full max-w-3xl relative overflow-auto max-h-[90vh]">
+            <button id="closeValueModal" class="portal-modal-close absolute top-3 right-3">&times;</button>
             <iframe id="valueIframe" src="value.html" class="w-full h-[80vh] border rounded"
-                style="width:100%; height:80vh; border-radius:6px; border:1px solid #ccc;">
+                style="width:100%; height:80vh; border-radius:6px; border:1px solid #e4e8f0;">
             </iframe>
         </div>
     </div>
 
     <!-- Problem Statement Modal -->
     <div id="problemModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white p-6 rounded-lg w-full max-w-2xl relative overflow-auto max-h-[90vh]">
-            <button id="closeProblemModal"
-                class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold text-xl">&times;</button>
-            <h2 class="text-2xl font-bold mb-4 text-center text-blue-700">Add Problem Statement</h2>
+        <div class="portal-modal-panel bg-white p-6 w-full max-w-2xl relative overflow-auto max-h-[90vh]">
+            <button id="closeProblemModal" class="portal-modal-close absolute top-3 right-3">&times;</button>
+            <h2 class="text-xl font-bold mb-4">Add Problem Statement</h2>
 
             <form id="problemStatementForm" class="space-y-4">
-                <!-- Problem Description -->
                 <div>
-                    <label for="problemDescription" class="block text-sm font-medium text-gray-700 mb-1">Problem
-                        Statement</label>
+                    <label for="problemDescription" class="portal-label">Problem statement</label>
                     <textarea id="problemDescription" name="problemDescription" rows="4" required
-                        class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        class="w-full border rounded-lg p-2"></textarea>
                 </div>
 
-                <!-- Selected Idea -->
                 <div>
-                    <label for="selectedIdea" class="block text-sm font-medium text-gray-700 mb-1">Selected Idea</label>
+                    <label for="selectedIdea" class="portal-label">Selected idea</label>
                     <textarea id="selectedIdea" name="selectedIdea" rows="3" required
-                        class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        class="w-full border rounded-lg p-2"></textarea>
                 </div>
 
                 <p id="problemMessage" class="text-center text-sm font-semibold text-gray-700"></p>
 
-                <!-- Submit Buttons -->
                 <div class="flex justify-end space-x-3 pt-4">
-                    <button type="button" id="cancelProblemBtn"
-                        class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded">Cancel</button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">Save</button>
+                    <button type="button" id="cancelProblemBtn" class="portal-btn portal-btn-ghost">Cancel</button>
+                    <button type="submit" class="portal-btn portal-btn-primary">Save</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- User Requirements Modal -->
-    <div id="userReqModal"
-        class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center overflow-y-auto z-50 hidden">
-        <div class="bg-white p-6 rounded-lg w-full max-w-4xl relative overflow-auto max-h-[90vh]">
-            <button id="closeUserReqModal"
-                class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 font-bold text-xl">&times;</button>
+    <div id="userReqModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center overflow-y-auto z-50 hidden">
+        <div class="portal-modal-panel bg-white p-6 w-full max-w-4xl relative overflow-auto max-h-[90vh]">
+            <button id="closeUserReqModal" class="portal-modal-close absolute top-3 right-3">&times;</button>
 
-            <h2 class="text-2xl font-bold mb-4 text-center text-blue-700">
-                User Requirements & Product Features (MOSCOW)
-            </h2>
+            <h2 class="text-xl font-bold mb-4">User Requirements &amp; Product Features (MOSCOW)</h2>
 
             <form id="userReqForm" class="space-y-4">
                 <div class="grid grid-cols-2 gap-4 font-semibold text-gray-700">
@@ -736,83 +577,64 @@
                     <div>Product Features (MOSCOW)</div>
                 </div>
 
-                <!-- 10 Rows -->
                 <div class="space-y-3">
-                    <!-- JS will generate rows -->
                     <div id="userReqRows"></div>
-                    <!-- MOSCOW Section -->
+
                     <div class="mt-6 border-t pt-6">
-                        <h3 class="text-lg font-semibold mb-4">MOSCOW Method</h3>
+                        <h3 class="portal-card-title mb-4">MOSCOW Method</h3>
 
                         <div class="space-y-4">
-
                             <div>
-                                <label class="block font-medium mb-1">Must Have</label>
-                                <textarea rows="3" id="mustHave"
-                                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                <label class="portal-label" for="mustHave">Must have</label>
+                                <textarea rows="3" id="mustHave" class="w-full border rounded-lg p-3"
                                     placeholder="Enter must have requirements..."></textarea>
                             </div>
 
                             <div>
-                                <label class="block font-medium mb-1">Should Have</label>
-                                <textarea rows="3" id="shouldHave"
-                                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                <label class="portal-label" for="shouldHave">Should have</label>
+                                <textarea rows="3" id="shouldHave" class="w-full border rounded-lg p-3"
                                     placeholder="Enter should have requirements..."></textarea>
                             </div>
 
                             <div>
-                                <label class="block font-medium mb-1">Could Have</label>
-                                <textarea rows="3" id="couldHave"
-                                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                <label class="portal-label" for="couldHave">Could have</label>
+                                <textarea rows="3" id="couldHave" class="w-full border rounded-lg p-3"
                                     placeholder="Enter could have requirements..."></textarea>
                             </div>
 
                             <div>
-                                <label class="block font-medium mb-1">Won’t Have</label>
-                                <textarea rows="3" id="wontHave"
-                                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                <label class="portal-label" for="wontHave">Won’t have</label>
+                                <textarea rows="3" id="wontHave" class="w-full border rounded-lg p-3"
                                     placeholder="Enter won't have requirements..."></textarea>
                             </div>
-
                         </div>
                     </div>
                 </div>
 
                 <div class="flex justify-end space-x-3 pt-4">
-                    <button type="button" id="cancelUserReqBtn"
-                        class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded">
-                        Cancel
-                    </button>
-                    <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
-                        Save
-                    </button>
+                    <button type="button" id="cancelUserReqBtn" class="portal-btn portal-btn-ghost">Cancel</button>
+                    <button type="submit" class="portal-btn portal-btn-primary">Save</button>
                 </div>
             </form>
         </div>
     </div>
 
     <div id="popupModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white w-4/5 max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-lg">
-
+        <div class="portal-modal-panel bg-white w-4/5 max-h-[90vh] overflow-y-auto p-6">
             <h2 id="modalTitle" class="text-xl font-bold mb-4"></h2>
 
             <div id="modalTableContainer"></div>
 
             <div class="text-right mt-4">
-                <button id="cancelPopupBtn" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">
-                    Cancel
-                </button>
-                <button class="bg-green-600 text-white px-4 py-2 rounded" id="savePopupBtn">
-                    Save
-                </button>
+                <button id="cancelPopupBtn" class="portal-btn portal-btn-ghost mr-2">Cancel</button>
+                <button id="savePopupBtn" class="portal-btn portal-btn-success">Save</button>
             </div>
-
         </div>
     </div>
 
-
+    <script src="/js/upload-titles.js"></script>
+    <script src="/js/portal-shell.js"></script>
     <script src="/js/dashboard.js"></script>
-
 
 </body>
 
